@@ -1,0 +1,68 @@
+---
+/**
+ * Locale Selector (Framer): іконка глобуса + назва мови + шеврон, поверх — прозорий нативний <select>.
+ * Список мов — з src/i18n/config.ts; поки локаль одна, показує тільки її (SPEC §5).
+ */
+import { locales, defaultLocale, localeLabels } from '../i18n/config';
+import { getLocale, useTranslations } from '../i18n';
+
+const current = getLocale(Astro.url);
+const t = useTranslations(current);
+const path = Astro.url.pathname.replace(new RegExp(`^/(${locales.join('|')})(?=/|$)`), '') || '/';
+const hrefFor = (l: string) => (l === defaultLocale ? path : `/${l}${path === '/' ? '' : path}`);
+const id = 'locale-select';
+---
+
+<div class="locale-selector">
+  <label class="sr-only" for={id}>{t('localeSelector.label')}</label>
+  <svg class="globe" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm87.63,96H175.8c-1.41-28.46-10.27-55.47-25.12-77A88.2,88.2,0,0,1,215.63,120ZM128,215.89c-18.73-20.27-30.09-49-31.77-79.89h63.54C158.09,166.870,146.73,195.62,128,215.89ZM96.23,120c1.68-30.87,13-59.620,31.77-79.89,18.73,20.27,30.09,49,31.77,79.89Zm9.09-77C90.47,64.53,81.61,91.54,80.2,120H40.37A88.2,88.2,0,0,1,105.32,43ZM40.37,136H80.2c1.41,28.46,10.27,55.47,25.12,77A88.2,88.2,0,0,1,40.37,136Zm110.31,77c14.85-21.560,23.71-48.570,25.12-77h39.83A88.2,88.2,0,0,1,150.68,213Z"></path></svg>
+  <span class="current">{localeLabels[current]}</span>
+  <svg class="chevron" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12"><path d="M 2 4.5 L 6 8.5 L 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <select id={id} class="native" data-locale-select>
+    {locales.map((l) => <option value={hrefFor(l)} selected={l === current}>{localeLabels[l]}</option>)}
+  </select>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-locale-select]').forEach((s) =>
+    s.addEventListener('change', () => {
+      window.location.href = s.value;
+    }),
+  );
+</script>
+
+<style>
+  .locale-selector {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-somewhat-light-grey);
+  }
+  .globe {
+    color: var(--color-greyish);
+    flex: none;
+  }
+  .chevron {
+    color: var(--color-somewhat-light-grey);
+    flex: none;
+  }
+  .native {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    font: inherit;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

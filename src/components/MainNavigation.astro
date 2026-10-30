@@ -1,0 +1,324 @@
+---
+/**
+ * main-navigation (Framer).
+ *  ≥1200: логотип + пігулки nav/items + кнопка «Записатися».
+ *  ≤1199: логотип + кнопка + hamburger; меню відкривається на весь екран під TopBar.
+ * Значення: docs/reference/stage-1/*.json.
+ */
+import Logo from './Logo.astro';
+import ButtonCta from './ButtonCta.astro';
+import { headerNav, mobileNav, routes, isActive } from '../data/site';
+import { getLocale, useTranslations } from '../i18n';
+
+const t = useTranslations(getLocale(Astro.url));
+const path = Astro.url.pathname;
+const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<typeof t>[0]);
+---
+
+<nav class="main-navigation" aria-label={t('nav.ariaLabel')} data-main-navigation>
+  <!-- Desktop / Small Desktop -->
+  <div class="desktop">
+    <div class="top">
+      <Logo size="large" />
+      <ul class="pills">
+        {
+          headerNav.map((k) => (
+            <li>
+              <a class:list={['pill', { 'is-active': isActive(k, path) }]} href={routes[k]} aria-current={isActive(k, path) ? 'page' : undefined}>
+                <span>{label(k)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <ButtonCta size="desktop">{t('nav.book')}</ButtonCta>
+  </div>
+
+  <!-- Tablet / Phone -->
+  <div class="compact">
+    <Logo size="large" class="logo-tablet" />
+    <Logo size="small" class="logo-phone" />
+    <div class="compact-actions">
+      <ButtonCta size="desktop" class="cta-tablet">{t('nav.book')}</ButtonCta>
+      <ButtonCta size="small" class="cta-phone">{t('nav.book')}</ButtonCta>
+      <button class="hamburger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+        <span class="sr-only" data-label-open>{t('menu.open')}</span>
+        <span class="sr-only" data-label-close hidden>{t('menu.close')}</span>
+        <span class="bar bar-1" aria-hidden="true"></span>
+        <span class="bar bar-2" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-menu hidden>
+    <ul class="mobile-nav">
+      {
+        mobileNav.map((k) => (
+          <li>
+            <a class:list={['mobile-link', { 'is-active': isActive(k, path) }]} href={routes[k]} aria-current={isActive(k, path) ? 'page' : undefined}>
+              {label(k)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-main-navigation]');
+  const btn = nav?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = nav?.querySelector<HTMLElement>('[data-menu]');
+  if (nav && btn && menu) {
+    const labelOpen = btn.querySelector<HTMLElement>('[data-label-open]')!;
+    const labelClose = btn.querySelector<HTMLElement>('[data-label-close]')!;
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      labelOpen.hidden = open;
+      labelClose.hidden = !open;
+      nav.classList.toggle('is-open', open);
+      // Block Scroll (Framer University): блокуємо скрол сторінки, поки меню відкрите.
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+      document.dispatchEvent(new CustomEvent(open ? 'ukrselt:scroll-lock' : 'ukrselt:scroll-unlock'));
+      if (open) {
+        menu.hidden = false;
+        requestAnimationFrame(() => menu.classList.add('is-visible'));
+      } else {
+        menu.classList.remove('is-visible');
+        const done = () => {
+          if (!nav.classList.contains('is-open')) menu.hidden = true;
+        };
+        menu.addEventListener('transitionend', done, { once: true });
+      }
+    };
+    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) setOpen(false);
+    });
+    window.matchMedia('(min-width: 1200px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>
+
+<style>
+  .main-navigation {
+    position: relative;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* ── Desktop ───────────────────────────── */
+  .desktop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    margin-top: 32px;
+    padding: 0 80px;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 8px;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 20px 24px; /* 16px контейнер + 8px внутрішній відступ у Framer */
+    border-radius: 40px;
+    background-image: linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 10px 30px 0 rgba(30, 30, 30, 0.1);
+    font-family: var(--font-family);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    color: var(--color-clean-white);
+    text-decoration: none;
+    white-space: nowrap;
+    position: relative;
+    isolation: isolate;
+  }
+  /* Hover у Framer: градієнт 0.09/0.06 → 0.14/0.11. CSS не анімує градієнти, тому
+     додатковий шар з прозорістю; 0.055/0.053 поверх базового дають рівно 0.14/0.11. */
+  .pill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-image: linear-gradient(101deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.053) 100%);
+    opacity: 0;
+    transition: opacity var(--dur-hover-pill) var(--ease-hover-pill);
+  }
+  .pill:hover::before {
+    opacity: 1;
+  }
+  .pill.is-active {
+    background-image: none;
+    background-color: var(--color-clean-white);
+    color: var(--color-almost-black);
+  }
+  .pill.is-active::before {
+    display: none;
+  }
+
+  /* ── Compact (Tablet / Phone) ───────────── */
+  .compact {
+    display: none;
+    position: relative;
+    z-index: 2;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .compact-actions {
+    display: flex;
+    align-items: center;
+  }
+  .hamburger {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .bar {
+    position: absolute;
+    left: 8px;
+    width: 24px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-clean-white);
+    transition: transform var(--dur-hover) var(--ease-hover);
+  }
+  .bar-1 {
+    top: 14px;
+  }
+  .bar-2 {
+    top: 24px;
+  }
+  .is-open .bar-1 {
+    transform: translateY(5px) rotate(45deg);
+  }
+  .is-open .bar-2 {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(100dvh - 48px); /* під TopBar (48px) */
+    background: var(--color-almost-black);
+    transform-origin: top center;
+    transform: scaleY(0);
+    transition: transform var(--dur-menu) var(--ease-menu);
+    overflow-y: auto;
+  }
+  .mobile-menu.is-visible {
+    transform: scaleY(1);
+  }
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-link {
+    font-family: var(--font-family);
+    font-weight: 300;
+    color: var(--color-clean-white);
+    text-decoration: none;
+    transition: color var(--dur-hover) var(--ease-hover);
+  }
+  .mobile-link.is-active,
+  .mobile-link:hover {
+    color: var(--color-greyish);
+  }
+
+  /* Small Desktop 1200–1439 */
+  @media (max-width: 1439.98px) {
+    .desktop {
+      padding: 0 32px;
+    }
+  }
+
+  /* Tablet 810–1199 */
+  @media (max-width: 1199.98px) {
+    .desktop {
+      display: none;
+    }
+    .compact {
+      display: flex;
+      height: 84px;
+      padding: 16px 32px;
+    }
+    .compact-actions {
+      gap: 20px;
+    }
+    .mobile-nav {
+      padding: 204px 32px 120px; /* 84 (рядок шапки) + 120 відступ Mobile Nav */
+      gap: 60px;
+    }
+    .mobile-link {
+      font-size: var(--text-heading-2-size);
+      line-height: 100%;
+      letter-spacing: -2px;
+    }
+    :global(.logo-phone),
+    :global(.cta-phone) {
+      display: none !important;
+    }
+  }
+
+  /* Phone ≤809 */
+  @media (max-width: 809.98px) {
+    .compact {
+      height: 64px;
+      padding: 12px 15px;
+    }
+    .compact-actions {
+      gap: 17px;
+    }
+    .mobile-nav {
+      padding: 124px 0 80px 15px; /* 64 (рядок шапки) + 60 відступ Mobile Nav */
+      gap: 32px;
+    }
+    .mobile-link {
+      font-size: 32px;
+      line-height: 130%;
+      letter-spacing: -0.02em;
+    }
+    :global(.logo-tablet),
+    :global(.cta-tablet) {
+      display: none !important;
+    }
+    :global(.logo-phone),
+    :global(.cta-phone) {
+      display: inline-flex !important;
+    }
+  }
+</style>

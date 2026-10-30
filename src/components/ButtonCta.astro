@@ -1,0 +1,45 @@
+---
+/** buttons/cta (Framer): синя кнопка «Записатися». Desktop 64px (20/24), Small 46px (16/20, текст 14). */
+import { bookHref } from '../data/site';
+
+interface Props {
+  size?: 'desktop' | 'small';
+  href?: string;
+  class?: string;
+}
+const { size = 'desktop', href = bookHref, class: cls } = Astro.props;
+---
+
+<a class:list={['cta', `cta--${size}`, cls]} href={href}><slot /></a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    border-radius: 48px;
+    background: var(--color-ukrselt-blue);
+    color: var(--color-clean-white);
+    font-family: var(--font-family);
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-hover) var(--ease-hover);
+  }
+  .cta:hover {
+    background: var(--color-lighter-blue);
+  }
+  .cta--desktop {
+    height: 64px;
+    padding: 20px 24px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .cta--small {
+    height: 46px;
+    padding: 16px 20px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+</style>

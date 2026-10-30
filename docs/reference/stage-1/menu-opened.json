@@ -1,0 +1,12 @@
+{
+ "opened": {
+  "bgImg": "linear-gradient(rgb(42, 42, 43) 0%, rgb(42, 42, 43) 100%)",
+  "bg": "rgb(42, 42, 43)",
+  "inner": "<div class=\"framer-zksq6p-container\" style=\"transform: none; transform-origin: 50% 50% 0px;\"><!--$--><!--/$--></div><div class=\"framer-2fuo8p\" style=\"--1naox4: 0px 80px 0px 80px; transform: none; transform-origin: 50% 50% 0px;\"><div class=\"framer-ewn3bf\" data-framer-name=\"Top\" style=\"transform: none; transform-origin: 50% 50% 0px;\"><div class=\"framer-1b5trwr-container\" data-framer-appear-id=\"1b5trwr\" style=\"opacity: 1; transform: none; transform-origin: 50% 50% 0px;\"><div class=\"framer-28Xqp framer-1cdjcn7 framer-v-1uuen8t\" data-framer-name=\"Small\" style=\"transform: none; transform-origin: 50% 50% 0px;\"><div data-framer-component-type=\"SVG\" data-framer-name=\"g8\" class=\"framer-171843y\" aria-hidden=\"true\" style=\"image-rendering: pixelated; flex-shrink: 0; background-size: 100% 100%; background-image: url(&quot;data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewBox=%220 0 128 36%22&gt;&lt;path d=%22M 96.467 24.088 C 96.467 24.601 96.35 25.085 96.122 25.536 C 95.89 25.988 95.563 26.383 95.136 26.721 C 94.71 27.062 94.191 27.328 93.578 27.524 C 92.969 27.719 92.282 27.817 91.518 27.817 C 91.022 27.817 90.533 27.793 90.053"
+ },
+ "close": {
+  "bgImg": "none",
+  "bg": "rgba(0, 0, 0, 0)",
+  "inner": "<div class=\"framer-ja60ci\" style=\"background-color: var(--token-6297d128-dd1c-4544-ba01-bc3efe8af731, rgb(254, 254, 254)); border-radius: 4.16667% / 50%; transform: rotate(45deg); transform-origin: 50% 50% 0px; will-change: transform;\"></div><div class=\"framer-1sg90q0\" style=\"background-color: var(--token-6297d128-dd1c-4544-ba01-bc3efe8af731, rgb(254, 254, 254)); border-radius: 4.16667% / 50%; transform: rotate(-45deg); transform-origin: 50% 50% 0px; will-change: transform;\"></div>"
+ }
+}

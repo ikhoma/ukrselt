@@ -1,9 +1,9 @@
 ---
 /**
- * ТИМЧАСОВА сторінка етапу 0: перевірка токенів і шрифту на preview.
+ * ТИМЧАСОВА сторінка етапів 0–1: токени, шрифт, шапка, меню, футер (reveal).
  * Замінюється справжньою головною на етапі 4. noindex.
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
+import PageLayout from '../layouts/PageLayout.astro';
 
 const colors = [
   'clean-white',
@@ -28,7 +28,7 @@ const styles = [
 ];
 ---
 
-<BaseLayout title="Ukrselt — етап 0 (токени)" description="Тимчасова сторінка перевірки токенів." noindex>
+<PageLayout title="Ukrselt — етап 0 (токени)" description="Тимчасова сторінка перевірки токенів." noindex>
   <main class="wrap">
     <p class="text-body-3">Тимчасова сторінка етапу 0. Не для індексації.</p>
 
@@ -58,11 +58,14 @@ const styles = [
       }
     </section>
   </main>
-</BaseLayout>
+</PageLayout>
 
 <style>
   .wrap {
+    min-height: 150vh; /* щоб було видно reveal футера */
     padding: 48px;
+    background: var(--color-almost-black);
+    border-radius: 0 0 40px 40px;
     display: grid;
     gap: 48px;
   }

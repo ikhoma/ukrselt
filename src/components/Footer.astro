@@ -1,0 +1,145 @@
+---
+/**
+ * footer (Framer). Ефект reveal: футер sticky під контентом (SPEC §4.7, уніфіковано).
+ * Desktop: padding 80, 4 колонки; Small Desktop / Tablet: padding 80 32; Phone: 40 16, 2 колонки.
+ * На Tablet у Framer футер був 810px завширшки (помилка width: auto) — тут на всю ширину.
+ */
+import Logo from './Logo.astro';
+import deco from '../assets/logo/logo-deco.svg?raw';
+import { footerNav, routes, isActive, phones, messengers, socials } from '../data/site';
+import { getLocale, useTranslations } from '../i18n';
+
+const t = useTranslations(getLocale(Astro.url));
+const path = Astro.url.pathname;
+const year = new Date().getFullYear(); // Auto Copyright (Framer University): рік рахується при збірці
+const decoSvg = deco.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+const columns = [
+  { title: t('footer.navigation'), links: footerNav.map((k) => ({ label: t(`nav.${k}` as Parameters<typeof t>[0]), href: routes[k], active: isActive(k, path) })) },
+  { title: t('footer.call'), links: phones.map((p) => ({ ...p, active: false })) },
+  { title: t('footer.write'), links: messengers.map((p) => ({ ...p, active: false })) },
+  { title: t('footer.subscribe'), links: socials.map((p) => ({ ...p, active: false })) },
+];
+---
+
+<footer class="footer">
+  <Logo size="large" />
+  <div class="footer-container">
+    {
+      columns.map((col) => (
+        <div class="footer-nav">
+          <p class="heading">{col.title}</p>
+          <ul>
+            {col.links.map((l) => (
+              <li>
+                <a class:list={['link', { 'is-active': l.active }]} href={l.href} aria-current={l.active ? 'page' : undefined}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+  <p class="copyright">© {year} Ukrselt. {t('footer.rights')}</p>
+  <div class="deco" set:html={decoSvg} />
+</footer>
+
+<style>
+  .footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 80px;
+    padding: 80px;
+    background: var(--color-night-black);
+    font-family: var(--font-family);
+  }
+  .footer-container {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+  }
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  li {
+    display: flex; /* висота пункту = 14px, як у Framer (Footer Nav item h14) */
+  }
+  .heading,
+  .link,
+  .copyright {
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 400;
+  }
+  .heading {
+    color: var(--color-clean-white);
+  }
+  .link {
+    color: var(--color-somewhat-light-grey);
+    text-decoration: none;
+    transition: color var(--dur-hover) var(--ease-hover);
+  }
+  .link:hover,
+  .link.is-active {
+    color: var(--color-greyish);
+  }
+  .copyright {
+    position: relative;
+    z-index: 1;
+    color: var(--color-greyish);
+  }
+  .deco {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 276px;
+    height: 255px;
+  }
+  .deco :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 1439.98px) {
+    .footer {
+      padding: 80px 32px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .footer {
+      gap: 48px;
+      padding: 40px 16px;
+    }
+    .footer-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 48px 20px;
+    }
+    .footer-nav,
+    ul {
+      gap: 24px;
+    }
+    .deco {
+      display: none;
+    }
+  }
+</style>

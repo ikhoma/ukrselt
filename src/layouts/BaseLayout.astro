@@ -6,6 +6,7 @@
 import '../styles/global.css';
 import { locales, defaultLocale, localeHtmlLang } from '../i18n/config';
 import { getLocale } from '../i18n';
+import { transitionCssVars } from '../scripts/animations';
 
 interface Props {
   title: string;
@@ -61,7 +62,7 @@ const schema = {
 ---
 
 <!doctype html>
-<html lang={localeHtmlLang[locale]}>
+<html lang={localeHtmlLang[locale]} style={transitionCssVars()}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />

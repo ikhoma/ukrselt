@@ -1,0 +1,41 @@
+---
+/** logo (Framer): Large 180×52 і Small 128×36 — окремі SVG, як у Framer. */
+import large from '../assets/logo/logo-large.svg?raw';
+import small from '../assets/logo/logo-small.svg?raw';
+import { getLocale, useTranslations } from '../i18n';
+
+interface Props {
+  size?: 'large' | 'small';
+  /** Обгорнути посиланням на головну. */
+  link?: boolean;
+  class?: string;
+}
+const { size = 'large', link = true, class: cls } = Astro.props;
+const t = useTranslations(getLocale(Astro.url));
+const svg = (size === 'large' ? large : small).replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+const Tag = link ? 'a' : 'span';
+---
+
+<Tag class:list={['logo', `logo--${size}`, cls]} href={link ? '/' : undefined} aria-label={link ? t('logo.home') : undefined}>
+  <Fragment set:html={svg} />
+</Tag>
+
+<style>
+  .logo {
+    display: block;
+    flex: none;
+  }
+  .logo--large {
+    width: 180px;
+    height: 52px;
+  }
+  .logo--small {
+    width: 128px;
+    height: 36px;
+  }
+  .logo :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

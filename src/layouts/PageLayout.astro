@@ -1,0 +1,42 @@
+---
+/**
+ * Каркас сторінки: TopBar + main-navigation, контент, футер з ефектом reveal (SPEC §4.7).
+ * Контент лежить вище за футер (z-index) і має непрозорий фон; футер — sticky bottom: 0.
+ */
+import BaseLayout from './BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import MainNavigation from '../components/MainNavigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+const props = Astro.props;
+---
+
+<BaseLayout {...props}>
+  <div class="page">
+    <header class="site-header">
+      <TopBar />
+      <MainNavigation />
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+  </div>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page {
+    position: relative;
+    z-index: 1;
+    background: var(--color-night-black);
+  }
+  .site-header {
+    position: relative;
+    z-index: 10;
+  }
+</style>

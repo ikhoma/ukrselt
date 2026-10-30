@@ -27,3 +27,14 @@
 ## Нотатки по інструментах
 - Sandbox без прямої мережі: дані з сайту брати через Chrome (claude-in-chrome) або web_fetch.
 - Папка проєкту: `ukrselt`.
+
+## Стан на 31.10.2026 (автономна робота, етапи 3–7)
+Гілки, кожна від попередньої, у `main` нічого не злито; у кожної свій preview на Vercel:
+- `stage-3` — /team, /team/<slug> (4 лікарі), /services з колекцій `team`, `services` (`src/content.config.ts`).
+- `stage-4` — головна (статичний стан), `VisitUs` спільний з «Контактами».
+- `stage-5` — `/api/contact` → Telegram (без токена: dry run на preview, помилка на production), стани форми, `form_submit`, GTM/Hotjar лише на production.
+- `stage-6` — `src/scripts/motion.ts`: Lenis, поява, паралакс, прелоадер, ротатор, місія, Team AnimationTimeline.
+- `stage-7` — QA: `docs/QA.md`.
+Рішення, прийняті без Івана, і відкриті питання: `docs/QUESTIONS.md`.
+Не робилось: етап 8 (DNS, запуск, бот Telegram, регіон функцій), етап 9 (анімація Services).
+Інструменти перевірки: Playwright у контейнері, порівняння з живим сайтом за позиціями елементів (1440/1024/390); заміри анімацій — `docs/reference/stage-4/anim-*.json`.

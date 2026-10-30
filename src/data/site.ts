@@ -1,6 +1,5 @@
 /**
  * Контакти й навігація. Значення з живого сайту ukrselt.com (SPEC §7, §2).
- * Порядок пунктів у шапці, мобільному меню і футері на живому сайті різний — переносимо 1:1.
  */
 export const phones = [
   { label: '+38 (063) 076-3022', href: 'tel:+380630763022' },
@@ -34,12 +33,14 @@ export const routes = {
 } as const;
 export type RouteKey = keyof typeof routes;
 
-/** Пігулки в шапці (desktop). */
-export const headerNav: RouteKey[] = ['home', 'services', 'team', 'price', 'sterilization', 'about', 'contacts'];
-/** Мобільне/планшетне меню. */
-export const mobileNav: RouteKey[] = ['home', 'about', 'price', 'services', 'team', 'sterilization', 'contacts'];
-/** Колонка «Навігація» у футері (на живому сайті без «Ціни»). */
-export const footerNav: RouteKey[] = ['home', 'about', 'services', 'team', 'sterilization', 'contacts'];
+/**
+ * Порядок пунктів — один для шапки, мобільного меню й футера.
+ * Рішення Івана 30.10.2026 на основі даних Hotjar (на Framer порядок у трьох місцях був різний).
+ */
+export const navOrder: RouteKey[] = ['home', 'services', 'team', 'price', 'sterilization', 'about', 'contacts'];
+export const headerNav = navOrder;
+export const mobileNav = navOrder;
+export const footerNav = navOrder;
 
 /** Кнопка «Записатися» веде на блок запису на головній. */
 export const bookHref = '/#book';

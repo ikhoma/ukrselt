@@ -1,6 +1,6 @@
 # Ukrselt: SPEC переносу з Framer на Astro
 
-Версія: 0.5, 30.10.2026 (§6.1 і §7.1 затверджено)
+Версія: 0.6, 30.10.2026 (§6.1 і §7.1 затверджено)
 Джерела: живий сайт ukrselt.com (DOM, CSS, мережа), редактор Framer (Assets, Localization), відповіді Івана, `docs/HANDOFF.md`.
 Правило: кожне значення взято з одного з цих джерел. Що не підтверджено, позначено **TBD**.
 
@@ -84,7 +84,15 @@
 | `divider`, `plus`, `stars`, `chevron-down` | `Divider`, `Plus`, `Stars`, `ChevronDown` | дрібні елементи |
 | `animation-timeline`, `card-animation` | `AnimationTimeline`, `CardAnimation` | скрол-анімація (див. §4) |
 | `Map.tsx` (code) | `Map` | Google Maps embed (див. §7) |
-| `Lottie.tsx` (code) | — | на живому сайті не знайдено; не переносимо, якщо не знайдеться використання |
+| `Lottie.tsx` (code) | — | на живому сайті не використовується, не переносимо |
+| `Examples.tsx` (code) | — | шаблон overrides від Framer (`withRotate`, `withHover`, `withRandomColor`); на живому сайті не використовується, не переносимо |
+| Framer University / **Smooth Scroll** | `SmoothScroll` | плавний скрол Lenis на всіх сторінках, див. §4.0 |
+| Framer University / **Block Scroll** (у коді «Stop Scroll») | у `Hamburger` / оверлеї | блокує скрол сторінки, поки відкрите меню/оверлей (`body overflow: hidden`) |
+| Framer University / **Auto Copyright** | у `Footer` | «© {поточний рік} Ukrselt. Всі права захищені.», рік рахується автоматично |
+| Framer University / **SVG** | інлайн-SVG / `src/assets/icons/*.svg` | іконки, вставлені як код SVG; переносимо як SVG-файли |
+| Framer / **Locale Selector** | `LocaleSelector` | перемикач мови, див. §5 |
+| Framer / **GoogleMaps** | `Map` | карта: на `/contacts` і в блоці «Visit us» на головній, див. §7.3 |
+| Framer / Ticker, Slideshow, Carousel, Lottie, Dot Lottie, Embed | — | у бібліотеці є, на живому сайті не використовуються, не переносимо |
 
 **TBD при реалізації:** точна відповідність «секція → компонент» знімається з панелі Layers для кожної сторінки.
 
@@ -164,6 +172,14 @@ Heading 1 на живому сайті не використовується (H1
 
 Параметри виносимо в `src/scripts/animations.ts`. Реалізація: CSS для простих появ, GSAP + ScrollTrigger для скролу.
 
+### 4.0 Плавний скрол (Smooth Scroll, Lenis)
+На всіх сторінках (крім `/404`) працює Lenis через компонент Framer University «Smooth Scroll» (`<html class="lenis">`).
+- Параметр компонента `intensity: 30` → `new Lenis({ duration: intensity / 10 })` = **duration 3 с**.
+- Решта — значення Lenis за замовчуванням: `smoothWheel: true`, `syncTouch: false` (на тачскрінах нативний скрол), easing `t => Math.min(1, 1.001 - 2 ** (-10 * t))`.
+- При монтуванні: скрол на початок сторінки; елементам з `overflow: auto` і `#overlay` ставиться `data-lenis-prevent` (у них свій скрол).
+- Відтворюємо тим самим пакетом `lenis` з тими самими параметрами і зв'язуємо з GSAP ScrollTrigger (оновлення ScrollTrigger на подію скролу Lenis, один RAF через `gsap.ticker`), щоб паралакс і AnimationTimeline не смикались.
+- Block Scroll: коли відкрите меню/оверлей, скрол сторінки блокується (у нас: `lenis.stop()` + `overflow: hidden`, після закриття — `lenis.start()`).
+
 ### 4.1 Прелоадер
 Готовий `logo-preloader.svg` (SMIL, без JS): синій хрест, маска 40×40, 1 с, easing `0.5 0 0 1`. **TBD:** тривалість показу і умова зникнення (від неї залежить затримка 2 с у §4.2).
 
@@ -207,7 +223,7 @@ Fade-in, поріг видимості 0.5 (`__framer__threshold`). Transition: 
   - усі тексти інтерфейсу (меню, кнопки, форма, футер) винесені в словники `src/i18n/<locale>.json`;
   - контент колекцій (`team`, `services`) має поле локалі;
   - список локалей задається в одному місці конфігу; маршрути, hreflang, `<html lang>`, sitemap і перемикач мови будуються з нього автоматично.
-- **Перемикач мови лишаємо** (на живому сайті є «Select Language», зараз з одним пунктом «Ukrainian»). Розташування й вигляд зняти з живого сайту при реалізації. Поки локаль одна, він показує тільки її; з додаванням EN список оновиться сам.
+- **Перемикач мови лишаємо** (компонент Framer «Locale Selector»; на живому сайті «Select Language», зараз з одним пунктом «Ukrainian»). Розташування й вигляд зняти з живого сайту при реалізації. Поки локаль одна, він показує тільки її; з додаванням EN список оновиться сам.
 - `<html lang="uk">`.
 
 ---
@@ -303,7 +319,7 @@ Fade-in, поріг видимості 0.5 (`__framer__threshold`). Transition: 
 - Прибирання `/success` з командою реклами вже погоджено. Подію `form_submit` повідомляємо їм як джерело конверсії після відправки форми.
 
 ### 7.3 Карта
-Google Maps embed (той самий `pb`-параметр, що на живому сайті) на `/contacts`, lazy-завантаження. **TBD:** наскільки можна прибрати елементи інтерфейсу карти (у звичайному embed можливості обмежені; альтернатива: статичне превʼю, яке за кліком вантажить карту).
+Google Maps embed (той самий `pb`-параметр, що на живому сайті) на `/contacts` і в блоці «Visit us» на головній, lazy-завантаження. **TBD:** наскільки можна прибрати елементи інтерфейсу карти (у звичайному embed можливості обмежені; альтернатива: статичне превʼю, яке за кліком вантажить карту).
 
 ---
 
@@ -333,7 +349,7 @@ Google Maps embed (той самий `pb`-параметр, що на живом
 | 3 | Колекції | `/team` + `/team/[slug]`, `/services` з колекцій |
 | 4 | Головна | Hero + TextLoop, Testimonials, VisitUs, Booking, без складних анімацій |
 | 5 | Форма і аналітика | API → Telegram, мікроанімація, `form_submit`, GTM, Hotjar, карта |
-| 6 | Анімації | поява, паралакс, ротатор hero, AnimationTimeline для Team (1:1) |
+| 6 | Анімації | плавний скрол (Lenis), поява, паралакс, ротатор hero, AnimationTimeline для Team (1:1) |
 | 7 | QA | порівняння зі скріншотами (мобільний / планшет / десктоп), SEO, alt, LCP |
 | 8 | Запуск | DNS, редиректи, тестова заявка в Telegram, повідомити команду реклами про `form_submit` |
 | 9 | Скрол-анімація Services | окреме рішення Івана: 1:1, переробка або без неї |

@@ -103,7 +103,7 @@ const c = getPage(locale, 'booking');
     display: flex;
     align-items: center;
     height: 56px;
-    padding: 20px;
+    padding: 0 20px;
     border-radius: 20px;
     background-image: linear-gradient(rgb(54, 54, 55) 0%, rgb(50, 50, 51) 100%);
     box-shadow: 0 10px 30px 0 rgba(31, 31, 31, 0.1);
@@ -123,8 +123,9 @@ const c = getPage(locale, 'booking');
     outline: none;
     background: none;
     font-family: var(--font-family);
-    font-size: 14px;
-    line-height: 16.8px;
+    /* 16px, а не 14px як у Framer: при меншому шрифті iOS Safari збільшує сторінку при фокусі на полі. */
+    font-size: 16px;
+    line-height: 20px;
     color: var(--color-clean-white);
   }
   .control input::placeholder {

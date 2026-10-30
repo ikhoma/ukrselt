@@ -1,0 +1,45 @@
+---
+/**
+ * btn/secondary (Framer, «Детальніше» на /team): пігулка 64px, padding 24, радіус 48,
+ * обводка 1px rgba(253,253,254,.5) (data-border → ::after), на hover обводка непрозора.
+ */
+interface Props {
+  href: string;
+  label: string;
+  /** Повна назва для читачів екрана, якщо label неінформативний («Детальніше»). */
+  ariaLabel?: string;
+}
+const { href, label, ariaLabel } = Astro.props;
+---
+
+<a class="btn-secondary" href={href} aria-label={ariaLabel}>{label}</a>
+
+<style>
+  .btn-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    padding: 24px;
+    border-radius: 48px;
+    font-size: 16px;
+    line-height: 16px;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn-secondary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(253, 253, 254, 0.5);
+    border-radius: inherit;
+    pointer-events: none;
+    transition: border-color var(--dur-hover-outline) var(--ease-hover-outline);
+  }
+  .btn-secondary:hover::after,
+  .btn-secondary:focus-visible::after {
+    border-color: rgb(253, 253, 254);
+  }
+</style>

@@ -1,0 +1,131 @@
+---
+/**
+ * /team (Framer): Intro (як на «Ціни») → Staff (групи з картками, між групами divider) → booking.
+ * Картки — з колекції team; групи і їх порядок — src/content/pages/<locale>/team.json.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageTitle from '../components/PageTitle.astro';
+import Lights from '../components/Lights.astro';
+import CardTeam from '../components/CardTeam.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale, localizePath } from '../i18n';
+import { getPage } from '../content/pages';
+import { getTeam, entrySlug } from '../content/collections';
+
+const locale = getLocale(Astro.url);
+const c = getPage(locale, 'team');
+const team = await getTeam(locale);
+
+const sizes: Record<string, string> = {
+  doctors: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(50vw - 42px), 630px',
+  assistants: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(50vw - 42px), 630px',
+  nurses: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(33vw - 32px), 416px',
+  administration: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(100vw - 64px), 1280px',
+};
+---
+
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <section class="intro">
+    <Lights size={400} top={61} offset={-360} />
+    <PageTitle title={c.title} text={c.intro} />
+  </section>
+  <section class="staff">
+    {
+      c.groups.map((g: { key: string; title: string }) => {
+        const people = team.filter((p) => p.data.group === g.key);
+        if (!people.length) return null;
+        return (
+          <>
+            <div class="divider" aria-hidden="true" />
+            <div class:list={['group', `group--${g.key}`]}>
+              <h2 class="text-heading-2">{g.title}</h2>
+              <div class="grid">
+                {people.map((p) => (
+                  <CardTeam
+                    name={p.data.name}
+                    role={p.data.role}
+                    photo={p.data.photo}
+                    photoAlt={p.data.photoAlt}
+                    href={p.data.page ? localizePath(`/team/${entrySlug(p.id)}`, locale) : undefined}
+                    moreLabel={c.more}
+                    moreAriaLabel={`${c.more}: ${p.data.name}`}
+                    sizes={sizes[g.key]}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        );
+      })
+    }
+    <div class="divider" aria-hidden="true" />
+  </section>
+  <Booking service="team" />
+</PageLayout>
+
+<style>
+  .intro {
+    position: relative;
+    padding: 200px 80px 80px;
+    background: var(--color-almost-black);
+  }
+  .staff {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 0 80px;
+    background: var(--color-almost-black);
+  }
+  .divider {
+    height: 1px;
+    background: rgba(254, 254, 254, 0.15);
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .group--nurses,
+  .group--administration {
+    gap: 48px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 80px 20px;
+  }
+  .group--nurses .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+  .group--administration .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (max-width: 1439.98px) {
+    .intro,
+    .staff {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .intro {
+      padding-bottom: 40px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .intro {
+      padding: 160px 16px 40px;
+    }
+    .staff {
+      gap: 40px;
+      padding: 0 16px;
+    }
+    .grid,
+    .group--nurses .grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+</style>

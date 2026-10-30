@@ -1,0 +1,35 @@
+---
+/**
+ * /services (Framer): Hero → блоки напрямів з колекції services (фото чергується: праворуч / ліворуч) → booking.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceBlock from '../components/ServiceBlock.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+import { getServices } from '../content/collections';
+
+const locale = getLocale(Astro.url);
+const c = getPage(locale, 'services');
+const services = await getServices(locale);
+---
+
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <PageHero title={c.hero.title} text={c.hero.text} image={pageImage(c.hero.image)} imageAlt={c.hero.imageAlt} />
+  {
+    services.map((s, i) => (
+      <ServiceBlock
+        first={i === 0}
+        title={s.data.title}
+        lead={s.data.lead}
+        paragraphs={s.data.paragraphs}
+        image={s.data.image}
+        imageAlt={s.data.imageAlt}
+        imagePosition={i % 2 === 0 ? 'right' : 'left'}
+      />
+    ))
+  }
+  <Booking service="services" />
+</PageLayout>

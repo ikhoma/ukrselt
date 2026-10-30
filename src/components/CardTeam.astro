@@ -1,0 +1,76 @@
+---
+/**
+ * cards/team (Framer «Variant 1»): квадратне фото (радіус 80 / 40 на ≤1199), ім'я (Heading 3), посада (Body),
+ * для лікарів — кнопка «Детальніше» на /team/<slug>. Ширину задає сітка батька.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BtnSecondary from './BtnSecondary.astro';
+
+interface Props {
+  name: string;
+  role: string;
+  photo: ImageMetadata;
+  photoAlt: string;
+  href?: string;
+  moreLabel?: string;
+  moreAriaLabel?: string;
+  /** sizes для srcset (залежить від групи). */
+  sizes: string;
+}
+const { name, role, photo, photoAlt, href, moreLabel, moreAriaLabel, sizes } = Astro.props;
+---
+
+<article class="card-team">
+  <div class="pic">
+    <Image src={photo} alt={photoAlt} widths={[358, 470, 630, 960, 1280]} sizes={sizes} format="webp" />
+  </div>
+  <div class="info">
+    <div class="text">
+      <h3 class="text-heading-3">{name}</h3>
+      <p class="role">{role}</p>
+    </div>
+    {href && moreLabel && <BtnSecondary href={href} label={moreLabel} ariaLabel={moreAriaLabel} />}
+  </div>
+</article>
+
+<style>
+  .card-team {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+  .pic {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .text {
+    width: 100%;
+  }
+  /* У Framer ім'я і посада — один RichText висотою 72 (h3 41.6 + 8 + p 22.4). */
+  .role {
+    margin-top: 8px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  @media (max-width: 1199.98px) {
+    .pic {
+      border-radius: 40px;
+    }
+  }
+</style>

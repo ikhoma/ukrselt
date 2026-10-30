@@ -1,0 +1,8 @@
+{
+  "group": "nurses",
+  "order": 1,
+  "name": "Наталія",
+  "role": "Молодша медична сестра",
+  "photo": "../../../assets/team/nataliia-card.png",
+  "photoAlt": "Наталія, молодша медична сестра Ukrselt"
+}

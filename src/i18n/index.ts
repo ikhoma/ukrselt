@@ -15,3 +15,8 @@ export function getLocale(url: URL): Locale {
 export function useTranslations(locale: Locale) {
   return (key: UiKey): string => dictionaries[locale]?.[key] ?? dictionaries[defaultLocale][key];
 }
+
+/** Шлях з урахуванням мови: мова за замовчуванням без префікса, інші — /<code>/... (ADR-0003). */
+export function localizePath(path: string, locale: Locale): string {
+  return locale === defaultLocale ? path : `/${locale}${path === '/' ? '' : path}`;
+}

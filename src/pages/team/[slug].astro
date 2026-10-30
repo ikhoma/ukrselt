@@ -1,0 +1,288 @@
+---
+/**
+ * /team/<slug> (Framer): Intro (ПІБ, опис, Посада/Стаж/Освіта + портрет) → benefit-1 → Photos → benefit-1 (0–2) → booking.
+ * Дані — запис колекції team з полем page. Сторінки є тільки в людей, у яких заповнено page.
+ */
+import { Image } from 'astro:assets';
+import PageLayout from '../../layouts/PageLayout.astro';
+import Booking from '../../components/Booking.astro';
+import { defaultLocale } from '../../i18n/config';
+import { getTeam, entrySlug, type TeamEntry } from '../../content/collections';
+
+export async function getStaticPaths() {
+  const team = await getTeam(defaultLocale);
+  return team.filter((e) => e.data.page).map((entry) => ({ params: { slug: entrySlug(entry.id) }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: TeamEntry };
+const slug = entrySlug(entry.id);
+const p = entry.data.page!;
+const [first, ...rest] = p.sections;
+---
+
+<PageLayout title={p.seo.title} description={p.seo.description}>
+  <section class="intro">
+    <div class="container">
+      <div class="info">
+        <h1 class="text-heading-2">{p.surname}<br />{p.givenNames}</h1>
+        {p.intro && <p class="lead">{p.intro}</p>}
+        <dl class="facts">
+          {
+            p.facts.map((f) => (
+              <div class="fact">
+                <dt class="text-heading-4">{f.title}</dt>
+                <dd>{f.text}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <div class="pic">
+        <Image src={p.image} alt={p.imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" loading="eager" fetchpriority="high" />
+      </div>
+    </div>
+  </section>
+
+  {
+    [first].map((s) => (
+      <section class="benefit benefit--first">
+        <h2 class="benefit-title">{s.title}</h2>
+        <div class="cols">
+          <ul class="list list--left">{s.left.map((li) => <li>{li}</li>)}</ul>
+          {s.right.length > 0 && <ul class="list list--right">{s.right.map((li) => <li>{li}</li>)}</ul>}
+        </div>
+      </section>
+    ))
+  }
+
+  {
+    p.photos.length > 0 && (
+      <section class="photos">
+        {p.photos.map((ph, i) => (
+          <div class:list={['photo', `photo--${i + 1}`]}>
+            <Image src={ph.src} alt={ph.alt} widths={[358, 420, 840, 960, 1680]} sizes={i === 0 ? '(max-width: 1199.98px) 100vw, 840px' : '420px'} format="webp" />
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    rest.map((s) => (
+      <section class="benefit">
+        <h2 class="benefit-title">{s.title}</h2>
+        <div class="cols">
+          <ul class="list list--left">{s.left.map((li) => <li>{li}</li>)}</ul>
+          {s.right.length > 0 && <ul class="list list--right">{s.right.map((li) => <li>{li}</li>)}</ul>}
+        </div>
+      </section>
+    ))
+  }
+
+  <Booking service={`team/${slug}`} />
+</PageLayout>
+
+<style>
+  .intro {
+    padding: 240px 80px 80px;
+    background: var(--color-almost-black);
+  }
+  .container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .info {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .lead {
+    max-width: 522px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .facts {
+    max-width: 522px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .fact {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .fact dd {
+    margin: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .pic {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 560px;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .pic :global(img),
+  .photo :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .benefit {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 80px;
+    background: var(--color-almost-black);
+  }
+  .benefit--first {
+    padding-top: 0;
+  }
+  .benefit-title {
+    width: 738px; /* 108 + 630: у Framer текст 630 починається після відступу */
+    max-width: 100%;
+    padding-left: 108px;
+    font-size: 24px;
+    line-height: 140%;
+    font-weight: 400;
+    color: var(--color-light-grey);
+  }
+  .cols {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .list {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .list--left {
+    padding-left: 108px;
+  }
+  .list--right {
+    padding-right: 108px;
+  }
+  /* Маркер як у Framer: «•» абсолютно зліва, текст з відступом 18.3px. */
+  .list li {
+    position: relative;
+    padding-left: 18.3px;
+  }
+  .list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+  }
+
+  .photos {
+    display: flex;
+    gap: 20px;
+    padding: 0 80px;
+    background: var(--color-almost-black);
+  }
+  .photo {
+    height: 630px;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .photo--1 {
+    flex: 2 1 0;
+  }
+  .photo--2 {
+    flex: 1 1 0;
+  }
+
+  @media (max-width: 1439.98px) {
+    .intro,
+    .benefit,
+    .photos {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .intro {
+      padding: 200px 32px 40px;
+    }
+    .container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 40px;
+    }
+    .pic {
+      order: -1;
+      flex: none;
+      height: auto;
+      aspect-ratio: 960 / 853;
+      border-radius: 60px;
+    }
+    .info :global(h1),
+    .lead,
+    .facts {
+      max-width: 630px;
+    }
+    .benefit {
+      gap: 40px;
+      padding: 40px 32px 80px;
+    }
+    .benefit-title {
+      padding-left: 0;
+    }
+    .list--left,
+    .list--right {
+      padding: 0;
+    }
+    .photo--1 {
+      flex: 1 1 auto;
+      height: auto;
+      aspect-ratio: 960 / 853;
+    }
+    .photo--2 {
+      display: none;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .intro {
+      padding: 160px 16px 40px;
+    }
+    .container {
+      gap: 20px;
+    }
+    .pic {
+      aspect-ratio: 358 / 318;
+      border-radius: 40px;
+    }
+    .benefit {
+      padding: 40px 16px;
+    }
+    .cols {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .photos {
+      padding: 0 16px;
+    }
+    .photo--1 {
+      aspect-ratio: 358 / 318;
+      border-radius: 40px;
+    }
+  }
+</style>

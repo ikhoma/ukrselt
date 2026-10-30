@@ -1,0 +1,8 @@
+{
+  "group": "assistants",
+  "order": 1,
+  "name": "Олена",
+  "role": "Асистент стоматолога",
+  "photo": "../../../assets/team/olena-card.png",
+  "photoAlt": "Олена, асистент стоматолога Ukrselt"
+}

@@ -1,0 +1,131 @@
+---
+/**
+ * Блок напряму на /services (Framer: секції «1» — текст ліворуч, фото праворуч, зі світлом; «4» — дзеркально).
+ * Текст: Heading 2 + Body 2 (перший абзац) + Body. Колонка 630, текст 522 (відступ 108 з боку фото).
+ * Tablet/Phone: колонка, фото зверху.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Lights from './Lights.astro';
+
+interface Props {
+  title: string;
+  lead: string;
+  paragraphs: string[];
+  image: ImageMetadata;
+  imageAlt: string;
+  imagePosition: 'left' | 'right';
+  first?: boolean;
+}
+const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false } = Astro.props;
+---
+
+<section class:list={['service', `service--image-${imagePosition}`, { 'service--first': first }]}>
+  {imagePosition === 'right' && <Lights size={900} offset={400} />}
+  <div class="text">
+    <h2 class="text-heading-2">{title}</h2>
+    <div class="body">
+      <p class="text-body-2">{lead}</p>
+      {paragraphs.map((t) => <p class="text-body">{t}</p>)}
+    </div>
+  </div>
+  <div class="pic">
+    <Image src={image} alt={imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" loading={first ? 'eager' : 'lazy'} />
+  </div>
+</section>
+
+<style>
+  .service {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 80px;
+    background: var(--color-almost-black);
+  }
+  .service--first {
+    padding-top: 160px;
+  }
+  .service--image-left .pic {
+    order: -1;
+  }
+  .text,
+  .pic {
+    position: relative;
+    z-index: 1;
+    flex: 0 1 630px; /* border-box: 630 разом з відступом 108 */
+    min-width: 0;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .service--image-right .text {
+    padding-right: 108px;
+  }
+  .service--image-left .text {
+    padding-left: 108px;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .pic {
+    height: 560px;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1439.98px) {
+    .service {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .service {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 40px 32px;
+    }
+    .service--image-right {
+      padding: 80px 32px 40px;
+    }
+    .service .pic {
+      order: -1;
+      flex: none;
+      height: auto;
+      aspect-ratio: 960 / 853;
+    }
+    .service--image-left .text {
+      padding-left: 0;
+    }
+    .body {
+      max-width: 630px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .service,
+    .service--image-right {
+      padding: 40px 16px;
+    }
+    .service--first {
+      padding-top: 80px;
+    }
+    .service .text {
+      padding: 0;
+    }
+    .service .pic {
+      aspect-ratio: 358 / 318;
+      border-radius: 40px;
+    }
+  }
+</style>

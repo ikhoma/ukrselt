@@ -1,0 +1,33 @@
+---
+/** Заголовок сторінки без фото (Ціни, Контакти): H1 + сірий текст по центру, між ними 48px. */
+interface Props {
+  title: string;
+  text: string;
+}
+const { title, text } = Astro.props;
+---
+
+<div class="page-title">
+  <h1 class="text-heading-1">{title}</h1>
+  <p class="text">{text}</p>
+</div>
+
+<style>
+  .page-title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    width: 100%;
+    text-align: center;
+  }
+  .text {
+    width: 630px;
+    max-width: 100%;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+</style>

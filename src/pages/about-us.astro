@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import MediaSplit from '../components/MediaSplit.astro';
+import Lights from '../components/Lights.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+
+const c = getPage(getLocale(Astro.url), 'about-us');
+---
+
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <PageHero title={c.hero.title} text={c.hero.text} image={pageImage(c.hero.image)} imageAlt={c.hero.imageAlt} />
+
+  <!-- Services → Sticky → Our Mission: секція 1700px (липкий блок 900 + 800 під анімацію). Поява тексту при скролі — етап 6. -->
+  <section class="mission">
+    <div class="sticky">
+    <Lights size={800} top={0} offset={400} />
+    <h2 class="mission-text">
+      {c.mission.line1}<br />
+      {c.mission.line2Before}{' '}
+      <span class="mission-pic"><Image src={pageImage(c.mission.image)} alt={c.mission.imageAlt} width={190} height={116} format="webp" /></span>{' '}
+      {c.mission.line2After}<br />
+      {c.mission.line3}
+    </h2>
+    </div>
+  </section>
+
+  <section class="benefits">
+    {c.sections.map((s: any) => <MediaSplit variant="benefit" image={pageImage(s.image)} imageAlt={s.imageAlt} imagePosition={s.imagePosition} items={s.items} />)}
+  </section>
+
+  <Booking service="about-us" />
+</PageLayout>
+
+<style>
+  .mission {
+    position: relative;
+    height: 1700px;
+    background: var(--color-almost-black);
+  }
+  .sticky {
+    position: sticky;
+    top: 0;
+    height: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 144px;
+    overflow: hidden;
+  }
+  .mission-text {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: 1152px;
+    text-align: center;
+    font-size: 64px;
+    line-height: 110%;
+    letter-spacing: -2.7px;
+    font-weight: 300;
+    color: var(--color-clean-white);
+  }
+  .mission-pic {
+    display: inline-block;
+    width: 95px;
+    height: 58px;
+    vertical-align: middle;
+    border-radius: 40px;
+    overflow: hidden;
+  }
+  .mission-pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .benefits {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 0 80px 80px;
+    background: var(--color-almost-black);
+  }
+  @media (max-width: 1439.98px) {
+    .benefits {
+      padding: 0 32px 80px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .sticky {
+      padding: 0 51px;
+    }
+    .mission-text :global(br) {
+      display: none; /* на Tablet у Framer текст місії без примусових переносів */
+    }
+    .mission-text {
+      max-width: 864px;
+      font-size: 56px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .sticky {
+      padding: 0 20px;
+    }
+    .mission-text {
+      font-size: 48px;
+      letter-spacing: -1.8px;
+    }
+    .mission-pic {
+      width: 83px;
+      height: 50px;
+    }
+    .benefits {
+      padding: 80px 16px 40px;
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import MediaSplit from '../components/MediaSplit.astro';
+import Lights from '../components/Lights.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+
+const c = getPage(getLocale(Astro.url), 'sterilization');
+---
+
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <PageHero tabletOffset title={c.hero.title} text={c.hero.text} image={pageImage(c.hero.image)} imageAlt={c.hero.imageAlt} />
+  {
+    c.sections.map((s: any, i: number) => (
+      <section class:list={['layout', { 'layout--first': i === 0 }]}>
+        <Lights size={900} offset={400} />
+        <MediaSplit variant="layout" image={pageImage(s.image)} imageAlt={s.imageAlt} imagePosition={s.imagePosition} items={s.items} />
+      </section>
+    ))
+  }
+  <Booking service="sterilization" />
+</PageLayout>
+
+<style>
+  .layout {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 80px;
+    background: var(--color-almost-black);
+  }
+  .layout--first {
+    padding-top: 160px;
+  }
+  @media (max-width: 1439.98px) {
+    .layout {
+      padding: 80px 32px;
+    }
+    .layout--first {
+      padding-top: 160px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .layout {
+      padding: 40px 32px 80px;
+    }
+    .layout--first {
+      padding-top: 80px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .layout {
+      padding: 40px 16px 40px;
+    }
+    .layout--first {
+      padding-top: 80px;
+    }
+  }
+</style>

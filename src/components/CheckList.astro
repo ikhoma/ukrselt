@@ -1,0 +1,107 @@
+---
+/**
+ * fancy-list (Framer): пункт = іконка-галочка в «скляному» квадраті 56×56 + заголовок і опис; між пунктами лінія.
+ */
+interface Item {
+  title: string;
+  text: string;
+}
+interface Props {
+  items: Item[];
+  class?: string;
+}
+const { items, class: cls } = Astro.props;
+---
+
+<ul class:list={['check-list', cls]}>
+  {
+    items.map((item, i) => (
+      <li class="item">
+        <div class="row">
+          <span class="checkmark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path stroke="currentColor" d="M20 6L9 17L4 12" stroke-width="2" />
+            </svg>
+          </span>
+          <div class="text">
+            <h3 class="title">{item.title}</h3>
+            <p class="desc">{item.text}</p>
+          </div>
+        </div>
+        {i < items.length - 1 && <hr class="line" />}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .check-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .checkmark {
+    position: relative;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    padding: 16px;
+    border-radius: 20px;
+    background-image: linear-gradient(101deg, rgba(253, 253, 254, 0.06) 0%, rgba(255, 255, 255, 0.04) 100%);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: var(--color-ukrselt-blue);
+  }
+  .checkmark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: inherit;
+  }
+  .checkmark svg {
+    display: block;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .title {
+    margin: 0;
+    font-size: var(--text-heading-4-size);
+    line-height: var(--text-heading-4-line-height);
+    font-weight: var(--text-heading-4-weight);
+    color: var(--text-heading-4-color);
+  }
+  .desc {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  @media (max-width: 1199.98px) {
+    .text {
+      max-width: 630px;
+    }
+  }
+  .line {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    border: 0;
+    background: rgba(254, 254, 254, 0.1);
+  }
+</style>

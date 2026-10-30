@@ -16,7 +16,7 @@ const redirects = {
 export default defineConfig({
   site: 'https://ukrselt.com',
   trailingSlash: 'never', // як у Framer (ADR-0002)
-  build: { format: 'file' }, // /about-us.html → /about-us без слеша
+  // build.format ігнорується: @astrojs/vercel завжди збирає у format 'directory' (about-us/index.html).
   // Astro 7 за замовчуванням ріже пробіли між inline-елементами ('jsx'); лишаємо HTML-правила.
   compressHTML: true,
   output: 'static', // усе prerender; /api/contact отримає prerender = false (етап 5)

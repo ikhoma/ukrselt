@@ -1,0 +1,200 @@
+---
+/**
+ * booking (Framer): фото + «Записатися» + форма. Остання секція сторінки (радіус знизу 40).
+ * Форма — нова (SPEC §7.1): Ім'я (необов'язкове), Телефон (обов'язковий), «Записатися на діагностику».
+ * Відправка й стани кнопки підключаються на етапі 5; поки форма лише розмічена (action="/api/contact").
+ */
+import { Image } from 'astro:assets';
+import { getLocale, useTranslations } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+
+interface Props {
+  /** Ідентифікатор сторінки для події form_submit (SPEC §7.1). */
+  service: string;
+}
+const { service } = Astro.props;
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const c = getPage(locale, 'booking');
+---
+
+<section class="booking" id="book">
+  <div class="container">
+    <div class="pic">
+      <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[360, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" />
+    </div>
+    <div class="form-col">
+      <h2 class="text-heading-2">{c.title}</h2>
+      <p class="intro">{c.text}</p>
+      <form class="form" method="post" action="/api/contact" data-booking-form data-service={service} novalidate>
+        <label class="field">
+          <span class="label">{c.nameLabel}</span>
+          <span class="control"><input type="text" name="name" autocomplete="name" maxlength="100" placeholder={t('form.namePlaceholder')} /></span>
+        </label>
+        <label class="field">
+          <span class="label">{c.phoneLabel}</span>
+          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder={t('form.phonePlaceholder')} /></span>
+        </label>
+        <!-- honeypot (ADR-0004) -->
+        <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="submit" type="submit">{t('form.submit')}</button>
+        <p class="note">{t('form.note')}</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .booking {
+    position: relative;
+    z-index: 1;
+    padding: 80px 80px 160px;
+    border-radius: 0 0 40px 40px;
+    background: var(--color-almost-black);
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .pic {
+    flex: none;
+    width: 630px;
+    height: 560px;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .form-col {
+    width: 630px;
+    padding-left: 108px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .intro {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .label {
+    font-size: 16px;
+    line-height: 22.4px;
+    color: var(--color-light-grey);
+  }
+  .control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 20px;
+    border-radius: 20px;
+    background-image: linear-gradient(rgb(54, 54, 55) 0%, rgb(50, 50, 51) 100%);
+    box-shadow: 0 10px 30px 0 rgba(31, 31, 31, 0.1);
+  }
+  .control::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .control input {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: none;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 16.8px;
+    color: var(--color-clean-white);
+  }
+  .control input::placeholder {
+    color: var(--color-somewhat-light-grey);
+    opacity: 1;
+  }
+  .control:focus-within::after {
+    border-color: rgba(255, 255, 255, 0.2); /* видимий фокус для клавіатури; у Framer фокус не виділявся */
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .submit {
+    height: 70px;
+    padding: 24px 32px;
+    border: 0;
+    border-radius: 40px;
+    background: var(--color-ukrselt-blue);
+    color: var(--color-clean-white);
+    font-family: var(--font-family);
+    font-size: 16px;
+    line-height: 22.4px;
+    cursor: pointer;
+    transition: background-color var(--dur-hover) var(--ease-hover);
+  }
+  .submit:hover {
+    background: var(--color-lighter-blue);
+  }
+  .note {
+    font-size: 14px;
+    line-height: 14px;
+    color: var(--color-light-grey);
+  }
+
+  @media (max-width: 1439.98px) {
+    .booking {
+      padding: 80px 32px 160px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .booking {
+      padding: 40px 32px 80px;
+    }
+    .container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .pic {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 630 / 560;
+    }
+    .form-col {
+      width: 100%;
+      padding-left: 0;
+    }
+    .intro {
+      max-width: 630px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .booking {
+      padding: 40px 15px 80px;
+    }
+    .pic {
+      border-radius: 40px;
+    }
+  }
+</style>

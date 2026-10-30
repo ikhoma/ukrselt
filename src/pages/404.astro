@@ -1,0 +1,135 @@
+---
+/** 404 (Framer): фото на весь екран, оверлей, заголовок, текст, дві кнопки. Без шапки й футера, лише логотип. */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/Logo.astro';
+import ButtonCta from '../components/ButtonCta.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+
+const c = getPage(getLocale(Astro.url), '404');
+---
+
+<BaseLayout title={c.seo.title} description={c.seo.description} noindex>
+  <main class="not-found">
+    <Image class="image" src={pageImage(c.image)} alt="" widths={[768, 1440, 2048]} sizes="100vw" format="webp" loading="eager" />
+    <div class="overlay"></div>
+    <Logo size="large" class="logo-404 logo-404--large" />
+    <Logo size="small" class="logo-404 logo-404--small" />
+    <div class="content">
+      <h1 class="text-heading-2">{c.title}</h1>
+      <p class="text">{c.text}</p>
+      <div class="actions">
+        <a class="secondary" href="/">{c.home}</a>
+        <ButtonCta size="desktop" class="cta-404">{c.book}</ButtonCta>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--color-almost-black);
+  }
+  .image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(42, 42, 43, 0.5);
+  }
+  :global(.logo-404) {
+    position: absolute !important;
+    top: 86px;
+    left: 80px;
+    z-index: 1;
+  }
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 630px;
+    max-width: calc(100% - 30px);
+    text-align: center;
+  }
+  .content h1 {
+    margin: 0;
+  }
+  .text {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--color-clean-white);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 0;
+  }
+  .secondary,
+  :global(.cta-404) {
+    width: 193px;
+  }
+  .secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    padding: 24px;
+    border-radius: 48px;
+    font-size: 16px;
+    line-height: 16px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .secondary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(253, 253, 254, 0.5);
+    border-radius: inherit;
+  }
+  :global(.logo-404--small) {
+    display: none !important;
+  }
+  @media (max-width: 1439.98px) {
+    :global(.logo-404) {
+      left: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    :global(.logo-404) {
+      top: 64px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    :global(.logo-404--large) {
+      display: none !important;
+    }
+    :global(.logo-404--small) {
+      display: block !important;
+      top: 64px;
+      left: 16px;
+    }
+    .actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

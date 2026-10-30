@@ -27,6 +27,13 @@
   --font-family: 'Open Sans', sans-serif;
 
   /* ── Текстові стилі ──────────────────────── */
+  /* Heading 1 (h1). Framer: 96 / 77 (Tablet) / 64 (Phone), 130%, -3px, 300. */
+  --text-heading-1-size: 96px;
+  --text-heading-1-line-height: 130%;
+  --text-heading-1-letter-spacing: -3px;
+  --text-heading-1-weight: 300;
+  --text-heading-1-color: var(--color-clean-white);
+
   /* Heading 2 (h2) */
   --text-heading-2-size: 64px;
   --text-heading-2-line-height: 100%;
@@ -69,7 +76,7 @@
   --text-body-3-weight: 400;
   --text-body-3-color: var(--color-somewhat-light-grey);
 
-  /* TBD (SPEC §3.2): Heading 1 (96px / 130%, решту зняти з Framer), Link, Link 2. */
+  /* TBD (SPEC §3.2): Link, Link 2. */
 }
 
 @media (max-width: 1439.98px) {
@@ -80,17 +87,27 @@
 
 @media (max-width: 1199.98px) {
   :root {
+    --text-heading-1-size: 77px;
     --text-heading-2-size: 56px;
   }
 }
 
 @media (max-width: 809.98px) {
   :root {
+    --text-heading-1-size: 64px;
     --text-heading-2-size: 40px;
   }
 }
 
 /* ── Класи текстових стилів (як framer-styles-preset) ── */
+.text-heading-1 {
+  font-family: var(--font-family);
+  font-size: var(--text-heading-1-size);
+  line-height: var(--text-heading-1-line-height);
+  letter-spacing: var(--text-heading-1-letter-spacing);
+  font-weight: var(--text-heading-1-weight);
+  color: var(--text-heading-1-color);
+}
 .text-heading-2 {
   font-family: var(--font-family);
   font-size: var(--text-heading-2-size);

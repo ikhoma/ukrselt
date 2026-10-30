@@ -1,0 +1,95 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PageTitle from '../components/PageTitle.astro';
+import Lights from '../components/Lights.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale } from '../i18n';
+import uk from '../content/price/uk.json';
+
+// price-list / price-row (Framer). Дані: src/content/price/<locale>.json.
+const price: Record<string, typeof uk> = { uk };
+const c = price[getLocale(Astro.url)] ?? uk;
+---
+
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <section class="intro">
+    <Lights size={400} top={61} offset={-360} class="intro-lights" />
+    <PageTitle title={c.title} text={c.intro} />
+  </section>
+  <section class="list">
+    <ul class="price-list">
+      {
+        c.items.map((it, i) => (
+          <li class:list={['price-row', i % 2 === 0 ? 'odd' : 'even']}>
+            <span class="service">{it.service}</span>
+            <span class="price">{it.price}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <Booking service="price" />
+</PageLayout>
+
+<style>
+  .intro {
+    position: relative;
+    padding: 200px 80px 80px;
+    background: var(--color-almost-black);
+  }
+  .list {
+    padding: 49px 80px 80px;
+    background: var(--color-almost-black);
+  }
+  .price-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .price-row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    border-radius: 32px;
+  }
+  .price-row.odd {
+    background: var(--color-dark-grey);
+  }
+  .service {
+    flex: 1;
+    font-size: var(--text-body-2-size);
+    line-height: 28px;
+    letter-spacing: var(--text-body-2-letter-spacing);
+    color: var(--text-body-2-color);
+  }
+  .price {
+    flex: none;
+    text-align: right;
+    font-size: var(--text-heading-4-size);
+    line-height: var(--text-heading-4-line-height);
+    font-weight: var(--text-heading-4-weight);
+    color: var(--text-heading-4-color);
+    white-space: nowrap;
+  }
+  @media (max-width: 1439.98px) {
+    .intro,
+    .list {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .intro {
+      padding: 160px 16px 40px;
+    }
+    .list {
+      padding: 46px 16px 40px;
+    }
+    .service {
+      line-height: 24px;
+    }
+  }
+</style>

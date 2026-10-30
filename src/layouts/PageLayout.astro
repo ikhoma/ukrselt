@@ -35,8 +35,12 @@ const props = Astro.props;
     z-index: 1;
     background: var(--color-night-black);
   }
+  /* У Framer шапка лежить поверх першої секції: Intro починається з 0, Hero — з 48px (під TopBar). */
   .site-header {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 10;
   }
 </style>

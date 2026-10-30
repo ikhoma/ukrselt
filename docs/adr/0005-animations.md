@@ -1,6 +1,6 @@
 # ADR-0005: Анімації — CSS + IntersectionObserver для появ, GSAP для скролу, пружини Framer як криві
 
-**Status:** Proposed
+**Status:** Accepted (Іван, 30.10.2026)
 **Date:** 2026-10-30
 **Deciders:** Іван
 

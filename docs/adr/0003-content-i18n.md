@@ -1,6 +1,6 @@
 # ADR-0003: Content collections і i18n з запасом під нові локалі
 
-**Status:** Proposed
+**Status:** Accepted (Іван, 30.10.2026)
 **Date:** 2026-10-30
 **Deciders:** Іван
 

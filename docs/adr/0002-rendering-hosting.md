@@ -1,6 +1,6 @@
 # ADR-0002: Рендеринг і хостинг — статичні сторінки + один endpoint на Vercel
 
-**Status:** Proposed
+**Status:** Accepted (Іван, 30.10.2026)
 **Date:** 2026-10-30
 **Deciders:** Іван
 

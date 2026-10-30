@@ -1,6 +1,6 @@
 # ADR-0004: Форма — власний endpoint → Telegram Bot API
 
-**Status:** Proposed
+**Status:** Accepted (Іван, 30.10.2026)
 **Date:** 2026-10-30
 **Deciders:** Іван
 

@@ -1,0 +1,205 @@
+---
+/**
+ * Services і Team на головній (Framer: Sticky [Cards + Title + cta] + Animation Timeline).
+ * Sticky 900px тримається, поки прокручується Animation Timeline (Services 1000 / 880 на телефоні, Team 800 / 720).
+ * Етап 4: статичний стан. Team — картки у фінальних позиціях; Services — перший кадр Framer (кільце карток, opacity ~0.1).
+ * Анімація: Team — етап 6 (1:1), Services — етап 9 (рішення окремо). Кадри зняті в docs/reference/stage-4/anim-*.json.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BtnSecondary from './BtnSecondary.astro';
+import Lights from './Lights.astro';
+
+interface Props {
+  variant: 'services' | 'team';
+  title: string;
+  accent: string;
+  text: string;
+  cta: string;
+  href: string;
+  cards: { image: ImageMetadata; alt: string }[];
+}
+const { variant, title, accent, text, cta, href, cards } = Astro.props;
+---
+
+<section class:list={['showcase', `showcase--${variant}`]} data-showcase={variant}>
+  <div class="sticky">
+    <div class="cards" data-cards>
+      {
+        cards.map((c, i) => (
+          <div class:list={['card', `card--${i + 1}`]} data-card>
+            <Image src={c.image} alt={c.alt} widths={[250, 375, 700]} sizes={variant === 'team' ? '375px' : '350px'} format="webp" />
+          </div>
+        ))
+      }
+    </div>
+    <div class="title-cta" data-title>
+      {variant === 'team' && <Lights size={900} offset={400} />}
+      <div class="text">
+        <h2 class="text-heading-2">{title}<br /><span class="accent">{accent}</span></h2>
+        <p class="desc">{text}</p>
+      </div>
+      <BtnSecondary href={href} label={cta} />
+    </div>
+  </div>
+  <div class="timeline" aria-hidden="true"></div>
+</section>
+
+<style>
+  .showcase {
+    position: relative;
+    padding: 80px 0;
+    background: var(--color-almost-black);
+  }
+  .sticky {
+    position: sticky;
+    top: 0;
+    height: 900px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .timeline {
+    height: 1000px;
+  }
+  .showcase--team .timeline {
+    height: 800px;
+  }
+  .title-cta {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+  .text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .accent {
+    color: var(--color-ukrselt-blue);
+  }
+  .desc {
+    max-width: 632px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .title-cta :global(.btn-secondary) {
+    z-index: 1;
+  }
+  .card {
+    position: absolute;
+    overflow: hidden;
+  }
+  .card :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Services: перший кадр Framer ── */
+  .showcase--services .cards {
+    position: absolute;
+    inset: 0;
+    opacity: 0.107194;
+    transform: matrix3d(0.179265, -1.0557, 0, 0, 1.0557, 0.179265, 0, 0, 0, 0, 1, -0.000833333, 0, 0, 0, 1);
+  }
+  .showcase--services .card {
+    width: 350px;
+    height: 350px;
+    border-radius: 80px;
+  }
+  .showcase--services .card--1 {
+    top: -74.875px;
+    left: calc(50% - 175px);
+    transform: matrix3d(1, 0, 0, 0, 0, 0.5, -0.866025, 0.00144338, 0, 0.866025, 0.5, -0.000833333, 0, 0, 0, 1);
+  }
+  .showcase--services .card--2 {
+    top: 624.875px;
+    left: calc(50% - 175px);
+    transform: matrix3d(1, 0, 0, 0, 0, 0.5, 0.866025, -0.00144338, 0, -0.866025, 0.5, -0.000833333, 0, 0, 0, 1);
+  }
+  .showcase--services .card--3 {
+    top: 275px;
+    left: calc(50% - 495px);
+    transform: matrix3d(0.5, 0, -0.866025, 0.00144338, 0, 1, 0, 0, 0.866025, 0, 0.5, -0.000833333, 0, 0, 0, 1);
+  }
+  .showcase--services .card--4 {
+    top: 275px;
+    left: calc(50% + 145px);
+    transform: matrix3d(0.5, 0, 0.866025, -0.00144338, 0, 1, 0, 0, -0.866025, 0, 0.5, -0.000833333, 0, 0, 0, 1);
+  }
+
+  /* ── Team: фінальні позиції карток (кінець Animation Timeline) ── */
+  .showcase--team .cards {
+    position: absolute;
+    top: 325px;
+    left: calc(50% - 98.5px);
+    width: 197px;
+    height: 250px;
+  }
+  .showcase--team .card {
+    top: 0;
+    left: -26px;
+    width: 250px;
+    height: 250px;
+    border-radius: 40px;
+    transform: translate(var(--tx), var(--ty)) scale(0.8);
+  }
+  .showcase--team .card--1 { --tx: -432px; --ty: -240px; z-index: 4; }
+  .showcase--team .card--2 { --tx: 218px; --ty: -274px; z-index: 3; }
+  .showcase--team .card--3 { --tx: -217px; --ty: 275px; z-index: 2; }
+  .showcase--team .card--4 { --tx: 540px; --ty: -200px; z-index: 1; }
+
+  @media (max-width: 1199.98px) {
+    .showcase--services .cards {
+      opacity: 0.071885;
+      transform: matrix3d(0.0807706, -0.71328, 0, 0, 0.71328, 0.0807706, 0, 0, 0, 0, 1, -0.000833333, 0, 0, 0, 1);
+    }
+    .showcase--services .card {
+      width: 350px;
+      height: 350px;
+    }
+    .showcase--services .card--1 { top: 37.4844px; left: calc(50% - 175px); }
+    .showcase--services .card--2 { top: 504.156px; left: calc(50% - 175px); }
+    .showcase--services .card--3 { top: 275px; left: calc(50% - 592px); }
+    .showcase--services .card--4 { top: 275px; left: calc(50% + 242px); }
+  }
+  @media (max-width: 809.98px) {
+    .showcase--services {
+      padding: 0 0 40px;
+    }
+    .showcase--team {
+      padding: 40px 0;
+    }
+    .title-cta {
+      padding: 0 15px;
+    }
+    .showcase--services .cards {
+      opacity: 0.0893921;
+      transform: matrix3d(0.163584, -1.15895, 0, 0, 1.15895, 0.163584, 0, 0, 0, 0, 1, -0.000833333, 0, 0, 0, 1);
+    }
+    .showcase--services .card {
+      width: 250px;
+      height: 250px;
+      border-radius: 40px;
+    }
+    .showcase--team .card {
+      transform: translate(var(--tx), var(--ty)) scale(0.5);
+    }
+    .showcase--team .card--1 { --tx: -140px; --ty: -240px; }
+    .showcase--team .card--2 { --tx: 0px; --ty: -280px; }
+    .showcase--team .card--3 { --tx: 140px; --ty: 240px; }
+    .showcase--team .card--4 { --tx: 140px; --ty: -240px; }
+  }
+</style>

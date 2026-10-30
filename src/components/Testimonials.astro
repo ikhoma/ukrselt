@@ -1,0 +1,240 @@
+---
+/**
+ * Testimonials (Framer, головна): заголовок + рейтинг (аватарки, 5 зірок, 4.7, «70+ відгуків»),
+ * ряд: фото + 2 картки відгуків (скло, як checkmark: градієнт, blur 7.5, обводка ::after).
+ */
+import { Image } from 'astro:assets';
+import Lights from './Lights.astro';
+import { homeImage } from '../content/images';
+
+interface Props {
+  title: string;
+  rating: string;
+  count: string;
+  image: string;
+  imageAlt: string;
+  headshots: string[];
+  items: { text: string; author: string; photo: string }[];
+}
+const { title, rating, count, image, imageAlt, headshots, items } = Astro.props;
+const star = `<svg viewBox="0 0 14 15" preserveAspectRatio="none" aria-hidden="true"><path d="M 6.524 1.964 C 6.674 1.503 7.326 1.503 7.476 1.964 L 8.459 4.991 C 8.526 5.197 8.718 5.337 8.935 5.337 L 12.119 5.337 C 12.603 5.337 12.804 5.957 12.412 6.241 L 9.837 8.113 C 9.662 8.24 9.588 8.466 9.655 8.672 L 10.639 11.7 C 10.789 12.16 10.261 12.543 9.87 12.259 L 7.294 10.387 C 7.119 10.26 6.881 10.26 6.706 10.387 L 4.13 12.259 C 3.739 12.543 3.211 12.16 3.361 11.7 L 4.345 8.672 C 4.412 8.466 4.338 8.24 4.163 8.113 L 1.588 6.241 C 1.196 5.957 1.397 5.337 1.881 5.337 L 5.065 5.337 C 5.282 5.337 5.474 5.197 5.541 4.991 Z" fill="var(--color-yellow)"/></svg>`;
+const stars = Array.from({ length: 5 }, () => star).join('');
+---
+
+<section class="testimonials">
+  <Lights size={900} offset={400} />
+  <div class="inner">
+    <div class="top">
+      <h2 class="text-heading-2">{title}</h2>
+      <div class="reviews">
+        <div class="headshots">
+          {headshots.map((h) => <span class="headshot"><Image src={homeImage(h)} alt="" widths={[48, 96]} sizes="48px" format="webp" /></span>)}
+        </div>
+        <div class="total">
+          <div class="stars-row"><span class="stars" set:html={stars} role="img" aria-label={`${rating} з 5`} /><span class="rating">{rating}</span></div>
+          <p class="count">{count}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="img"><Image src={homeImage(image)} alt={imageAlt} widths={[358, 413, 826]} sizes="(max-width: 1199.98px) 100vw, 413px" format="webp" /></div>
+      {
+        items.map((it) => (
+          <figure class="card">
+            <span class="stars" set:html={stars} aria-hidden="true" />
+            <blockquote class="quote">{it.text}</blockquote>
+            <figcaption class="author">
+              <Image class="avatar" src={homeImage(it.photo)} alt="" widths={[48, 96]} sizes="48px" format="webp" />
+              <span class="name">{it.author}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    position: relative;
+    padding: 80px;
+    background: var(--color-almost-black);
+  }
+  .inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+  .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+  .reviews {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .headshots {
+    display: flex;
+  }
+  .headshot {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .headshot + .headshot {
+    margin-left: -10px;
+  }
+  .headshot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid var(--color-dark-grey);
+  }
+  .headshot:first-child::after {
+    border-color: var(--color-almost-black);
+  }
+  .headshot:last-child {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
+  }
+  .headshot :global(img),
+  .img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .total {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .stars-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .stars {
+    display: flex;
+  }
+  .stars :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  .rating {
+    font-size: 16px;
+    line-height: 18px;
+    color: #fff;
+  }
+  .count {
+    font-size: 20px;
+    line-height: 28px;
+    color: #fff;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .img,
+  .card {
+    min-width: 0;
+    height: 367px;
+    border-radius: 40px;
+  }
+  .img {
+    overflow: hidden;
+  }
+  .card {
+    position: relative;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: linear-gradient(101deg, rgba(253, 253, 254, 0.06) 0%, rgba(255, 255, 255, 0.04) 100%);
+    backdrop-filter: blur(7.5px);
+    -webkit-backdrop-filter: blur(7.5px);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    pointer-events: none;
+  }
+  .quote {
+    margin: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .author {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .name {
+    font-size: 20px;
+    line-height: var(--text-body-2-line-height);
+    letter-spacing: -0.2px;
+    color: var(--color-clean-white);
+  }
+  @media (max-width: 1439.98px) {
+    .testimonials {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .testimonials {
+      padding: 80px 32px;
+    }
+    .inner {
+      width: 746px;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .img {
+      height: auto;
+      aspect-ratio: 746 / 663;
+    }
+    .card {
+      height: 403px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .testimonials {
+      padding: 40px 16px;
+    }
+    .inner {
+      gap: 40px;
+    }
+    .img {
+      aspect-ratio: 358 / 338;
+    }
+    .card {
+      height: 338px;
+    }
+  }
+</style>

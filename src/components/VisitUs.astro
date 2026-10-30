@@ -1,0 +1,123 @@
+---
+/**
+ * Visit us (Framer, головна і «Контакти»): заголовок «Відвідати / наш центр», опис, адреса, розклад + карта Google (lazy).
+ * Tablet/Phone: карта зверху.
+ */
+import Lights from './Lights.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
+
+const v = getPage(getLocale(Astro.url), 'visit');
+// Той самий embed, що на Framer (SPEC §7.3), lazy.
+const mapSrc =
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2542.4037867767497!2d30.521542076832915!3d50.414857289925436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf3c19aa2309%3A0xef5beb9a60400c6c!2zVWtyc2VsdCAtINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LAg0JrQu9GW0L3RltC60LAsINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LjQuSDQptC10L3RgtGALCDQodGC0L7QvNCw0YLQvtC70L7Qs9GW0Y8!5e0!3m2!1sen!2sua!4v1724497576306!5m2!1sen!2sua';
+---
+
+<section class="visit">
+  <Lights size={800} offset={400} />
+  <div class="visit-us">
+    <div class="visit-title">
+      <h2 class="text-heading-2">{v.titleLine1}<br /><span class="accent">{v.titleLine2}</span></h2>
+      <div class="paragraphs">{v.paragraphs.map((p: string) => <p>{p}</p>)}</div>
+    </div>
+    <div class="info">
+      <h3 class="text-heading-4">{v.addressTitle}</h3>
+      <p>{v.address}</p>
+    </div>
+    <div class="info">
+      <h3 class="text-heading-4">{v.scheduleTitle}</h3>
+      <p>{v.schedule.map((l: string, i: number) => <>{i > 0 && <br />}{l}</>)}</p>
+    </div>
+  </div>
+  <iframe class="map" src={mapSrc} title={v.mapTitle} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+</section>
+
+<style>
+  .visit {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 80px;
+    background: var(--color-almost-black);
+  }
+  .visit-us {
+    position: relative;
+    z-index: 1;
+    width: 630px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .visit-title {
+    padding-right: 108px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .accent {
+    color: var(--color-ukrselt-blue);
+  }
+  .paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .paragraphs p,
+  .info p {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-right: 108px;
+  }
+  .info h3 {
+    margin: 0;
+  }
+  .map {
+    position: relative;
+    z-index: 1;
+    width: 630px;
+    height: 560px;
+    border: 0;
+    flex: none;
+  }
+  @media (max-width: 1439.98px) {
+    .visit {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .visit-title,
+    .info {
+      padding-right: 0;
+    }
+    .paragraphs {
+      max-width: 630px;
+    }
+    .visit {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 40px 32px;
+    }
+    .map {
+      order: -1;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 630 / 560;
+    }
+    .visit-us {
+      width: 100%;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .visit {
+      padding: 40px 15px;
+    }
+  }
+</style>

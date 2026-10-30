@@ -1,0 +1,192 @@
+---
+/**
+ * Hero головної (Framer: Hero → hero / Transition*). 900px, фото cover + оверлей-градієнт (картинка з Framer).
+ * Заголовок: «Змінюємо» + text loop (слова виїжджають з-під маски; анімація — етап 6, ADR-0005).
+ * Для пошуковиків і читачів екрана — один H1 з повною фразою; візуальний заголовок aria-hidden.
+ * Шапка сайту лежить поверх (PageLayout).
+ */
+import { Image } from 'astro:assets';
+import hero from '../assets/home/hero.png';
+import overlay from '../assets/home/hero-overlay.png';
+import { localizePath, getLocale } from '../i18n';
+
+interface Props {
+  title: string;
+  words: string[];
+  h1: string;
+  text: string;
+  cta: string;
+}
+const { title, words, h1, text, cta } = Astro.props;
+const locale = getLocale(Astro.url);
+---
+
+<section class="hero">
+  <div class="hero-image" data-hero-image>
+    <Image src={hero} alt="" widths={[780, 1440, 2048]} sizes="(max-width: 1199.98px) 300vw, 100vw" format="webp" loading="eager" fetchpriority="high" />
+  </div>
+  <Image class="overlay" src={overlay} alt="" widths={[1440]} sizes="100vw" format="webp" loading="eager" />
+  <div class="title">
+    <h1 class="sr-only">{h1}</h1>
+    <div class="heading" aria-hidden="true">
+      <span class="lead-word">{title}</span>
+      <span class="text-loop" data-text-loop>
+        {words.map((w, i) => <span class:list={['word', { 'is-active': i === 0 }]}>{w}</span>)}
+      </span>
+    </div>
+    <div class="row">
+      <p class="text">{text}</p>
+      <a class="cta" href={localizePath('/', locale) + '#book'}>{cta}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 900px;
+    overflow: hidden;
+    background: var(--color-almost-black);
+  }
+  .hero-image {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    height: 960px;
+  }
+  .hero-image :global(img),
+  .overlay {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .title {
+    position: absolute;
+    z-index: 2;
+    left: 80px;
+    bottom: 80px;
+    width: 867px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .heading {
+    display: flex;
+    gap: 22px;
+    font-size: 96px;
+    line-height: 130%;
+    letter-spacing: -3px;
+    font-weight: 300;
+    color: #fff;
+  }
+  .text-loop {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    height: 1.3em;
+  }
+  .word {
+    display: block;
+    white-space: nowrap;
+  }
+  .word:not(.is-active) {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .text {
+    width: 414px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: #fdfdfe;
+  }
+  .cta {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 304px;
+    height: 64px;
+    padding: 20px 24px;
+    border-radius: 48px;
+    background: var(--color-ukrselt-blue);
+    color: var(--color-clean-white);
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: none;
+    transition: background-color var(--dur-hover) var(--ease-hover);
+  }
+  .cta:hover {
+    background: var(--color-lighter-blue);
+  }
+
+  @media (max-width: 1439.98px) {
+    .title {
+      left: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .hero-image {
+      top: -219px;
+      left: -443px;
+      right: -210px;
+      bottom: 0;
+      height: auto;
+    }
+    .title {
+      width: 630px;
+      gap: 20px;
+    }
+    .heading {
+      flex-direction: column;
+      gap: 0;
+      font-size: 72px;
+    }
+    .lead-word {
+      line-height: 57.6px;
+      letter-spacing: -1.44px;
+      color: var(--color-clean-white);
+    }
+    .row {
+      flex-direction: column;
+    }
+    .text {
+      width: auto;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .hero-image {
+      top: 48px;
+      left: -303px;
+      right: -454px;
+      bottom: 87px;
+    }
+    .title {
+      left: 15px;
+      width: 321px;
+    }
+    .cta {
+      width: auto;
+    }
+  }
+</style>

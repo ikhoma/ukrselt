@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets';
 import PageLayout from '../layouts/PageLayout.astro';
 import PageTitle from '../components/PageTitle.astro';
-import Lights from '../components/Lights.astro';
 import Booking from '../components/Booking.astro';
+import VisitUs from '../components/VisitUs.astro';
 import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
@@ -15,9 +15,6 @@ const groups = [
   { title: c.write, links: messengers },
   { title: c.subscribe, links: socials },
 ];
-// Той самий embed, що на Framer (SPEC §7.3), lazy.
-const mapSrc =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2542.4037867767497!2d30.521542076832915!3d50.414857289925436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf3c19aa2309%3A0xef5beb9a60400c6c!2zVWtyc2VsdCAtINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LAg0JrQu9GW0L3RltC60LAsINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LjQuSDQptC10L3RgtGALCDQodGC0L7QvNCw0YLQvtC70L7Qs9GW0Y8!5e0!3m2!1sen!2sua!4v1724497576306!5m2!1sen!2sua';
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
@@ -46,24 +43,7 @@ const mapSrc =
     </div>
   </section>
 
-  <section class="visit">
-    <Lights size={800} offset={400} />
-    <div class="visit-us">
-      <div class="visit-title">
-        <h2 class="text-heading-2">{c.visit.titleLine1}<br /><span class="accent">{c.visit.titleLine2}</span></h2>
-        <div class="paragraphs">{c.visit.paragraphs.map((p: string) => <p>{p}</p>)}</div>
-      </div>
-      <div class="info">
-        <h3 class="text-heading-4">{c.visit.addressTitle}</h3>
-        <p>{c.visit.address}</p>
-      </div>
-      <div class="info">
-        <h3 class="text-heading-4">{c.visit.scheduleTitle}</h3>
-        <p>{c.visit.schedule.map((l: string, i: number) => <>{i > 0 && <br />}{l}</>)}</p>
-      </div>
-    </div>
-    <iframe class="map" src={mapSrc} title={c.visit.mapTitle} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-  </section>
+  <VisitUs />
 
   <Booking service="contacts" />
 </PageLayout>
@@ -126,9 +106,7 @@ const mapSrc =
   li {
     display: flex;
   }
-  .contacts a,
-  .paragraphs p,
-  .info p {
+  .contacts a {
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
     color: var(--text-body-color);
@@ -141,72 +119,14 @@ const mapSrc =
     color: var(--color-greyish);
   }
 
-  .visit {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 80px;
-    background: var(--color-almost-black);
-  }
-  .visit-us {
-    position: relative;
-    z-index: 1;
-    width: 630px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .visit-title {
-    padding-right: 108px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  .accent {
-    color: var(--color-ukrselt-blue);
-  }
-  .paragraphs {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-  }
-  .info {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-right: 108px;
-  }
-  .info h3 {
-    margin: 0;
-  }
-  .map {
-    position: relative;
-    z-index: 1;
-    width: 630px;
-    height: 560px;
-    border: 0;
-    flex: none;
-  }
 
   @media (max-width: 1439.98px) {
     .intro,
-    .visit {
-      padding-left: 32px;
-      padding-right: 32px;
-    }
   }
   @media (max-width: 1199.98px) {
     .intro {
       gap: 48px;
       padding: 200px 32px 40px;
-    }
-    .visit-title,
-    .info {
-      padding-right: 0;
-    }
-    .paragraphs {
-      max-width: 630px;
     }
     .row {
       flex-direction: column;
@@ -221,20 +141,6 @@ const mapSrc =
     .contacts {
       padding-left: 0;
     }
-    .visit {
-      flex-direction: column;
-      align-items: stretch;
-      padding: 40px 32px;
-    }
-    .map {
-      order: -1;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 630 / 560;
-    }
-    .visit-us {
-      width: 100%;
-    }
   }
   @media (max-width: 809.98px) {
     .intro {
@@ -246,12 +152,6 @@ const mapSrc =
     }
     .pic {
       border-radius: 40px;
-    }
-    .visit {
-      padding: 40px 15px;
-    }
-    .visit-title {
-      padding-right: 0;
     }
   }
 </style>

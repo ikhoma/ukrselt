@@ -1,101 +1,80 @@
 ---
 /**
- * ТИМЧАСОВА сторінка етапів 0–1: токени, шрифт, шапка, меню, футер (reveal).
- * Замінюється справжньою головною на етапі 4. noindex.
+ * Головна (Framer «/»): Hero → Services → Benefits 1 → Benefits 2 → Testimonials → Team → Visit us → booking.
+ * Прелоадер і анімації появи — етап 6.
  */
 import PageLayout from '../layouts/PageLayout.astro';
+import HomeHero from '../components/HomeHero.astro';
+import HomeShowcase from '../components/HomeShowcase.astro';
+import MediaSplit from '../components/MediaSplit.astro';
+import Lights from '../components/Lights.astro';
+import Testimonials from '../components/Testimonials.astro';
+import VisitUs from '../components/VisitUs.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale, localizePath } from '../i18n';
+import { getPage } from '../content/pages';
+import { homeImage } from '../content/images';
+import { getTeam } from '../content/collections';
 
-const colors = [
-  'clean-white',
-  'night-black',
-  'almost-black',
-  'dark-grey',
-  'greyish',
-  'somewhat-light-grey',
-  'light-grey',
-  'ukrselt-blue',
-  'lighter-blue',
-  'blue-light',
-  'yellow',
-];
-const styles = [
-  ['text-heading-2', 'h2', 'Heading 2 — Широкий спектр'],
-  ['text-heading-3', 'h3', 'Heading 3 — Наша команда'],
-  ['text-heading-4', 'h4', 'Heading 4 — Сучасне обладнання та матеріали'],
-  ['text-body-2', 'p', 'Body 2 — Аліса Горецька'],
-  ['text-body', 'p', 'Body — Ми пропонуємо широкий спектр послуг'],
-  ['text-body-3', 'p', 'Body 3 — +38 (063) 076-3022'],
-];
+const locale = getLocale(Astro.url);
+const c = getPage(locale, 'home');
+const team = (await getTeam(locale)).filter((p) => p.data.homePhoto);
 ---
 
-<PageLayout title="Ukrselt — етап 0 (токени)" description="Тимчасова сторінка перевірки токенів." noindex>
-  <main class="wrap">
-    <p class="text-body-3">Тимчасова сторінка етапу 0. Не для індексації.</p>
+<PageLayout title={c.seo.title} description={c.seo.description}>
+  <HomeHero title={c.hero.title} words={c.hero.words} h1={c.hero.h1} text={c.hero.text} cta={c.hero.cta} />
 
-    <section>
-      <h2 class="text-heading-4">Кольори</h2>
-      <ul class="swatches">
-        {
-          colors.map((c) => (
-            <li>
-              <span class="chip" style={`background: var(--color-${c})`} />
-              <code class="text-body-3">--color-{c}</code>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+  <HomeShowcase
+    variant="services"
+    title={c.services.title}
+    accent={c.services.accent}
+    text={c.services.text}
+    cta={c.services.cta}
+    href={localizePath('/services', locale)}
+    cards={c.services.cards.map((k: { image: string; alt: string }) => ({ image: homeImage(k.image), alt: k.alt }))}
+  />
 
-    <section>
-      <h2 class="text-heading-4">Текстові стилі</h2>
-      {
-        styles.map(([cls, Tag, text]) => (
-          <div class="row">
-            <code class="text-body-3">.{cls}</code>
-            <Tag class={cls}>{text}</Tag>
-          </div>
-        ))
-      }
-    </section>
-  </main>
+  <section class="benefits benefits--1">
+    <Lights size={900} offset={400} />
+    <MediaSplit variant="layout" image={homeImage(c.benefits1.image)} imageAlt={c.benefits1.imageAlt} imagePosition="right" items={c.benefits1.items} />
+  </section>
+  <section class="benefits">
+    <Lights size={900} offset={400} />
+    <MediaSplit variant="layout" image={homeImage(c.benefits2.image)} imageAlt={c.benefits2.imageAlt} imagePosition="left" items={c.benefits2.items} />
+  </section>
+
+  <Testimonials {...c.testimonials} />
+
+  <HomeShowcase
+    variant="team"
+    title={c.team.title}
+    accent={c.team.accent}
+    text={c.team.text}
+    cta={c.team.cta}
+    href={localizePath('/team', locale)}
+    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt }))}
+  />
+
+  <VisitUs />
+  <Booking service="home" />
 </PageLayout>
 
 <style>
-  .wrap {
-    min-height: 150vh; /* щоб було видно reveal футера */
-    padding: 192px 48px 48px;
+  .benefits {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 80px;
     background: var(--color-almost-black);
-    border-radius: 0 0 40px 40px;
-    display: grid;
-    gap: 48px;
   }
-  section {
-    display: grid;
-    gap: 24px;
+  @media (max-width: 1439.98px) {
+    .benefits {
+      padding: 80px 32px;
+    }
   }
-  .swatches {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-  }
-  .swatches li {
-    display: grid;
-    gap: 8px;
-  }
-  .chip {
-    display: block;
-    height: 64px;
-    border-radius: 12px;
-    border: 1px solid var(--color-greyish);
-  }
-  .row {
-    display: grid;
-    gap: 8px;
-  }
-  code {
-    color: var(--color-light-grey);
+  @media (max-width: 809.98px) {
+    .benefits {
+      padding: 40px 16px 80px;
+    }
   }
 </style>

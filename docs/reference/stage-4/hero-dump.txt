@@ -1,0 +1,362 @@
+===== 1440
+DIV [top-lights] 0,0 1440x752 "" absolute t0px l0px r0px b8544.23px | ov hidden | z 4 
+DIV [light] 1040,-400 800x800 "" absolute t-400px l1040px r-400px b352px | op 0.5 | z 3 
+DIV [light] -400,-400 800x800 "" absolute t-400px l-400px r1040px b352px | op 0.5 | z 3 
+DIV [Preloader] 0,0 1440x900 "" flex-row gap10px ai:center jc:center | absolute t0px l0px r0px b8396.23px | ov hidden | z 4 
+DIV [Variant 2] 609,417 223x66 "" op 0 | ov hidden 
+DIV [Desktop] 0,80 1440x64 "" flex-column gap32px ai:flex-start jc:flex-start | ov hidden 
+DIV [Top] 80,80 1070x64 "" flex-row gap32px ai:center jc:center 
+DIV [Large] 80,86 180x52 "" flex-row gap0px ai:center jc:center | ov hidden 
+DIV [g8] 80,86 180x52 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Vertical Navigation] 292,80 858x64 "" flex-row gap8px ai:center jc:center | pad 0px 8px 0px 0px | z 1 
+A [Selected] 292,80 113x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bg rgb(254, 254, 254) | bgi linear-gradient(101deg, rgb(254, 254, 254) 0%, rgb(254, 254, 254) 100%) | r 40px  href=./
+DIV [Frame 69] 308,100 81x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px | bg rgb(255, 255, 255) 
+DIV [Button] 316,100 65x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 316,100 65x24 "Головна" font 16px/24px/400 lsnormal rgb(42, 42, 43) 
+A [Default] 413,80 111x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./services
+DIV [Frame 69] 429,100 79x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 437,100 63x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 437,100 63x24 "Послуги" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+A [Default] 532,80 116x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./team
+DIV [Frame 69] 548,100 84x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 556,100 68x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 556,100 68x24 "Команда" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+A [Default] 656,80 84x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./price
+DIV [Frame 69] 672,100 52x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 680,100 36x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 680,100 36x24 "Ціни" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+A [Default] 748,80 147x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./sterilization
+DIV [Frame 69] 764,100 115x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 772,100 99x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 772,100 99x24 "Стерилізація" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+A [Default] 904,80 110x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./about-us
+DIV [Frame 69] 920,100 78x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 928,100 62x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 928,100 62x24 "Про нас" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+A [Default] 1022,80 120x64 "" flex-row gap0px ai:center jc:center | pad 20px 16px | bgi linear-gradient(101deg, rgba(253, 253, 254, 0.09) 0%, rgba(255, 255, 255, 0.06) 100%) | r 40px  href=./contacts
+DIV [Frame 69] 1038,100 88x24 "" flex-row gap0px ai:center jc:center | pad 0px 8px 
+DIV [Button] 1046,100 72x24 "" flex-column gapnormal ai:normal jc:center 
+P [] 1046,100 72x24 "Контакти" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+BUTTON [Desktop] 1223,80 137x64 "" flex-row gap0px ai:center jc:center | pad 20px 24px | bg rgb(0, 157, 220) | r 48px 
+DIV [Записатися на прийом] 1247,100 89x24 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 1247,100 89x24 "Записатися" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero] 0,0 1440x900 "" flex-column gap0px ai:flex-start jc:flex-start | bg rgb(42, 42, 43) | z 2 
+DIV [hero] 0,0 1440x900 "" absolute t0px l0px r0px b0px | z 1 
+DIV [Hero] 0,0 1440x900 "" ov hidden 
+DIV [Title] 80,574 867x246 "" flex-column gap32px ai:flex-start jc:center | absolute t573.578px l80px r492.984px b80px | ov hidden | z 2 
+DIV [Desktop] 80,574 867x125 "" flex-row gap22px ai:flex-start jc:center | ov hidden 
+DIV [Desktop] 80,574 419x125 "" flex-row gap0px ai:center jc:center | ov hidden 
+H1 [] 80,574 419x125 "Змінюємо" font 96px/124.8px/300 ls-3px rgb(255, 255, 255) 
+DIV [text loop] 521,574 426x125 ""  
+DIV [Variant 2] 521,574 426x125 "" flex-column gap0px ai:flex-start jc:center | ov hidden 
+DIV [wrd1] 521,449 358x125 "" flex-column gapnormal ai:normal jc:flex-start | absolute t-62.3906px l0px r67.5469px b62.3906px | tf matrix(1, 0, 0, 1, 0, -62.3984) | z 1 
+H1 [] 521,449 358x125 "усмішки." font 96px/124.8px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd2] 521,574 263x125 "" flex-column gapnormal ai:normal jc:flex-start | z 1 
+H1 [] 521,574 263x125 "життя." font 96px/124.8px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd1-2] 521,699 358x125 "" flex-column gapnormal ai:normal jc:flex-start | absolute t125px l0px r67.5469px b-125px | z 1 
+H1 [] 521,699 358x125 "усмішки." font 96px/124.8px/300 ls-3px rgb(255, 255, 255) 
+DIV [Відкрийте для себе наших видатних стоматологів, які можуть задовольнити будь-які ваші потреби, і готові забезпечити винятковий досвід стоматологічного відвідування.] 80,730 414x90 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 80,730 414x90 "Urkselt – cтоматологічний центр у серці Києва із в" font 16px/22.4px/400 lsnormal rgb(253, 253, 254) 
+A [СTA] 514,730 304x64 "" flex-row gap0px ai:center jc:center | pad 20px 24px | bg rgb(0, 157, 220) | r 48px  href=./#book
+DIV [Записатися на прийом] 577,750 178x24 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 577,750 178x24 "Записатися на прийом" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero Image] 0,10 1440x960 "" absolute t9.54688px l0px r0px b-70px | z 0 
+IMG [] 0,10 1440x960 "" ov clip DmjGusj5OF8KSpYTaUEfHyOgMs.png?width=2048&height=1366 alt=
+DIV [Overlay] 0,0 1440x900 "" absolute t0px l0px r0px b0px 
+IMG [] 0,0 1440x900 "" ov clip FEOq5c6MLlnF9a9KG0JB9XrBg3o.png?width=1440&height=810 alt=
+DIV [Curtain] 0,-820 1440x820 "" absolute t-820px l0px r0px b900px | bg rgb(42, 42, 43) | ov hidden | z 4 
+DIV [Desktop Animation] 0,0 1440x48 "" flex-column gap0px ai:flex-end jc:center | pad 0px 80px | bg rgb(42, 42, 43) | ov hidden 
+DIV [Info Stack] 523,14 837x21 "" flex-row gap32px ai:center jc:center 
+DIV [Mobile] 523,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380630763022] 523,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 523,14 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+DIV [Phone] 679,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380443377388] 679,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 679,14 124x19 "+38 (094) 906-2388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380949062388
+DIV [Phone] 835,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380443377388] 835,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 835,14 124x19 "+38 (044) 337-7388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380443377388
+DIV [Adress] 991,16 234x16 "" flex-row gap4px ai:center jc:flex-start 
+DIV [Велика Васильківська 134] 1011,17 214x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 1011,14 214x19 "Київ, Велика Васильківська 134" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./contacts
+LABEL [] 1256,13 1x1 "Select Language" absolute t0px l0px r104.094px b22px | ov hidden | font 12px/normal/400 lsnormal rgb(0, 0, 0) 
+DIV [] 1281,14 63x21 "Ukrainian" ov hidden | font 14px/21px/400 lsnormal rgb(146, 145, 150) 
+DIV [Desktop] 0,270 1440x630 "" flex-column gap80px ai:flex-start jc:center | pad 80px | bg rgb(32, 32, 33) 
+DIV [logo] 80,375 180x52 "" flex-column gap0px ai:center jc:center | ov hidden 
+DIV [Large] 80,375 180x52 "" flex-row gap0px ai:center jc:center | ov hidden 
+DIV [g8] 80,375 180x52 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Footer Container] 80,507 1280x194 "" flex-row gap20px ai:flex-start jc:flex-start | z 1 
+DIV [Footer Nav] 80,507 305x194 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 80,507 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 80,507 305x14 "Навігація" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [Головна] 80,537 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,534 57x19 "Головна" font 14px/14px/400 lsnormal rgb(90, 90, 94)  href=./
+DIV [Про нас] 80,567 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,564 54x19 "Про нас" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./about-us
+DIV [Послуги] 80,597 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,594 55x19 "Послуги" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./services
+DIV [Команда] 80,627 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,624 60x19 "Команда" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./team
+DIV [Контакти] 80,657 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,654 87x19 "Стерилізація" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./sterilization
+DIV [Контакти] 80,687 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 80,684 63x19 "Контакти" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./contacts
+DIV [Footer Nav] 405,507 305x104 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 405,507 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 405,507 305x14 "Дзвоніть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 405,537 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 405,534 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+DIV [+380630763022] 405,567 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 405,564 124x19 "+38 (094) 906-2388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380949062388
+DIV [+380630763022] 405,597 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 405,594 124x19 "+38 (044) 337-7388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380443377388
+DIV [Footer Nav] 730,507 305x134 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 730,507 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 730,507 305x14 "Пишіть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 730,537 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 730,534 61x19 "Telegram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://t.me/+380630763022
+DIV [+380630763022] 730,567 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 730,564 34x19 "Viber" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=viber://chat?number=%2B380630763022
+DIV [+380630763022] 730,597 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 730,594 67x19 "WhatsApp" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://wa.me/+380630763022
+DIV [+380630763022] 730,627 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 730,624 114x19 "info@ukrselt.com" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=mailto:info@ukrselt.com
+DIV [Footer Nav] 1055,507 305x74 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 1055,507 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 1055,507 305x14 "Підпишіться" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 1055,537 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 1055,534 66x19 "Instagram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.instagram.com/dental.ukrselt/
+DIV [+380630763022] 1055,567 305x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 1055,564 62x19 "Facebook" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.facebook.com/profile.php?id=100086790133405
+DIV [] 80,781 239x14 "© 2026 Ukrselt. Всі права захищені." font 14px/14px/400 lsnormal rgb(90, 90, 94) 
+DIV [Variant 1] 1164,645 276x255 "" flex-row gap10px ai:center jc:center | ov hidden 
+DIV [Group 1] 1164,645 276x255 ""  
+DIV [wrapper] 0,900 1440x8396 "" flex-column gap0px ai:center jc:center | z 5 
+DIV [Services] 0,900 1440x2060 "" flex-column gap0px ai:flex-start jc:flex-start | pad 80px 0px | bg rgb(42, 42, 43) 
+===== 1024
+DIV [top-lights] 0,0 1024x752 "" absolute t0px l0px r0px b12667.9px | ov hidden | z 4 
+DIV [light] 824,-200 400x400 "" absolute t-200px l824px r-200px b552px | op 0.5 | z 3 
+DIV [light] -200,-200 400x400 "" absolute t-200px l-200px r824px b552px | op 0.5 | z 3 
+DIV [Preloader] 0,0 1024x900 "" flex-row gap10px ai:center jc:center | absolute t0px l0px r0px b12519.9px | ov hidden | z 4 
+DIV [Variant 2] 401,417 223x66 "" op 0 | ov hidden 
+BUTTON [Desktop] 795,58 137x64 "" flex-row gap0px ai:center jc:center | pad 20px 24px | bg rgb(0, 157, 220) | r 48px 
+DIV [Записатися на прийом] 819,78 89x24 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 819,78 89x24 "Записатися" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero] 0,0 1024x900 "" flex-column gap0px ai:flex-start jc:flex-start | bg rgb(42, 42, 43) | z 2 
+DIV [hero] 0,0 1024x900 "" absolute t0px l0px r0px b0px 
+DIV [Hero - Tablet] 0,0 1024x900 "" ov hidden 
+DIV [Title] 32,498 630x322 "" flex-column gap20px ai:flex-start jc:center | absolute t497.594px l32px r362px b80px | ov hidden | z 2 
+DIV [Mobile] 32,498 321x151 "" flex-column gap0px ai:flex-start jc:flex-start | ov hidden 
+DIV [Mobile] 32,498 321x58 "" flex-column gap0px ai:center jc:center | ov hidden 
+H2 [] 32,498 321x58 "Змінюємо" font 72px/57.6px/300 ls-1.44px rgb(254, 254, 254) 
+DIV [Variant 2] 32,555 193x94 "" flex-column gap0px ai:flex-start jc:center | ov hidden 
+DIV [wrd1] 32,462 263x94 "" flex-column gapnormal ai:normal jc:flex-start | absolute t-46.7969px l0px r-70.25px b46.7969px | tf matrix(1, 0, 0, 1, 0, -46.7969) | z 1 
+H1 [] 32,462 263x94 "усмішки." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd2] 32,555 193x94 "" flex-column gapnormal ai:normal jc:flex-start | z 1 
+H1 [] 32,555 193x94 "життя." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd1-2] 32,648 263x94 "" flex-column gapnormal ai:normal jc:flex-start | absolute t93px l0px r-70.25px b-93px | z 1 
+H1 [] 32,648 263x94 "усмішки." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [Відкрийте для себе наших видатних стоматологів, які можуть задовольнити будь-які ваші потреби, і готові забезпечити винятковий досвід стоматологічного відвідування.] 32,669 630x67 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 32,669 630x67 "Urkselt – cтоматологічний центр у серці Києва із в" font 16px/22.4px/400 lsnormal rgb(253, 253, 254) 
+A [СTA] 32,756 304x64 "" flex-row gap0px ai:center jc:center | pad 20px 24px | bg rgb(0, 157, 220) | r 48px  href=./#book
+DIV [Записатися на прийом] 95,776 178x24 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 95,776 178x24 "Записатися на прийом" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero Image] -443,-219 1677x1119 "" absolute t-218.531px l-443px r-210px b0px | z 0 
+IMG [] -443,-219 1677x1119 "" ov clip DmjGusj5OF8KSpYTaUEfHyOgMs.png?width=2048&height=1366 alt=
+DIV [Overlay] 0,0 1024x900 "" absolute t0px l0px r0px b0px 
+IMG [] 0,0 1024x900 "" ov clip FEOq5c6MLlnF9a9KG0JB9XrBg3o.png?scale-down-to=1024&width=1440&height=810 alt=
+DIV [Curtain] 0,-1024 1024x1024 "" absolute t-1024px l0px r0px b900px | bg rgb(42, 42, 43) | ov hidden | z 4 
+DIV [Tablet Animation] 0,0 1024x48 "" flex-column gap0px ai:flex-end jc:center | pad 0px 32px | bg rgb(42, 42, 43) | ov hidden 
+DIV [Info Stack] 311,14 681x21 "" flex-row gap32px ai:center jc:flex-start 
+DIV [Mobile] 311,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380630763022] 311,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 311,14 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+DIV [Phone] 467,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380443377388] 467,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 467,14 124x19 "+38 (094) 906-2388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380949062388
+DIV [Adress] 623,16 234x16 "" flex-row gap4px ai:center jc:flex-start 
+DIV [Велика Васильківська 134] 643,17 214x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 643,14 214x19 "Київ, Велика Васильківська 134" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./contacts#address
+LABEL [] 888,13 1x1 "Select Language" absolute t0px l0px r104.094px b22px | ov hidden | font 12px/normal/400 lsnormal rgb(0, 0, 0) 
+DIV [] 913,14 63x21 "Ukrainian" ov hidden | font 14px/21px/400 lsnormal rgb(146, 145, 150) 
+DIV [Tablet Static] 0,48 1024x84 "" flex-column gap0px ai:flex-start jc:flex-start 
+DIV [Top] 32,48 960x84 "" flex-row gapnormal ai:center jc:space-between | pad 16px 0px 
+DIV [Large] 32,64 180x52 "" flex-row gap0px ai:center jc:center | ov hidden 
+DIV [g8] 32,64 180x52 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Menu] 952,70 40x40 ""  
+DIV [Mobile Nav] 0,132 1024x978 "" flex-column gap60px ai:flex-start jc:flex-start | pad 120px 32px | op 0 
+DIV [Головна] 32,252 960x56 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,242 206x76 "Головна" font 56px/56px/300 ls-2px rgb(90, 90, 94)  href=./
+DIV [Про нас] 32,368 960x56 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,358 197x76 "Про нас" font 56px/56px/300 ls-2px rgb(254, 254, 254)  href=./about-us
+DIV [Про нас] 32,484 960x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,483 116x43 "Про нас" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./about-us
+DIV [Послуги] 32,586 960x56 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,576 199x76 "Послуги" font 56px/56px/300 ls-2px rgb(254, 254, 254)  href=./services
+DIV [Команда] 32,702 960x56 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,692 213x76 "Команда" font 56px/56px/300 ls-2px rgb(254, 254, 254)  href=./team
+DIV [Контакти] 32,818 960x56 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,808 307x76 "Стерилізація" font 56px/56px/300 ls-2px rgb(254, 254, 254)  href=./sterilization
+DIV [Tablet] 0,360 810x540 "" flex-column gap80px ai:flex-start jc:center | pad 80px 32px | bg rgb(32, 32, 33) 
+DIV [logo] 32,420 180x52 "" flex-column gap0px ai:center jc:center | ov hidden 
+DIV [Large] 32,420 180x52 "" flex-row gap0px ai:center jc:center | ov hidden 
+DIV [g8] 32,420 180x52 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Footer Container] 32,552 746x194 "" flex-row gap20px ai:flex-start jc:flex-start | z 1 
+DIV [Footer Nav] 32,552 172x194 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 32,552 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 32,552 172x14 "Навігація" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [Головна] 32,582 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,579 57x19 "Головна" font 14px/14px/400 lsnormal rgb(90, 90, 94)  href=./
+DIV [Про нас] 32,612 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,609 54x19 "Про нас" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./about-us
+DIV [Послуги] 32,642 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,639 55x19 "Послуги" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./services
+DIV [Команда] 32,672 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,669 60x19 "Команда" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./team
+DIV [Контакти] 32,702 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,699 87x19 "Стерилізація" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./sterilization
+DIV [Контакти] 32,732 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 32,729 63x19 "Контакти" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./contacts
+DIV [Footer Nav] 224,552 172x104 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 224,552 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 224,552 172x14 "Дзвоніть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 224,582 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 224,579 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+DIV [+380630763022] 224,612 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 224,609 124x19 "+38 (094) 906-2388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380949062388
+DIV [+380630763022] 224,642 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 224,639 124x19 "+38 (044) 337-7388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380443377388
+DIV [Footer Nav] 415,552 172x134 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 415,552 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 415,552 172x14 "Пишіть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 415,582 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 415,579 61x19 "Telegram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://t.me/+380630763022
+DIV [+380630763022] 415,612 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 415,609 34x19 "Viber" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=viber://chat?number=%2B380630763022
+DIV [+380630763022] 415,642 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 415,639 67x19 "WhatsApp" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://wa.me/+380630763022
+DIV [+380630763022] 415,672 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 415,669 114x19 "info@ukrselt.com" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=mailto:info@ukrselt.com
+DIV [Footer Nav] 607,552 172x74 "" flex-column gap16px ai:flex-start jc:flex-start 
+DIV [Головна] 607,552 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 607,552 172x14 "Підпишіться" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 607,582 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 607,579 66x19 "Instagram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.instagram.com/dental.ukrselt/
+DIV [+380630763022] 607,612 172x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 607,609 62x19 "Facebook" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.facebook.com/profile.php?id=100086790133405
+DIV [] 32,826 239x14 "© 2026 Ukrselt. Всі права захищені." font 14px/14px/400 lsnormal rgb(90, 90, 94) 
+DIV [Variant 1] 534,645 276x255 "" flex-row gap10px ai:center jc:center | ov hidden 
+DIV [Group 1] 534,645 276x255 ""  
+DIV [wrapper] 0,900 1024x12520 "" flex-column gap0px ai:center jc:center | z 5 
+DIV [Services] 0,900 1024x2060 "" flex-column gap0px ai:flex-start jc:flex-start | pad 80px 0px | bg rgb(42, 42, 43) 
+===== 390
+DIV [top-lights] 0,0 390x752 "" absolute t0px l0px r0px b10216.5px | ov hidden | z 4 
+DIV [light] 190,-200 400x400 "" absolute t-200px l190px r-200px b552px | op 0.5 | z 3 
+DIV [light] -200,-200 400x400 "" absolute t-200px l-200px r190px b552px | op 0.5 | z 3 
+DIV [Preloader] 0,0 390x900 "" flex-row gap10px ai:center jc:center | absolute t0px l0px r0px b10068.5px | ov hidden | z 4 
+DIV [Variant 2] 114,358 162x48 "" op 0 | ov hidden 
+DIV [Mobile Static] 0,48 390x64 "" flex-column gap0px ai:flex-start jc:flex-start | ov hidden 
+DIV [Top] 15,60 360x40 "" flex-row gapnormal ai:center jc:space-between 
+DIV [Small] 15,62 128x36 "" flex-column gap0px ai:center jc:center | ov hidden 
+DIV [g8] 15,62 128x36 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Menu] 335,60 40x40 ""  
+DIV [Mobile Nav] 0,112 390x771 "" flex-column gap60px ai:flex-start jc:flex-start | pad 120px 0px 0px 15px | op 0 
+DIV [Головна] 15,232 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,231 121x43 "Головна" font 32px/41.6px/300 ls-0.64px rgb(90, 90, 94)  href=./
+DIV [Про нас] 15,334 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,333 116x43 "Про нас" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./about-us
+DIV [Про нас] 15,435 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,434 116x43 "Про нас" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./about-us
+DIV [Послуги] 15,537 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,536 117x43 "Послуги" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./services
+DIV [Команда] 15,638 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,637 125x43 "Команда" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./team
+DIV [Контакти] 15,740 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,739 182x43 "Стерилізація" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./sterilization
+DIV [Контакти] 15,842 375x42 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 15,841 131x43 "Контакти" font 32px/41.6px/300 ls-0.64px rgb(254, 254, 254)  href=./contacts
+BUTTON [Small] 200,58 118x46 "" flex-row gap0px ai:center jc:center | pad 16px 20px | bg rgb(0, 157, 220) | r 48px 
+DIV [Записатися на прийом] 220,74 78x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 220,74 78x14 "Записатися" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero] 0,0 390x900 "" flex-column gap0px ai:flex-start jc:flex-start | bg rgb(42, 42, 43) | z 2 
+DIV [hero] 0,0 390x900 "" absolute t0px l0px r0px b0px | z 1 
+DIV [Hero - Mobile] 0,0 390x900 "" ov hidden 
+DIV [Title] 15,453 321x367 "" flex-column gap20px ai:flex-start jc:center | absolute t452.781px l15px r54.25px b80px | ov hidden | z 2 
+DIV [Mobile] 15,453 321x151 "" flex-column gap0px ai:flex-start jc:flex-start | ov hidden 
+DIV [Mobile] 15,453 321x58 "" flex-column gap0px ai:center jc:center | ov hidden 
+H2 [] 15,453 321x58 "Змінюємо" font 72px/57.6px/300 ls-1.44px rgb(254, 254, 254) 
+DIV [Variant 2] 15,510 193x94 "" flex-column gap0px ai:flex-start jc:center | ov hidden 
+DIV [wrd1] 15,417 263x94 "" flex-column gapnormal ai:normal jc:flex-start | absolute t-46.7969px l0px r-70.25px b46.7969px | tf matrix(1, 0, 0, 1, 0, -46.7969) | z 1 
+H1 [] 15,417 263x94 "усмішки." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd2] 15,510 193x94 "" flex-column gapnormal ai:normal jc:flex-start | z 1 
+H1 [] 15,510 193x94 "життя." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [wrd1-2] 15,603 263x94 "" flex-column gapnormal ai:normal jc:flex-start | absolute t93px l0px r-70.25px b-93px | z 1 
+H1 [] 15,603 263x94 "усмішки." font 72px/93.6px/300 ls-3px rgb(255, 255, 255) 
+DIV [Відкрийте для себе наших видатних стоматологів, які можуть задовольнити будь-які ваші потреби, і готові забезпечити винятковий досвід стоматологічного відвідування.] 15,624 321x112 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 15,624 321x112 "Urkselt – cтоматологічний центр у серці Києва із в" font 16px/22.4px/400 lsnormal rgb(253, 253, 254) 
+A [СTA] 15,756 226x64 "" flex-row gap0px ai:center jc:center | pad 20px 24px | bg rgb(0, 157, 220) | r 48px  href=./#book
+DIV [Записатися на прийом] 39,776 178x24 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 39,776 178x24 "Записатися на прийом" font 16px/24px/400 lsnormal rgb(254, 254, 254) 
+DIV [Hero Image] -303,48 1147x765 "" absolute t48px l-303px r-454px b86.9688px | z 0 
+IMG [] -303,48 1147x765 "" ov clip DmjGusj5OF8KSpYTaUEfHyOgMs.png?width=2048&height=1366 alt=
+DIV [Overlay] 0,0 390x900 "" absolute t0px l0px r0px b0px 
+IMG [] 0,0 390x900 "" ov clip FEOq5c6MLlnF9a9KG0JB9XrBg3o.png?scale-down-to=512&width=1440&height=810 alt=
+DIV [Curtain] 0,-812 390x812 "" absolute t-812px l0px r0px b900px | bg rgb(42, 42, 43) | ov hidden | z 4 
+DIV [Phone Animation] 0,0 390x48 "" flex-column gap0px ai:flex-end jc:center | pad 0px 15px | bg rgb(42, 42, 43) | ov hidden 
+DIV [Info Stack] 116,14 259x21 "" flex-row gap32px ai:center jc:flex-end 
+DIV [Mobile] 116,17 124x14 "" flex-row gap4px ai:center jc:flex-start 
+DIV [+380630763022] 116,17 124x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 116,14 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+LABEL [] 271,13 1x1 "Select Language" absolute t0px l0px r104.094px b22px | ov hidden | font 12px/normal/400 lsnormal rgb(0, 0, 0) 
+DIV [] 296,14 63x21 "Ukrainian" ov hidden | font 14px/21px/400 lsnormal rgb(146, 145, 150) 
+DIV [Phone] 0,135 390x765 "" flex-column gap48px ai:flex-start jc:flex-start | pad 40px 16px | bg rgb(32, 32, 33) 
+DIV [logo] 16,175 180x52 "" flex-column gap0px ai:center jc:center | ov hidden 
+DIV [Large] 16,175 180x52 "" flex-row gap0px ai:center jc:center | ov hidden 
+DIV [g8] 16,175 180x52 "" bgi url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewB 
+DIV [Footer Container] 16,275 358x456 "" flex-column gap48px ai:flex-start jc:flex-start | z 1 
+DIV [Footer Nav] 16,275 169x242 "" flex-column gap24px ai:flex-start jc:flex-start 
+DIV [Головна] 16,275 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 16,275 169x14 "Навігація" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [Головна] 16,313 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,310 57x19 "Головна" font 14px/14px/400 lsnormal rgb(90, 90, 94)  href=./
+DIV [Про нас] 16,351 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,348 54x19 "Про нас" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./about-us
+DIV [Послуги] 16,389 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,386 55x19 "Послуги" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./services
+DIV [Команда] 16,427 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,424 60x19 "Команда" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./team
+DIV [Контакти] 16,465 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,462 87x19 "Стерилізація" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./sterilization
+DIV [Контакти] 16,503 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,500 63x19 "Контакти" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=./contacts
+DIV [Footer Nav] 205,275 169x128 "" flex-column gap24px ai:flex-start jc:flex-start 
+DIV [Головна] 205,275 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 205,275 169x14 "Дзвоніть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 205,313 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 205,310 124x19 "+38 (063) 076-3022" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380630763022
+DIV [+380630763022] 205,351 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 205,348 124x19 "+38 (094) 906-2388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380949062388
+DIV [+380630763022] 205,389 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 205,386 124x19 "+38 (044) 337-7388" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=tel:+380443377388
+DIV [Footer Nav] 16,565 169x166 "" flex-column gap24px ai:flex-start jc:flex-start 
+DIV [Головна] 16,565 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 16,565 169x14 "Пишіть" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 16,603 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,600 61x19 "Telegram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://t.me/+380630763022
+DIV [+380630763022] 16,641 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,638 34x19 "Viber" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=viber://chat?number=%2B380630763022
+DIV [+380630763022] 16,679 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,676 67x19 "WhatsApp" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://wa.me/+380630763022
+DIV [+380630763022] 16,717 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 16,714 114x19 "info@ukrselt.com" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=mailto:info@ukrselt.com
+DIV [Footer Nav] 205,565 169x90 "" flex-column gap24px ai:flex-start jc:flex-start 
+DIV [Головна] 205,565 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+P [] 205,565 169x14 "Підпишіться" font 14px/14px/400 lsnormal rgb(254, 254, 254) 
+DIV [+380630763022] 205,603 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 205,600 66x19 "Instagram" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.instagram.com/dental.ukrselt/
+DIV [+380630763022] 205,641 169x14 "" flex-column gapnormal ai:normal jc:flex-start 
+A [] 205,638 62x19 "Facebook" font 14px/14px/400 lsnormal rgb(146, 145, 150)  href=https://www.facebook.com/profile.php?id=100086790133405
+DIV [] 16,779 358x14 "© 2026 Ukrselt. Всі права захищені." font 14px/14px/400 lsnormal rgb(90, 90, 94) 
+DIV [wrapper] 0,900 390x10068 "" flex-column gap0px ai:center jc:flex-start | z 5 
+DIV [Services] 0,900 390x1940 "" flex-column gap0px ai:flex-start jc:flex-start | pad 0px 0px 40px | bg rgb(42, 42, 43) 
+DIV [Sticky] 0,900 390x900 "" flex-row gap0px ai:center jc:center | sticky t0px lauto rauto bauto | ov hidden | z 1 

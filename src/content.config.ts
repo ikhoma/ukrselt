@@ -22,6 +22,8 @@ const team = defineCollection({
       role: z.string(),
       photo: image(),
       photoAlt: z.string(),
+      /** Фото для блоку Team на головній (Framer: doc1…doc6). Є — людина показується на головній. */
+      homePhoto: image().optional(),
       /** Окрема сторінка /team/<slug> (slug = ім'я файлу). Немає — немає кнопки «Детальніше». */
       page: z
         .object({

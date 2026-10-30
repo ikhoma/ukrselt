@@ -2,7 +2,7 @@
 /**
  * booking (Framer): фото + «Записатися» + форма. Остання секція сторінки (радіус знизу 40).
  * Форма — нова (SPEC §7.1): Ім'я (необов'язкове), Телефон (обов'язковий), «Записатися на діагностику».
- * Відправка й стани кнопки підключаються на етапі 5; поки форма лише розмічена (action="/api/contact").
+ * Відправка: /api/contact (ADR-0004). Без JS — звичайний POST; з JS — fetch, стани кнопки, подія form_submit після успіху.
  */
 import { Image } from 'astro:assets';
 import { getLocale, useTranslations } from '../i18n';
@@ -17,6 +17,7 @@ const { service } = Astro.props;
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
+const uid = `book-${service.replace(/[^a-z0-9]/gi, '-')}`;
 ---
 
 <section class="booking" id="book">
@@ -34,11 +35,18 @@ const c = getPage(locale, 'booking');
         </label>
         <label class="field">
           <span class="label">{c.phoneLabel}</span>
-          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder={t('form.phonePlaceholder')} /></span>
+          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
+          <span class="field-error" id={`${uid}-phone-error`} data-phone-error hidden>{t('form.phoneRequired')}</span>
         </label>
+        <input type="hidden" name="service" value={service} />
+        <input type="hidden" name="page" value={Astro.url.pathname} />
+        <input type="hidden" name="elapsed" value="" data-elapsed />
         <!-- honeypot (ADR-0004) -->
         <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="submit" type="submit">{t('form.submit')}</button>
+        <button class="submit" type="submit" data-submit data-text-idle={t('form.submit')} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
+          <span class="submit-label" data-submit-label>{t('form.submit')}</span>
+        </button>
+        <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
         <p class="note">{t('form.note')}</p>
       </form>
     </div>
@@ -158,6 +166,38 @@ const c = getPage(locale, 'booking');
   .submit:hover {
     background: var(--color-lighter-blue);
   }
+  .submit[disabled] {
+    cursor: default;
+  }
+  .submit[data-state='sending'] {
+    background: var(--color-lighter-blue);
+  }
+  /* Мікроанімація зміни стану (SPEC §7.1, вигляд TBD): текст виїжджає знизу. */
+  .submit-label {
+    display: inline-block;
+  }
+  .submit-label.is-swapping {
+    animation: label-in 350ms var(--ease-hover-pill) both;
+  }
+  @keyframes label-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .field-error,
+  .form-error {
+    font-size: 14px;
+    line-height: 140%;
+    color: #ff6b6b;
+  }
+  .control:has(input[aria-invalid='true'])::after {
+    border-color: rgba(255, 107, 107, 0.6);
+  }
   .note {
     font-size: 14px;
     line-height: 14px;
@@ -199,3 +239,80 @@ const c = getPage(locale, 'booking');
     }
   }
 </style>
+
+<script>
+  type DL = { dataLayer?: Record<string, unknown>[] };
+  const digits = (v: string) => v.replace(/\D/g, '');
+  const validPhone = (v: string) => {
+    const d = digits(v);
+    const full = d.length === 10 && d.startsWith('0') ? `38${d}` : d;
+    return full.length >= 10 && full.length <= 15;
+  };
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-booking-form]')) {
+    const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    const phoneError = form.querySelector<HTMLElement>('[data-phone-error]')!;
+    const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const button = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const elapsed = form.querySelector<HTMLInputElement>('[data-elapsed]')!;
+    let startedAt = 0;
+    let resetTimer = 0;
+
+    const setLabel = (text: string) => {
+      label.textContent = text;
+      label.classList.remove('is-swapping');
+      void label.offsetWidth;
+      label.classList.add('is-swapping');
+    };
+    const setState = (state: 'idle' | 'sending' | 'success') => {
+      button.dataset.state = state;
+      button.disabled = state !== 'idle';
+      setLabel(button.dataset[`text${state[0].toUpperCase()}${state.slice(1)}` as 'textIdle'] ?? '');
+    };
+    const showPhoneError = (show: boolean) => {
+      phoneError.hidden = !show;
+      phone.setAttribute('aria-invalid', String(show));
+    };
+
+    form.addEventListener('focusin', () => (startedAt ||= Date.now()));
+    form.addEventListener('input', () => (startedAt ||= Date.now()));
+    phone.addEventListener('input', () => phoneError.hidden || showPhoneError(!validPhone(phone.value)));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (button.disabled) return;
+      formError.hidden = true;
+      if (!validPhone(phone.value)) {
+        showPhoneError(true);
+        phone.focus();
+        return;
+      }
+      showPhoneError(false);
+      elapsed.value = String(startedAt ? Date.now() - startedAt : '');
+      setState('sending');
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+        const data = await res.json().catch(() => ({ ok: false }));
+        if (!res.ok || !data.ok) {
+          if (data.error === 'phone') {
+            setState('idle');
+            showPhoneError(true);
+            return;
+          }
+          throw new Error('send');
+        }
+        const w = window as unknown as DL;
+        (w.dataLayer ||= []).push({ event: 'form_submit', service: form.dataset.service });
+        setState('success');
+        form.reset();
+        startedAt = 0;
+        clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => setState('idle'), 6000);
+      } catch {
+        setState('idle');
+        formError.hidden = false;
+      }
+    });
+  }
+</script>

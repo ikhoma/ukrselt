@@ -3,6 +3,7 @@
  * Базовий шаблон сторінки: <head>, SEO, Schema.org.
  * SPEC §6. GTM і Hotjar додаються на етапі 5 (ADR-0007).
  */
+import Analytics from '../components/Analytics.astro';
 import '../styles/global.css';
 import { locales, defaultLocale, localeHtmlLang } from '../i18n/config';
 import { getLocale } from '../i18n';
@@ -91,8 +92,10 @@ const schema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     <slot name="head" />
+    <Analytics part="head" />
   </head>
   <body>
+    <Analytics part="body" />
     <slot />
   </body>
 </html>

@@ -175,6 +175,15 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   .pill:hover::before {
     opacity: 1;
   }
+  /* Stroke (Framer data-border → ::after): 1px rgba(255,255,255,0.09), всередині, у всіх станах. */
+  .pill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: inherit;
+    pointer-events: none;
+  }
   .pill.is-active {
     background-image: none;
     background-color: var(--color-clean-white);

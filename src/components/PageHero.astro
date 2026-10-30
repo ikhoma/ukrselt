@@ -18,7 +18,7 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
 ---
 
 <section class:list={['page-hero', { 'page-hero--tablet-offset': tabletOffset }]}>
-  <Image class="image" src={image} alt={imageAlt} widths={[768, 1440, 2048]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" />
+  <Image class="image" data-parallax="0.1" src={image} alt={imageAlt} widths={[768, 1440, 2048]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" />
   <div class="overlay"></div>
   <div class="title">
     <h1 class="text-heading-1">{title}</h1>

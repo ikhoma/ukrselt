@@ -23,10 +23,10 @@ const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false }
 <section class:list={['service', `service--image-${imagePosition}`, { 'service--first': first }]}>
   {imagePosition === 'right' && <Lights size={900} offset={400} />}
   <div class="text">
-    <h2 class="text-heading-2">{title}</h2>
+    <h2 class="text-heading-2" data-appear>{title}</h2>
     <div class="body">
-      <p class="text-body-2">{lead}</p>
-      {paragraphs.map((t) => <p class="text-body">{t}</p>)}
+      <p class="text-body-2" data-appear>{lead}</p>
+      {paragraphs.map((t) => <p class="text-body" data-appear>{t}</p>)}
     </div>
   </div>
   <div class="pic">

@@ -1,0 +1,33 @@
+---
+/**
+ * Прелоадер головної (Framer: Preloader + Curtain, SPEC §4.1): темна шторка на весь екран з анімованим логотипом
+ * (logo-preloader.svg, SMIL 1 с). Через ~2 с від початку завантаження (і не раніше події load) шторка їде вгору
+ * за ~520 мс (заміряна крива, src/scripts/motion.ts). Без JS не показується.
+ */
+import logo from '../assets/logo/logo-preloader.svg?raw';
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="logo" set:html={logo} />
+</div>
+
+<style>
+  .preloader {
+    display: none;
+  }
+  :global(.js) .preloader {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-almost-black);
+    will-change: transform;
+  }
+  .logo :global(svg) {
+    display: block;
+    width: 223px;
+    height: 66px;
+  }
+</style>

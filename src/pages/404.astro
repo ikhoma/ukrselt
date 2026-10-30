@@ -11,7 +11,7 @@ import { pageImage } from '../content/images';
 const c = getPage(getLocale(Astro.url), '404');
 ---
 
-<BaseLayout title={c.seo.title} description={c.seo.description} noindex>
+<BaseLayout title={c.seo.title} description={c.seo.description} noindex noSmoothScroll>
   <main class="not-found">
     <Image class="image" src={pageImage(c.image)} alt="" widths={[768, 1440, 2048]} sizes="100vw" format="webp" loading="eager" />
     <div class="overlay"></div>

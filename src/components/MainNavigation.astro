@@ -51,7 +51,7 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     </div>
   </div>
 
-  <div class="mobile-menu" id="mobile-menu" data-menu hidden>
+  <div class="mobile-menu" id="mobile-menu" data-menu data-lenis-prevent hidden>
     <ul class="mobile-nav">
       {
         mobileNav.map((k) => (

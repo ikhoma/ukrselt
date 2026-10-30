@@ -5,6 +5,7 @@
  */
 import PageLayout from '../layouts/PageLayout.astro';
 import HomeHero from '../components/HomeHero.astro';
+import Preloader from '../components/Preloader.astro';
 import HomeShowcase from '../components/HomeShowcase.astro';
 import MediaSplit from '../components/MediaSplit.astro';
 import Lights from '../components/Lights.astro';
@@ -22,6 +23,7 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto);
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
+  <Preloader />
   <HomeHero title={c.hero.title} words={c.hero.words} h1={c.hero.h1} text={c.hero.text} cta={c.hero.cta} />
 
   <HomeShowcase

@@ -14,11 +14,13 @@ interface Props {
   description: string;
   /** Для службових сторінок (404, тимчасові). */
   noindex?: boolean;
+  /** Без плавного скролу (404, як у Framer). */
+  noSmoothScroll?: boolean;
   /** Абсолютний або відносний шлях до OG-картинки. */
   ogImage?: string;
 }
 
-const { title, description, noindex = false, ogImage = '/og.png' } = Astro.props;
+const { title, description, noindex = false, ogImage = '/og.png', noSmoothScroll = false } = Astro.props;
 const site = Astro.site ?? new URL('https://ukrselt.com');
 const locale = getLocale(Astro.url);
 
@@ -63,9 +65,10 @@ const schema = {
 ---
 
 <!doctype html>
-<html lang={localeHtmlLang[locale]} style={transitionCssVars()}>
+<html lang={localeHtmlLang[locale]} style={transitionCssVars()} data-no-smooth-scroll={noSmoothScroll || undefined}>
   <head>
     <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -97,5 +100,8 @@ const schema = {
   <body>
     <Analytics part="body" />
     <slot />
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>

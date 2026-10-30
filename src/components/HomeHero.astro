@@ -22,7 +22,7 @@ const locale = getLocale(Astro.url);
 ---
 
 <section class="hero">
-  <div class="hero-image" data-hero-image>
+  <div class="hero-image" data-parallax="0.1">
     <Image src={hero} alt="" widths={[780, 1440, 2048]} sizes="(max-width: 1199.98px) 300vw, 100vw" format="webp" loading="eager" fetchpriority="high" />
   </div>
   <Image class="overlay" src={overlay} alt="" widths={[1440]} sizes="100vw" format="webp" loading="eager" />
@@ -31,7 +31,9 @@ const locale = getLocale(Astro.url);
     <div class="heading" aria-hidden="true">
       <span class="lead-word">{title}</span>
       <span class="text-loop" data-text-loop>
-        {words.map((w, i) => <span class:list={['word', { 'is-active': i === 0 }]}>{w}</span>)}
+        <span class="stack" data-text-loop-stack>
+          {[...words, words[0]].map((w) => <span class="word">{w}</span>)}
+        </span>
       </span>
     </div>
     <div class="row">
@@ -100,14 +102,14 @@ const locale = getLocale(Astro.url);
     overflow: hidden;
     height: 1.3em;
   }
+  .stack {
+    display: block;
+    will-change: transform;
+  }
   .word {
     display: block;
+    height: 1.3em;
     white-space: nowrap;
-  }
-  .word:not(.is-active) {
-    position: absolute;
-    top: 100%;
-    left: 0;
   }
   .row {
     display: flex;

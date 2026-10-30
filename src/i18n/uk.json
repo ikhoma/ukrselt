@@ -1,0 +1,20 @@
+{
+  "nav.home": "Головна",
+  "nav.services": "Послуги",
+  "nav.team": "Команда",
+  "nav.price": "Ціни",
+  "nav.sterilization": "Стерилізація",
+  "nav.about": "Про нас",
+  "nav.contacts": "Контакти",
+  "nav.book": "Записатися",
+  "localeSelector.label": "Select Language",
+  "footer.rights": "Всі права захищені.",
+  "form.submit": "Записатися на діагностику",
+  "form.sending": "Надсилаємо…",
+  "form.success": "Дякуємо! Скоро зателефонуємо",
+  "form.error": "Не вдалося надіслати. Спробуйте ще раз або зателефонуйте +38 (063) 076-3022",
+  "form.phoneRequired": "Вкажіть номер телефону",
+  "form.namePlaceholder": "Ваше ім'я",
+  "form.phonePlaceholder": "+38 (0__) ___-__-__",
+  "form.note": "Адміністратор зв'яжеться з вами в робочий час клініки, щоб погодити зручний час візиту."
+}

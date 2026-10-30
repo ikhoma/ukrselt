@@ -1,0 +1,141 @@
+/*
+ * Дизайн-токени Ukrselt. Джерело: Framer → Assets (Colors, Text Styles) + CSS живого сайту.
+ * SPEC §3. Назви — kebab-case від назв у Framer, друкарські помилки виправлено.
+ *
+ * Брейкпоінти (Framer, desktop-first):
+ *   Desktop       ≥ 1440   — базові значення
+ *   Small Desktop 1200–1439  @media (max-width: 1439.98px)
+ *   Tablet        810–1199   @media (max-width: 1199.98px)
+ *   Phone         ≤ 809      @media (max-width: 809.98px)
+ */
+
+:root {
+  /* ── Кольори ─────────────────────────────── */
+  --color-clean-white: #fefefe;
+  --color-night-black: #202021;
+  --color-almost-black: #2a2a2b; /* у Framer також «Grey» (дубль) */
+  --color-dark-grey: #323234;
+  --color-greyish: #5a5a5e;
+  --color-somewhat-light-grey: #929196;
+  --color-light-grey: #b3b3b3;
+  --color-ukrselt-blue: #009ddc; /* у Framer «Ukrcelt blue» */
+  --color-lighter-blue: #0fbbff;
+  --color-blue-light: #d5ecf5;
+  --color-yellow: #ffb700;
+
+  /* ── Шрифт ───────────────────────────────── */
+  --font-family: 'Open Sans', sans-serif;
+
+  /* ── Текстові стилі ──────────────────────── */
+  /* Heading 2 (h2) */
+  --text-heading-2-size: 64px;
+  --text-heading-2-line-height: 100%;
+  --text-heading-2-letter-spacing: -2px;
+  --text-heading-2-weight: 300;
+  --text-heading-2-color: var(--color-clean-white);
+
+  /* Heading 3 (h3) */
+  --text-heading-3-size: 32px;
+  --text-heading-3-line-height: 130%;
+  --text-heading-3-letter-spacing: -0.02em;
+  --text-heading-3-weight: 300;
+  --text-heading-3-color: var(--color-clean-white);
+
+  /* Heading 4 (h4) */
+  --text-heading-4-size: 24px;
+  --text-heading-4-line-height: 130%;
+  --text-heading-4-letter-spacing: 0;
+  --text-heading-4-weight: 300;
+  --text-heading-4-color: var(--color-clean-white);
+
+  /* Body 2 (p) */
+  --text-body-2-size: 20px;
+  --text-body-2-line-height: 140%;
+  --text-body-2-letter-spacing: -0.01em;
+  --text-body-2-weight: 400;
+  --text-body-2-color: var(--color-somewhat-light-grey);
+
+  /* Body (p) */
+  --text-body-size: 16px;
+  --text-body-line-height: 140%;
+  --text-body-letter-spacing: 0;
+  --text-body-weight: 400;
+  --text-body-color: var(--color-somewhat-light-grey);
+
+  /* Body 3 (p) */
+  --text-body-3-size: 14px;
+  --text-body-3-line-height: 100%;
+  --text-body-3-letter-spacing: 0;
+  --text-body-3-weight: 400;
+  --text-body-3-color: var(--color-somewhat-light-grey);
+
+  /* TBD (SPEC §3.2): Heading 1 (96px / 130%, решту зняти з Framer), Link, Link 2. */
+}
+
+@media (max-width: 1439.98px) {
+  :root {
+    --text-body-2-line-height: 120%;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  :root {
+    --text-heading-2-size: 56px;
+  }
+}
+
+@media (max-width: 809.98px) {
+  :root {
+    --text-heading-2-size: 40px;
+  }
+}
+
+/* ── Класи текстових стилів (як framer-styles-preset) ── */
+.text-heading-2 {
+  font-family: var(--font-family);
+  font-size: var(--text-heading-2-size);
+  line-height: var(--text-heading-2-line-height);
+  letter-spacing: var(--text-heading-2-letter-spacing);
+  font-weight: var(--text-heading-2-weight);
+  color: var(--text-heading-2-color);
+}
+.text-heading-3 {
+  font-family: var(--font-family);
+  font-size: var(--text-heading-3-size);
+  line-height: var(--text-heading-3-line-height);
+  letter-spacing: var(--text-heading-3-letter-spacing);
+  font-weight: var(--text-heading-3-weight);
+  color: var(--text-heading-3-color);
+}
+.text-heading-4 {
+  font-family: var(--font-family);
+  font-size: var(--text-heading-4-size);
+  line-height: var(--text-heading-4-line-height);
+  letter-spacing: var(--text-heading-4-letter-spacing);
+  font-weight: var(--text-heading-4-weight);
+  color: var(--text-heading-4-color);
+}
+.text-body-2 {
+  font-family: var(--font-family);
+  font-size: var(--text-body-2-size);
+  line-height: var(--text-body-2-line-height);
+  letter-spacing: var(--text-body-2-letter-spacing);
+  font-weight: var(--text-body-2-weight);
+  color: var(--text-body-2-color);
+}
+.text-body {
+  font-family: var(--font-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  letter-spacing: var(--text-body-letter-spacing);
+  font-weight: var(--text-body-weight);
+  color: var(--text-body-color);
+}
+.text-body-3 {
+  font-family: var(--font-family);
+  font-size: var(--text-body-3-size);
+  line-height: var(--text-body-3-line-height);
+  letter-spacing: var(--text-body-3-letter-spacing);
+  font-weight: var(--text-body-3-weight);
+  color: var(--text-body-3-color);
+}

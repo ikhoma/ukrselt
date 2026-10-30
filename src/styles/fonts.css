@@ -1,0 +1,5 @@
+/* Open Sans, self-hosted через Fontsource (ADR-0006). Inter не використовуємо.
+   Кожен файл містить @font-face з unicode-range: браузер вантажить лише потрібні підмножини (cyrillic, latin). */
+@import '@fontsource/open-sans/300.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/700.css';

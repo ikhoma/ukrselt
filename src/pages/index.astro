@@ -1,0 +1,98 @@
+---
+/**
+ * ТИМЧАСОВА сторінка етапу 0: перевірка токенів і шрифту на preview.
+ * Замінюється справжньою головною на етапі 4. noindex.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const colors = [
+  'clean-white',
+  'night-black',
+  'almost-black',
+  'dark-grey',
+  'greyish',
+  'somewhat-light-grey',
+  'light-grey',
+  'ukrselt-blue',
+  'lighter-blue',
+  'blue-light',
+  'yellow',
+];
+const styles = [
+  ['text-heading-2', 'h2', 'Heading 2 — Широкий спектр'],
+  ['text-heading-3', 'h3', 'Heading 3 — Наша команда'],
+  ['text-heading-4', 'h4', 'Heading 4 — Сучасне обладнання та матеріали'],
+  ['text-body-2', 'p', 'Body 2 — Аліса Горецька'],
+  ['text-body', 'p', 'Body — Ми пропонуємо широкий спектр послуг'],
+  ['text-body-3', 'p', 'Body 3 — +38 (063) 076-3022'],
+];
+---
+
+<BaseLayout title="Ukrselt — етап 0 (токени)" description="Тимчасова сторінка перевірки токенів." noindex>
+  <main class="wrap">
+    <p class="text-body-3">Тимчасова сторінка етапу 0. Не для індексації.</p>
+
+    <section>
+      <h2 class="text-heading-4">Кольори</h2>
+      <ul class="swatches">
+        {
+          colors.map((c) => (
+            <li>
+              <span class="chip" style={`background: var(--color-${c})`} />
+              <code class="text-body-3">--color-{c}</code>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-heading-4">Текстові стилі</h2>
+      {
+        styles.map(([cls, Tag, text]) => (
+          <div class="row">
+            <code class="text-body-3">.{cls}</code>
+            <Tag class={cls}>{text}</Tag>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .wrap {
+    padding: 48px;
+    display: grid;
+    gap: 48px;
+  }
+  section {
+    display: grid;
+    gap: 24px;
+  }
+  .swatches {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .swatches li {
+    display: grid;
+    gap: 8px;
+  }
+  .chip {
+    display: block;
+    height: 64px;
+    border-radius: 12px;
+    border: 1px solid var(--color-greyish);
+  }
+  .row {
+    display: grid;
+    gap: 8px;
+  }
+  code {
+    color: var(--color-light-grey);
+  }
+</style>

@@ -98,7 +98,43 @@ const loop = document.querySelector<HTMLElement>('[data-text-loop]');
 
 /** Заміряна крива шторки прелоадера (частка шляху від часу), ~520 мс. */
 const CURTAIN_EASE = 'linear(0 0%, 0.12 12%, 0.51 24%, 0.79 37%, 0.92 49%, 0.96 61%, 0.99 73%, 1 100%)';
-const PRELOADER_MIN_MS = 2000;
+/** Ритм прелоадера (рішення Івана 31.10): хрест заповнюється мінімум 1 с, тримається 1 с, далі шторка. */
+const FILL_MIN_MS = 1000;
+const HOLD_MS = 1000;
+/** Якщо критичне (фото Hero, оверлей, шрифт) не прийшло за цей час — відкриваємо однаково. */
+const CRITICAL_TIMEOUT_MS = 6000;
+
+/** cubic-bezier(x1, y1, x2, y2) як функція часу 0..1 → 0..1. */
+function bezier(x1: number, y1: number, x2: number, y2: number) {
+  const f = (a: number, b: number, t: number) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+  return (x: number) => {
+    let lo = 0, hi = 1, t = x;
+    for (let i = 0; i < 30; i++) {
+      t = (lo + hi) / 2;
+      if (f(x1, x2, t) < x) lo = t;
+      else hi = t;
+    }
+    return f(y1, y2, t);
+  };
+}
+const fillEase = bezier(0.5, 0, 0, 1);
+
+/**
+ * Прогрес критичних ресурсів 0..1: фото Hero, оверлей, шрифти.
+ * Решта сторінки довантажується вже під відкритою шторкою.
+ */
+function criticalProgress(onChange: (p: number) => void) {
+  const tasks: Promise<unknown>[] = [
+    ...[...document.querySelectorAll<HTMLImageElement>('img[data-critical]')].map((img) =>
+      img.complete ? Promise.resolve() : new Promise((r) => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); }),
+    ),
+    document.fonts?.ready ?? Promise.resolve(),
+  ];
+  let done = 0;
+  onChange(0);
+  tasks.forEach((t) => t.then(() => onChange(++done / tasks.length)));
+  setTimeout(() => onChange(1), CRITICAL_TIMEOUT_MS);
+}
 
 function startLoop() {
   if (!loop) return;
@@ -127,16 +163,31 @@ function startLoop() {
 
 if (preloader) {
   lenis?.stop();
-  // Модуль виконується після розбору HTML; картинок не чекаємо. Мінімум 2 с від початку навігації, як у Framer.
-  const wait = Math.max(0, PRELOADER_MIN_MS - performance.now());
-  setTimeout(() => {
-    preloader.style.animation = 'none';
-    preloader.style.transition = `transform 520ms ${CURTAIN_EASE}`;
-    preloader.style.transform = 'translateY(-100%)';
-    setTimeout(() => preloader.remove(), 600);
-    lenis?.start();
-    startLoop();
-  }, wait);
+  const wipe = preloader.querySelector<SVGElement>('.wipe');
+  const logo = preloader.querySelector<HTMLElement>('.logo');
+  preloader.style.animation = 'none'; // CSS-запобіжник не потрібен, JS працює
+  if (wipe) wipe.style.animation = 'none';
+  let target = 0;
+  criticalProgress((p) => (target = Math.max(target, p)));
+  const t0 = performance.now();
+  const tick = (now: number) => {
+    // Заповнення не швидше за 1 с по кривій лого і не більше, ніж реально завантажено.
+    const shown = Math.min(target, fillEase(Math.min(1, (now - t0) / FILL_MIN_MS)));
+    if (wipe) wipe.style.transform = `scaleY(${shown})`;
+    if (shown < 1) return requestAnimationFrame(tick);
+    setTimeout(() => {
+      if (logo) {
+        logo.style.transition = 'opacity 200ms ease-out';
+        logo.style.opacity = '0';
+      }
+      preloader.style.transition = `transform 520ms ${CURTAIN_EASE}`;
+      preloader.style.transform = 'translateY(-100%)';
+      setTimeout(() => preloader.remove(), 600);
+      lenis?.start();
+      startLoop();
+    }, HOLD_MS);
+  };
+  requestAnimationFrame(tick);
 } else {
   startLoop();
 }

@@ -23,9 +23,9 @@ const locale = getLocale(Astro.url);
 
 <section class="hero">
   <div class="hero-image" data-parallax="0.1">
-    <Image src={hero} alt="" widths={[780, 1440, 2048]} sizes="(max-width: 1199.98px) 300vw, 100vw" format="webp" loading="eager" fetchpriority="high" />
+    <Image src={hero} alt="" widths={[780, 1440, 2048]} sizes="(max-width: 1199.98px) 300vw, 100vw" format="webp" loading="eager" fetchpriority="high" data-critical />
   </div>
-  <Image class="overlay" src={overlay} alt="" widths={[1440]} sizes="100vw" format="webp" loading="eager" />
+  <Image class="overlay" src={overlay} alt="" widths={[1440]} sizes="100vw" format="webp" loading="eager" data-critical />
   <div class="title">
     <h1 class="sr-only">{h1}</h1>
     <div class="heading" aria-hidden="true">

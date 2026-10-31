@@ -1,6 +1,7 @@
 ---
 /**
  * Прелоадер головної (Framer: Preloader + Curtain, SPEC §4.1): темна шторка на весь екран з анімованим логотипом
+ * Стоїть першим у <body> (слот preloader у PageLayout), щоб на повільній мережі шапка не малювалась раніше.
  * (logo-preloader.svg: синій хрест «виростає» знизу, easing 0.5 0 0 1). Ритм (рішення Івана 31.10): хрест заповнюється
  * за реальним прогресом критичного (фото Hero, оверлей, шрифт), але не швидше ніж за 1 с; 1 с тримається заповненим;
  * далі лого швидко гасне і шторка їде вгору (~520 мс). Логіка — src/scripts/motion.ts.
@@ -9,46 +10,21 @@
 import logo from '../assets/logo/logo-preloader.svg?raw';
 ---
 
+<!-- Стилі інлайном і без scoped-класів: шторка має бути намальована першою, ще до завантаження CSS-файлів. -->
+<style is:inline>
+  .preloader { display: none; }
+  .js .preloader {
+    position: fixed; z-index: 1000; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #2a2a2b; will-change: transform;
+    animation: preloader-failsafe 0.5s ease 8s forwards;
+  }
+  @keyframes preloader-failsafe { to { transform: translateY(-100%); visibility: hidden; } }
+  .preloader .wipe { transform-box: fill-box; transform-origin: 50% 100%; animation: preloader-wipe 1s cubic-bezier(0.5, 0, 0, 1) both; }
+  @keyframes preloader-wipe { from { transform: scaleY(0); } }
+  .preloader svg { display: block; width: 223px; height: 66px; }
+</style>
+
 <div class="preloader" data-preloader aria-hidden="true">
   <div class="logo" set:html={logo} />
 </div>
-
-<style>
-  .preloader {
-    display: none;
-  }
-  :global(.js) .preloader {
-    position: fixed;
-    z-index: 1000;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-almost-black);
-    will-change: transform;
-  }
-  :global(.js) .preloader {
-    animation: preloader-failsafe 0.5s ease 8s forwards;
-  }
-  @keyframes preloader-failsafe {
-    to {
-      transform: translateY(-100%);
-      visibility: hidden;
-    }
-  }
-  .logo :global(.wipe) {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: wipe 1s cubic-bezier(0.5, 0, 0, 1) both;
-  }
-  @keyframes wipe {
-    from {
-      transform: scaleY(0);
-    }
-  }
-  .logo :global(svg) {
-    display: block;
-    width: 223px;
-    height: 66px;
-  }
-</style>

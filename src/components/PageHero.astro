@@ -1,7 +1,7 @@
 ---
 /**
  * Hero сторінки з фото (Framer: Paralax на «Про нас», Hero на «Стерилізації»).
- * 720px (Desktop/Tablet), 900px (Phone); фото cover з відступом -90px (паралакс — етап 6), оверлей rgba(51,51,51,0.5).
+ * Висота 70vh (мін. — текст + відступ), H1 на 200 px / 160 px як на інших сторінках (рішення Івана 31.10); фото cover, паралакс, оверлей rgba(51,51,51,0.5).
  */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -27,10 +27,18 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
 </section>
 
 <style>
+  /*
+   * Рішення Івана 31.10 (відхід від Framer, де Hero 720/900 px з відступом 48 і заголовком по центру):
+   *  - Hero починається з верху сторінки під TopBar (як на головній) — без margin-top, який «протікав» і давав чорну смугу;
+   *  - H1 на тій самій висоті, що й на сторінках без фото (200 px, на телефоні 160 px), щоб заголовок не стрибав між сторінками;
+   *  - висота 70% вікна, але не менша за текст + відступ знизу.
+   */
   .page-hero {
     position: relative;
-    height: 720px;
-    margin-top: 48px; /* під TopBar, як у Framer */
+    min-height: 70vh;
+    padding: 200px 80px 120px;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     background: var(--color-almost-black);
   }
@@ -39,7 +47,7 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
     top: -90px;
     left: 0;
     width: 100%;
-    height: 900px;
+    height: calc(100% + 180px);
     object-fit: cover;
   }
   .overlay {
@@ -48,10 +56,8 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
     background: rgba(51, 51, 51, 0.5);
   }
   .title {
-    position: absolute;
-    top: 360px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -66,6 +72,12 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
     line-height: var(--text-body-line-height);
     color: var(--color-clean-white);
   }
+  @media (max-width: 1439.98px) {
+    .page-hero {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
   @media (max-width: 1199.98px) {
     .page-hero:not(.page-hero--tablet-offset) .image {
       top: 0;
@@ -73,18 +85,12 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
     }
   }
   @media (max-width: 809.98px) {
+    .page-hero {
+      padding: 160px 15px 80px;
+    }
     .page-hero .image {
       top: 0;
       height: 100%;
-    }
-  }
-  @media (max-width: 809.98px) {
-    .page-hero {
-      height: 900px;
-    }
-    .title {
-      top: 450px;
-      padding: 0 15px;
     }
   }
 </style>

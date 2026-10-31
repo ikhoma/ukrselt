@@ -1,20 +1,30 @@
 ---
 /**
- * Оверлей «Записатися» (Framer: #overlay з компонентом Form). Відкривається кнопкою «Записатися» в шапці ([data-open-booking]).
+ * Оверлей форми (Framer: #overlay з компонентом Form). «Записатися» — кнопка в шапці ([data-open-booking]);
+ * «Замовити дзвінок» — кнопка в Hero головної ([data-open-callback]), лише поле телефону (рішення Івана 31.10).
  * Desktop: темний фон на весь екран і блок booking з фото по центру; Tablet: картка 632 без фото; Phone: на весь екран без фото.
  * Закриття: хрестик (48×48, top/right 40, на телефоні 15) або Escape. Поява (заміряно): фон 0.25 с, вміст 0.18 с.
  * Нативний <dialog>: фокус усередині, Escape, доступність.
  */
 import Booking from './Booking.astro';
+import { getLocale } from '../i18n';
+import { getPage } from '../content/pages';
 
+interface Props {
+  /** booking — «Записатися» з шапки ([data-open-booking]); callback — «Замовити дзвінок» з Hero ([data-open-callback]). */
+  kind?: 'booking' | 'callback';
+}
+const { kind = 'booking' } = Astro.props;
 const path = Astro.url.pathname.replace(/^\/|\/$/g, '');
-const service = path || 'home';
+const service = (path || 'home') + (kind === 'callback' ? '/callback' : '');
+const c = getPage(getLocale(Astro.url), 'booking');
+const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
 ---
 
-<dialog class="booking-overlay" data-booking-overlay aria-label="Записатися" data-lenis-prevent>
+<dialog class="booking-overlay" data-booking-overlay={kind} aria-label={label} data-lenis-prevent>
   <button class="close" type="button" data-booking-close aria-label="Закрити"><span></span><span></span></button>
   <div class="content">
-    <Booking service={service} variant="overlay" />
+    <Booking service={service} variant="overlay" kind={kind} />
   </div>
 </dialog>
 
@@ -93,8 +103,9 @@ const service = path || 'home';
 </style>
 
 <script>
-  const dialog = document.querySelector<HTMLDialogElement>('[data-booking-overlay]');
-  if (dialog) {
+  // Кожен оверлей відкривається своїм тригером: [data-open-booking] або [data-open-callback].
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>('[data-booking-overlay]')) {
+    const kind = dialog.dataset.bookingOverlay;
     const lock = (on: boolean) => {
       document.documentElement.style.overflow = on ? 'hidden' : '';
       document.dispatchEvent(new CustomEvent(on ? 'ukrselt:scroll-lock' : 'ukrselt:scroll-unlock'));
@@ -114,8 +125,7 @@ const service = path || 'home';
       }, 250);
     };
     document.addEventListener('click', (e) => {
-      const trigger = (e.target as Element).closest('[data-open-booking]');
-      if (!trigger) return;
+      if (!(e.target as Element).closest(`[data-open-${kind}]`)) return;
       e.preventDefault();
       open();
     });

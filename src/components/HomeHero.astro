@@ -38,7 +38,7 @@ const locale = getLocale(Astro.url);
     </div>
     <div class="row">
       <p class="text">{text}</p>
-      <a class="cta" href={localizePath('/', locale) + '#book'}>{cta}</a>
+      <a class="cta" href={localizePath('/', locale) + '#book'} data-open-callback>{cta}</a>
     </div>
   </div>
 </section>

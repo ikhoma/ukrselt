@@ -6,6 +6,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import HomeHero from '../components/HomeHero.astro';
 import Preloader from '../components/Preloader.astro';
+import BookingOverlay from '../components/BookingOverlay.astro';
 import HomeShowcase from '../components/HomeShowcase.astro';
 import MediaSplit from '../components/MediaSplit.astro';
 import Lights from '../components/Lights.astro';
@@ -59,6 +60,7 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto);
 
   <VisitUs />
   <Booking service="home" />
+  <BookingOverlay kind="callback" />
 </PageLayout>
 
 <style>

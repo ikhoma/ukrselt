@@ -16,31 +16,39 @@ interface Props {
   variant?: 'section' | 'overlay';
   /** Текст кнопки: «Записатися на прийом» (за замовчуванням) або «Записатися на діагностику» (сторінки послуг під рекламу). */
   submit?: 'default' | 'diagnostics';
+  /** booking — Ім'я + Телефон; callback — «Замовити дзвінок»: лише Телефон, поле й кнопка в один рядок (рішення Івана 31.10). */
+  kind?: 'booking' | 'callback';
 }
-const { service, variant = 'section', submit = 'default' } = Astro.props;
+const { service, variant = 'section', submit = 'default', kind = 'booking' } = Astro.props;
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
-const submitText = t(submit === 'diagnostics' ? 'form.submitDiagnostics' : 'form.submit');
-const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-9]/gi, '-')}`;
+const submitText = t(kind === 'callback' ? 'form.submitCallback' : submit === 'diagnostics' ? 'form.submitDiagnostics' : 'form.submit');
+const uid = `book-${variant === 'overlay' ? `overlay-${kind}` : service.replace(/[^a-z0-9]/gi, '-')}`;
+const callback = kind === 'callback';
+const title = callback ? c.callback.title : c.title;
+const text = callback ? c.callback.text : c.text;
+const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
 ---
 
-<section class:list={['booking', `booking--${variant}`]} id={variant === 'section' ? 'book' : undefined}>
+<section class:list={['booking', `booking--${variant}`, `booking--${kind}`]} id={variant === 'section' ? 'book' : undefined}>
   <div class="container">
     <div class="pic">
       <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[360, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" />
     </div>
     <div class="form-col">
-      <h2 class="text-heading-2">{c.title}</h2>
-      <p class="intro">{c.text}</p>
+      <h2 class="text-heading-2">{title}</h2>
+      <p class="intro">{text}</p>
       <form class="form" method="post" action="/api/contact" data-booking-form data-service={service} novalidate>
         <div class="fields">
+        {!callback && (
         <label class="field">
           <span class="label">{c.nameLabel}</span>
           <span class="control"><input type="text" name="name" autocomplete="name" maxlength="100" placeholder={t('form.namePlaceholder')} /></span>
         </label>
+        )}
         <label class="field">
-          <span class="label">{c.phoneLabel}</span>
+          <span class="label">{phoneLabel}</span>
           <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="19" value="+38 (0" data-phone-prefix="+38 (0" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
           <span class="field-error" id={`${uid}-phone-error`} data-phone-error hidden>{t('form.phoneRequired')}</span>
         </label>
@@ -54,7 +62,7 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
           <span class="submit-label" data-submit-label>{submitText}</span>
         </button>
         <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
-        <p class="note">{t('form.note')}</p>
+        {!callback && <p class="note">{t('form.note')}</p>}
       </form>
     </div>
   </div>
@@ -245,6 +253,25 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
       max-width: 630px;
     }
   }
+  /* «Замовити дзвінок» (макет Івана 31.10): одне поле, кнопка в тому ж рядку й тієї ж висоти, що поле (56). */
+  .booking--callback .form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 16px;
+  }
+  .booking--callback .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .booking--callback .submit {
+    align-self: start;
+    margin-top: 32.4px; /* висота підпису поля (22.4) + відступ 10 — кнопка на рівні поля */
+    height: 56px;
+    padding: 0 24px;
+  }
+  .booking--callback .form-error {
+    grid-column: 1 / -1;
+  }
   /* Оверлей (Framer: Form у #overlay): Tablet — картка 632 без фото, Phone — на весь екран без фото. */
   @media (max-width: 1199.98px) {
     .booking--overlay {
@@ -263,6 +290,13 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
     .fields {
       grid-template-columns: minmax(0, 1fr);
       gap: 32px;
+    }
+    .booking--callback .form {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .booking--callback .submit {
+      margin-top: 0;
+      height: 70px;
     }
     .booking--overlay {
       width: 100%;

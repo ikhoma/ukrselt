@@ -1,0 +1,128 @@
+---
+/**
+ * Оверлей «Записатися» (Framer: #overlay з компонентом Form). Відкривається кнопкою «Записатися» в шапці ([data-open-booking]).
+ * Desktop: темний фон на весь екран і блок booking з фото по центру; Tablet: картка 632 без фото; Phone: на весь екран без фото.
+ * Закриття: хрестик (48×48, top/right 40, на телефоні 15) або Escape. Поява (заміряно): фон 0.25 с, вміст 0.18 с.
+ * Нативний <dialog>: фокус усередині, Escape, доступність.
+ */
+import Booking from './Booking.astro';
+
+const path = Astro.url.pathname.replace(/^\/|\/$/g, '');
+const service = path || 'home';
+---
+
+<dialog class="booking-overlay" data-booking-overlay aria-label="Записатися" data-lenis-prevent>
+  <button class="close" type="button" data-booking-close aria-label="Закрити"><span></span><span></span></button>
+  <div class="content">
+    <Booking service={service} variant="overlay" />
+  </div>
+</dialog>
+
+<style>
+  .booking-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-almost-black);
+    color: inherit;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transition: opacity 250ms ease-out;
+  }
+  .booking-overlay[open] {
+    display: flex;
+  }
+  .booking-overlay::backdrop {
+    background: transparent;
+  }
+  .booking-overlay.is-open {
+    opacity: 1;
+  }
+  .content {
+    width: 100%;
+    margin: auto 0; /* по центру вертикально, але з прокруткою, якщо не влазить */
+    opacity: 0;
+    transition: opacity 180ms ease-out;
+  }
+  .booking-overlay.is-open .content {
+    opacity: 1;
+  }
+  .close {
+    position: fixed;
+    z-index: 2; /* вище за .booking (z-index 1) */
+    top: 40px;
+    right: 40px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .close span {
+    position: absolute;
+    top: 23px;
+    left: 12px;
+    width: 24px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-clean-white);
+    transform: rotate(45deg);
+  }
+  .close span + span {
+    transform: rotate(-45deg);
+  }
+  @media (max-width: 809.98px) {
+    .close {
+      top: 15px;
+      right: 15px;
+    }
+    .content {
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-booking-overlay]');
+  if (dialog) {
+    const lock = (on: boolean) => {
+      document.documentElement.style.overflow = on ? 'hidden' : '';
+      document.dispatchEvent(new CustomEvent(on ? 'ukrselt:scroll-lock' : 'ukrselt:scroll-unlock'));
+    };
+    const open = () => {
+      if (dialog.open) return;
+      dialog.showModal();
+      lock(true);
+      requestAnimationFrame(() => dialog.classList.add('is-open'));
+    };
+    const close = () => {
+      if (!dialog.open) return;
+      dialog.classList.remove('is-open');
+      setTimeout(() => {
+        dialog.close();
+        lock(false);
+      }, 250);
+    };
+    document.addEventListener('click', (e) => {
+      const trigger = (e.target as Element).closest('[data-open-booking]');
+      if (!trigger) return;
+      e.preventDefault();
+      open();
+    });
+    dialog.querySelector('[data-booking-close]')!.addEventListener('click', close);
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close();
+    });
+  }
+</script>

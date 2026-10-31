@@ -10,7 +10,7 @@ interface Props {
 const { size = 'desktop', href = bookHref, class: cls } = Astro.props;
 ---
 
-<a class:list={['cta', `cta--${size}`, cls]} href={href}><slot /></a>
+<a class:list={['cta', `cta--${size}`, cls]} href={href} data-open-booking><slot /></a>
 
 <style>
   .cta {

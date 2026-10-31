@@ -13,6 +13,11 @@ import { spring } from './springs';
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* ── Оновлення сторінки починається згори (як «Smooth Scroll» у Framer, SPEC §4.0), якщо в адресі немає якоря ── */
+// ScrollTrigger сам керує history.scrollRestoration і пам'яттю скролу — тому через його API.
+ScrollTrigger.clearScrollMemory('manual');
+if (!location.hash) window.scrollTo(0, 0);
+
 /* ── Плавний скрол ─────────────────────────────────────────── */
 const smooth = !document.documentElement.hasAttribute('data-no-smooth-scroll');
 let lenis: Lenis | null = null;
@@ -193,4 +198,11 @@ if (preloader) {
   startLoop();
 }
 
-window.addEventListener('load', () => ScrollTrigger.refresh());
+window.addEventListener('load', () => {
+  // Браузер може відновити позицію вже після нашого scrollTo(0, 0) — повертаємо на початок ще раз.
+  if (!location.hash) {
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+    else window.scrollTo(0, 0);
+  }
+  ScrollTrigger.refresh();
+});

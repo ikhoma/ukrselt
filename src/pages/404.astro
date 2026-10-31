@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Logo from '../components/Logo.astro';
 import ButtonCta from '../components/ButtonCta.astro';
+import BookingOverlay from '../components/BookingOverlay.astro';
 import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
@@ -26,6 +27,7 @@ const c = getPage(getLocale(Astro.url), '404');
       </div>
     </div>
   </main>
+  <BookingOverlay />
 </BaseLayout>
 
 <style>

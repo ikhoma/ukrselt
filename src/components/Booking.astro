@@ -12,15 +12,17 @@ import { pageImage } from '../content/images';
 interface Props {
   /** Ідентифікатор сторінки для події form_submit (SPEC §7.1). */
   service: string;
+  /** section — блок унизу сторінки (#book); overlay — той самий блок в оверлеї «Записатися» (BookingOverlay). */
+  variant?: 'section' | 'overlay';
 }
-const { service } = Astro.props;
+const { service, variant = 'section' } = Astro.props;
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
-const uid = `book-${service.replace(/[^a-z0-9]/gi, '-')}`;
+const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-9]/gi, '-')}`;
 ---
 
-<section class="booking" id="book">
+<section class:list={['booking', `booking--${variant}`]} id={variant === 'section' ? 'book' : undefined}>
   <div class="container">
     <div class="pic">
       <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[360, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" />
@@ -230,9 +232,24 @@ const uid = `book-${service.replace(/[^a-z0-9]/gi, '-')}`;
       max-width: 630px;
     }
   }
+  /* Оверлей (Framer: Form у #overlay): Tablet — картка 632 без фото, Phone — на весь екран без фото. */
+  @media (max-width: 1199.98px) {
+    .booking--overlay {
+      width: 632px;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .booking--overlay .pic {
+      display: none;
+    }
+  }
   @media (max-width: 809.98px) {
     .booking {
       padding: 40px 15px 80px;
+    }
+    .booking--overlay {
+      width: 100%;
+      min-height: 100%;
     }
     .pic {
       border-radius: 40px;

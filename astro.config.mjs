@@ -22,6 +22,8 @@ export default defineConfig({
   output: 'static', // усе prerender; /api/contact отримає prerender = false (етап 5)
   adapter: vercel(),
   redirects,
+  // HTML сторінки підтягується при наведенні / дотику до посилання (рішення Івана 31.10). Astro сам пропускає «економію трафіку» і 2G.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   i18n: {
     locales: [...locales],
     defaultLocale,

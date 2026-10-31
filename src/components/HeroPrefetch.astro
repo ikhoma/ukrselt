@@ -1,0 +1,68 @@
+---
+/**
+ * Фонове підтягування перших фото інших сторінок (рішення Івана 31.10).
+ * Після load і в простої браузера по одному вантажимо фото Hero / першого екрана в порядку частоти переходів:
+ * Головна → Контакти → Послуги → Команда → Стерилізація → Про нас («Ціни» без фото вгорі).
+ * Розмір обирає сам браузер із srcset/sizes — ті самі, що на сторінці, тож потрапляють у кеш саме потрібні файли.
+ * Не працює при «економії трафіку» та на 2G.
+ */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import heroHome from '../assets/home/hero.png';
+import heroOverlay from '../assets/home/hero-overlay.png';
+import { getLocale, localizePath } from '../i18n';
+import { getPage } from '../content/pages';
+import { pageImage } from '../content/images';
+import { getTeam } from '../content/collections';
+
+const locale = getLocale(Astro.url);
+const page = (slug: string) => getPage(locale, slug);
+// widths і sizes мають збігатися з тими, що в компонентах сторінок (HomeHero, PageHero, contacts, CardTeam).
+const HERO = { widths: [768, 1440, 2048], sizes: '100vw' };
+const doctors = (await getTeam(locale)).filter((p) => p.data.group === 'doctors').slice(0, 2);
+
+const plan: { path: string; images: { src: ImageMetadata; widths: number[]; sizes: string }[] }[] = [
+  { path: '/', images: [{ src: heroHome, widths: [780, 1440, 2048], sizes: '(max-width: 1199.98px) 300vw, 100vw' }, { src: heroOverlay, widths: [1440], sizes: '100vw' }] },
+  { path: '/contacts', images: [{ src: pageImage(page('contacts').image), widths: [358, 635, 960, 1270], sizes: '(max-width: 1199.98px) 100vw, 635px' }] },
+  { path: '/services', images: [{ src: pageImage(page('services').hero.image), ...HERO }] },
+  {
+    path: '/team',
+    images: doctors.map((d) => ({ src: d.data.photo, widths: [358, 470, 630, 960, 1280], sizes: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(50vw - 42px), 630px' })),
+  },
+  { path: '/sterilization', images: [{ src: pageImage(page('sterilization').hero.image), ...HERO }] },
+  { path: '/about-us', images: [{ src: pageImage(page('about-us').hero.image), ...HERO }] },
+];
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const queue: { srcset: string; sizes: string }[] = [];
+for (const p of plan) {
+  if (localizePath(p.path, locale) === current) continue;
+  for (const img of p.images) {
+    const r = await getImage({ src: img.src, widths: img.widths, format: 'webp' });
+    queue.push({ srcset: r.srcSet.attribute, sizes: img.sizes });
+  }
+}
+---
+
+<script type="application/json" id="hero-prefetch" set:html={JSON.stringify(queue)} />
+<script>
+  const data = document.getElementById('hero-prefetch');
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  const skip = !data || conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType ?? '');
+  if (!skip) {
+    const queue: { srcset: string; sizes: string }[] = JSON.parse(data!.textContent || '[]');
+    const idle = (fn: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(fn, 500));
+    const next = () => {
+      const item = queue.shift();
+      if (!item) return;
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = img.onerror = () => idle(next);
+      img.sizes = item.sizes;
+      img.srcset = item.srcset;
+    };
+    const start = () => idle(next);
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+  }
+</script>

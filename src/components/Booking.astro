@@ -41,7 +41,7 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
         </label>
         <label class="field">
           <span class="label">{c.phoneLabel}</span>
-          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" value="+380" data-phone-prefix="+380" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
+          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="19" value="+38 (0" data-phone-prefix="+38 (0" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
           <span class="field-error" id={`${uid}-phone-error`} data-phone-error hidden>{t('form.phoneRequired')}</span>
         </label>
         </div>
@@ -277,10 +277,11 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
 <script>
   type DL = { dataLayer?: Record<string, unknown>[] };
   const digits = (v: string) => v.replace(/\D/g, '');
+  /** Український номер: рівно 10 цифр після «+38» (маска поля); інші країни — 10–15 цифр. */
   const validPhone = (v: string) => {
     const d = digits(v);
-    const full = d.length === 10 && d.startsWith('0') ? `38${d}` : d;
-    return full.length >= 10 && full.length <= 15;
+    if (d.startsWith('380') || (d.length <= 10 && d.startsWith('0'))) return (d.startsWith('38') ? d.slice(2) : d).length === 10;
+    return d.length >= 10 && d.length <= 15;
   };
 
   for (const form of document.querySelectorAll<HTMLFormElement>('form[data-booking-form]')) {
@@ -309,34 +310,74 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
       phone.setAttribute('aria-invalid', String(show));
     };
 
-    // Префікс +380 (рішення Івана 31.10): уже стоїть у полі, курсор — одразу після нього.
+    // Маска як у плейсхолдері: +38 (0XX) XXX-XX-XX (рішення Івана 31.10). Поле вже містить «+38 (0», курсор після нього.
     const prefix = phone.dataset.phonePrefix ?? '';
-    const caretToEnd = () => requestAnimationFrame(() => {
-      const end = phone.value.length;
-      if ((phone.selectionStart ?? 0) < prefix.length || phone.selectionStart === phone.selectionEnd) phone.setSelectionRange(end, end);
-    });
+    /** Цифри національного номера (10, з першим «0») з будь-якого введеного вигляду. */
+    const national = (v: string) => {
+      let d = digits(v);
+      if (d.startsWith('38')) d = d.slice(2);
+      while (d.startsWith('00')) d = d.slice(1);
+      if (d && !d.startsWith('0')) d = '0' + d;
+      return d.slice(0, 10);
+    };
+    const format = (d: string) => {
+      if (!d) return '';
+      let out = '+38 (' + d.slice(0, 3);
+      if (d.length > 3) out += ') ' + d.slice(3, 6);
+      if (d.length > 6) out += '-' + d.slice(6, 8);
+      if (d.length > 8) out += '-' + d.slice(8, 10);
+      return out;
+    };
+    /** Позиція курсора після n-ї цифри національного номера у відформатованому рядку. */
+    const caretAfterDigit = (str: string, n: number) => {
+      if (n <= 0) return prefix.length;
+      let seen = 0;
+      // перші «3» і «8» у «+38» — не національні цифри
+      for (let i = 4; i < str.length; i++) if (/\d/.test(str[i]) && ++seen === n) return i + 1;
+      return str.length;
+    };
+    const apply = (keepCaret: boolean) => {
+      const before = phone.selectionStart ?? phone.value.length;
+      const digitsBefore = national(phone.value.slice(0, before)).length;
+      const d = national(phone.value) || '0';
+      phone.value = format(d);
+      const pos = keepCaret ? Math.max(prefix.length, caretAfterDigit(phone.value, digitsBefore)) : phone.value.length;
+      phone.setSelectionRange(pos, pos);
+    };
     phone.addEventListener('focus', () => {
-      if (prefix && !phone.value) phone.value = prefix;
-      caretToEnd();
+      if (!phone.value) phone.value = prefix;
+      requestAnimationFrame(() => {
+        if ((phone.selectionStart ?? 0) < prefix.length || phone.selectionStart === phone.selectionEnd) phone.setSelectionRange(phone.value.length, phone.value.length);
+      });
     });
     phone.addEventListener('click', () => {
-      if ((phone.selectionStart ?? 0) < prefix.length) caretToEnd();
+      if ((phone.selectionStart ?? 0) < prefix.length) phone.setSelectionRange(prefix.length, prefix.length);
     });
     phone.addEventListener('blur', () => {
-      if (phone.value === prefix) return;
-      if (!digits(phone.value)) phone.value = '';
+      if (phone.value === prefix) phone.value = '';
     });
-    // Вставлений чи набраний повний номер: 0XXXXXXXXX, 380…, +380 0XX… → +380XXXXXXXXX (без подвійного «0»).
-    phone.addEventListener('input', () => {
-      let d = digits(phone.value);
-      if (!d) return;
-      if (d.startsWith('3800')) d = '380' + d.slice(4);
-      else if (d.startsWith('0')) d = '38' + d;
-      const next = '+' + d;
-      if (next !== phone.value && /^[+\d]*$/.test(phone.value.replace(/[\s()-]/g, ''))) {
-        phone.value = next;
-        phone.setSelectionRange(next.length, next.length);
+    // Backspace на «)», пробілі чи «-» стирає цифру перед ним; префікс «+38 (0» не стирається.
+    phone.addEventListener('keydown', (e) => {
+      if (e.key !== 'Backspace') return;
+      const s = phone.selectionStart ?? 0;
+      if (s !== phone.selectionEnd) return;
+      if (s <= prefix.length) {
+        e.preventDefault();
+        return;
       }
+      let i = s;
+      while (i > prefix.length && !/\d/.test(phone.value[i - 1])) i--;
+      if (i !== s && i > prefix.length) {
+        e.preventDefault();
+        phone.value = phone.value.slice(0, i - 1) + phone.value.slice(s);
+        phone.setSelectionRange(i - 1, i - 1);
+        apply(true);
+      }
+    });
+    phone.addEventListener('input', (e) => {
+      const ie = e as InputEvent;
+      const atEnd = (phone.selectionStart ?? 0) >= phone.value.length;
+      apply(!atEnd && ie.inputType !== 'insertFromPaste');
     });
 
     form.addEventListener('focusin', () => (startedAt ||= Date.now()));

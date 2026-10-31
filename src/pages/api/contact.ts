@@ -21,6 +21,7 @@ const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 export function normalizePhone(raw: string): string | null {
   const digits = raw.replace(/\D/g, '');
   const full = digits.length === 10 && digits.startsWith('0') ? `38${digits}` : digits;
+  if (full.startsWith('380')) return full.length === 12 ? full : null; // Україна: рівно 12 цифр
   return full.length >= 10 && full.length <= 15 ? full : null;
 }
 

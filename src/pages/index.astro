@@ -22,7 +22,7 @@ const c = getPage(locale, 'home');
 const team = (await getTeam(locale)).filter((p) => p.data.homePhoto);
 ---
 
-<PageLayout title={c.seo.title} description={c.seo.description}>
+<PageLayout title={c.seo.title} description={c.seo.description} topBarDivider={false}>
   <Preloader slot="preloader" />
   <HomeHero title={c.hero.title} words={c.hero.words} h1={c.hero.h1} text={c.hero.text} cta={c.hero.cta} />
 

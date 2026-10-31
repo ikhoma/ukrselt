@@ -5,9 +5,15 @@
  */
 import LocaleSelector from './LocaleSelector.astro';
 import { phones, address } from '../data/site';
+
+interface Props {
+  /** Лінія знизу (у Framer на всіх сторінках, крім головної, де TopBar лежить на Hero). */
+  divider?: boolean;
+}
+const { divider = true } = Astro.props;
 ---
 
-<div class="top-bar">
+<div class:list={['top-bar', { 'top-bar--divider': divider }]}>
   <div class="info-stack">
     {
       phones.map((p, i) => (
@@ -32,6 +38,16 @@ import { phones, address } from '../data/site';
     align-items: center;
     justify-content: flex-end;
     background: var(--color-almost-black);
+  }
+  .top-bar--divider {
+    position: relative;
+  }
+  .top-bar--divider::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-bottom: 1px solid rgba(254, 254, 254, 0.1);
+    pointer-events: none;
   }
   .info-stack {
     display: flex;

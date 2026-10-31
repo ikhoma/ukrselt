@@ -46,13 +46,14 @@ const locale = getLocale(Astro.url);
 <style>
   .hero {
     position: relative;
-    height: 900px;
+    height: 100vh; /* як у Framer: Hero на всю висоту вікна, TopBar лежить поверх */
     overflow: hidden;
     background: var(--color-almost-black);
   }
+  /* Фото фіксованого розміру, прив'язане до низу Hero (заміряно: низ фото на 70 px нижче за низ Hero). */
   .hero-image {
     position: absolute;
-    top: 10px;
+    bottom: -70px;
     left: 0;
     right: 0;
     height: 960px;
@@ -149,11 +150,10 @@ const locale = getLocale(Astro.url);
   }
   @media (max-width: 1199.98px) {
     .hero-image {
-      top: -219px;
       left: -443px;
       right: -210px;
       bottom: 0;
-      height: auto;
+      height: 1119px;
     }
     .title {
       width: 630px;
@@ -177,11 +177,13 @@ const locale = getLocale(Astro.url);
     }
   }
   @media (max-width: 809.98px) {
+    /* Phone: фото прив'язане до верху (під TopBar), висота фіксована. */
     .hero-image {
       top: 48px;
+      bottom: auto;
       left: -303px;
       right: -454px;
-      bottom: 87px;
+      height: 765px;
     }
     .title {
       left: 15px;

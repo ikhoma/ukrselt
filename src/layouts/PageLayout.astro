@@ -14,6 +14,8 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** Лінія під TopBar (на головній немає). */
+  topBarDivider?: boolean;
 }
 const props = Astro.props;
 ---
@@ -22,7 +24,7 @@ const props = Astro.props;
   <slot name="preloader" />
   <div class="page">
     <header class="site-header">
-      <TopBar />
+      <TopBar divider={Astro.props.topBarDivider ?? true} />
       <MainNavigation />
     </header>
     <main id="main">

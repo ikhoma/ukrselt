@@ -39,13 +39,13 @@ const c = getPage(getLocale(Astro.url), 'about-us');
 <style>
   .mission {
     position: relative;
-    height: 1700px;
+    height: calc(100vh + 800px); /* sticky 100vh + 800 px анімації, як у Framer */
     background: var(--color-almost-black);
   }
   .sticky {
     position: sticky;
     top: 0;
-    height: 900px;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;

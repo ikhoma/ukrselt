@@ -85,10 +85,11 @@ if (team) {
   team.classList.add('is-animated');
   const mm = gsap.matchMedia();
   const build = (cfg: (typeof teamEnd)['desktop']) => {
-    // Sticky висотою 900 закріплений, поки Animation Timeline (800) проходить під ним — це і є діапазон анімації.
+    // Sticky (100vh) закріплений, поки Animation Timeline (800) проходить під ним — це і є діапазон анімації.
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
-      scrollTrigger: { trigger: timeline, start: 'top top+=900', end: 'bottom top+=900', scrub: true },
+      // Sticky = 100vh: діапазон — від «верх Timeline біля низу вікна» до «низ Timeline біля низу вікна» (800 px).
+      scrollTrigger: { trigger: timeline, start: 'top bottom', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true },
     });
     cards.forEach((card, i) => {
       const [x, y] = cfg.pos[i % cfg.pos.length];

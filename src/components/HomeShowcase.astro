@@ -1,7 +1,7 @@
 ---
 /**
  * Services і Team на головній (Framer: Sticky [Cards + Title + cta] + Animation Timeline).
- * Sticky 900px тримається, поки прокручується Animation Timeline (Services 1000 / 880 на телефоні, Team 800 / 720).
+ * Sticky на висоту вікна (100vh) тримається, поки прокручується Animation Timeline (Services 1000 / 880 на телефоні, Team 800 / 720).
  * Етап 4: статичний стан. Team — картки у фінальних позиціях; Services — перший кадр Framer (кільце карток, opacity ~0.1).
  * Анімація: Team — етап 6 (1:1), Services — етап 9 (рішення окремо). Кадри зняті в docs/reference/stage-4/anim-*.json.
  */
@@ -54,7 +54,7 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
   .sticky {
     position: sticky;
     top: 0;
-    height: 900px;
+    height: 100vh; /* як у Framer: sticky на висоту вікна */
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -120,22 +120,22 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
     border-radius: 80px;
   }
   .showcase--services .card--1 {
-    top: -74.875px;
+    top: calc(50% - 524.875px);
     left: calc(50% - 175px);
     transform: matrix3d(1, 0, 0, 0, 0, 0.5, -0.866025, 0.00144338, 0, 0.866025, 0.5, -0.000833333, 0, 0, 0, 1);
   }
   .showcase--services .card--2 {
-    top: 624.875px;
+    top: calc(50% + 174.875px);
     left: calc(50% - 175px);
     transform: matrix3d(1, 0, 0, 0, 0, 0.5, 0.866025, -0.00144338, 0, -0.866025, 0.5, -0.000833333, 0, 0, 0, 1);
   }
   .showcase--services .card--3 {
-    top: 275px;
+    top: calc(50% - 175px);
     left: calc(50% - 495px);
     transform: matrix3d(0.5, 0, -0.866025, 0.00144338, 0, 1, 0, 0, 0.866025, 0, 0.5, -0.000833333, 0, 0, 0, 1);
   }
   .showcase--services .card--4 {
-    top: 275px;
+    top: calc(50% - 175px);
     left: calc(50% + 145px);
     transform: matrix3d(0.5, 0, 0.866025, -0.00144338, 0, 1, 0, 0, -0.866025, 0, 0.5, -0.000833333, 0, 0, 0, 1);
   }
@@ -143,7 +143,7 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
   /* ── Team: фінальні позиції карток (кінець Animation Timeline) ── */
   .showcase--team .cards {
     position: absolute;
-    top: 325px;
+    top: calc(50% - 125px);
     left: calc(50% - 98.5px);
     width: 197px;
     height: 250px;
@@ -170,10 +170,10 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
       width: 350px;
       height: 350px;
     }
-    .showcase--services .card--1 { top: 37.4844px; left: calc(50% - 175px); }
-    .showcase--services .card--2 { top: 504.156px; left: calc(50% - 175px); }
-    .showcase--services .card--3 { top: 275px; left: calc(50% - 592px); }
-    .showcase--services .card--4 { top: 275px; left: calc(50% + 242px); }
+    .showcase--services .card--1 { top: calc(50% - 412.516px); left: calc(50% - 175px); }
+    .showcase--services .card--2 { top: calc(50% + 54.156px); left: calc(50% - 175px); }
+    .showcase--services .card--3 { top: calc(50% - 175px); left: calc(50% - 592px); }
+    .showcase--services .card--4 { top: calc(50% - 175px); left: calc(50% + 242px); }
   }
   @media (max-width: 809.98px) {
     .showcase--services {

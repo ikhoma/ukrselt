@@ -41,7 +41,7 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
         </label>
         <label class="field">
           <span class="label">{c.phoneLabel}</span>
-          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
+          <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" value="+380" data-phone-prefix="+380" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
           <span class="field-error" id={`${uid}-phone-error`} data-phone-error hidden>{t('form.phoneRequired')}</span>
         </label>
         </div>
@@ -308,6 +308,36 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
       phoneError.hidden = !show;
       phone.setAttribute('aria-invalid', String(show));
     };
+
+    // Префікс +380 (рішення Івана 31.10): уже стоїть у полі, курсор — одразу після нього.
+    const prefix = phone.dataset.phonePrefix ?? '';
+    const caretToEnd = () => requestAnimationFrame(() => {
+      const end = phone.value.length;
+      if ((phone.selectionStart ?? 0) < prefix.length || phone.selectionStart === phone.selectionEnd) phone.setSelectionRange(end, end);
+    });
+    phone.addEventListener('focus', () => {
+      if (prefix && !phone.value) phone.value = prefix;
+      caretToEnd();
+    });
+    phone.addEventListener('click', () => {
+      if ((phone.selectionStart ?? 0) < prefix.length) caretToEnd();
+    });
+    phone.addEventListener('blur', () => {
+      if (phone.value === prefix) return;
+      if (!digits(phone.value)) phone.value = '';
+    });
+    // Вставлений чи набраний повний номер: 0XXXXXXXXX, 380…, +380 0XX… → +380XXXXXXXXX (без подвійного «0»).
+    phone.addEventListener('input', () => {
+      let d = digits(phone.value);
+      if (!d) return;
+      if (d.startsWith('3800')) d = '380' + d.slice(4);
+      else if (d.startsWith('0')) d = '38' + d;
+      const next = '+' + d;
+      if (next !== phone.value && /^[+\d]*$/.test(phone.value.replace(/[\s()-]/g, ''))) {
+        phone.value = next;
+        phone.setSelectionRange(next.length, next.length);
+      }
+    });
 
     form.addEventListener('focusin', () => (startedAt ||= Date.now()));
     form.addEventListener('input', () => (startedAt ||= Date.now()));

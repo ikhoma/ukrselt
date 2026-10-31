@@ -21,7 +21,7 @@ const c = getPage(getLocale(Astro.url), 'booking');
 const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
 ---
 
-<dialog class="booking-overlay" data-booking-overlay={kind} aria-label={label} data-lenis-prevent>
+<dialog class="booking-overlay" data-booking-overlay={kind} aria-label={label} tabindex="-1" data-lenis-prevent>
   <button class="close" type="button" data-booking-close aria-label="Закрити"><span></span><span></span></button>
   <div class="content">
     <Booking service={service} variant="overlay" kind={kind} />
@@ -48,6 +48,9 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
   }
   .booking-overlay[open] {
     display: flex;
+  }
+  .booking-overlay:focus {
+    outline: none;
   }
   .booking-overlay::backdrop {
     background: transparent;
@@ -89,6 +92,17 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
   .close span + span {
     transform: rotate(-45deg);
   }
+  /* Hover/фокус як у посилань TopBar і футера: колір гасне до greyish, 200 мс (у Framer hover хрестика не було). */
+  .close span {
+    transition: background-color var(--dur-hover) var(--ease-hover);
+  }
+  .close:hover span,
+  .close:focus-visible span {
+    background: var(--color-greyish);
+  }
+  .close:focus-visible {
+    outline: none;
+  }
   @media (max-width: 809.98px) {
     .close {
       top: 15px;
@@ -113,6 +127,8 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
     const open = () => {
       if (dialog.open) return;
       dialog.showModal();
+      // Браузер сам фокусує перший елемент (часто поле телефону). Фокусуємо діалог: Tab веде далі по формі (Іван 31.10).
+      dialog.focus();
       lock(true);
       requestAnimationFrame(() => dialog.classList.add('is-open'));
     };

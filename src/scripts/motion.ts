@@ -36,10 +36,14 @@ const appearItems = document.querySelectorAll<HTMLElement>('[data-appear]');
 if (appearItems.length) {
   const io = new IntersectionObserver(
     (entries) => {
+      // Ті, що стали видимі одночасно (напр. ряд відгуків на десктопі), з'являються по черзі з кроком 0.2 с, як у Framer.
+      let i = 0;
       for (const e of entries) {
         if (!e.isIntersecting) continue;
-        e.target.classList.add('is-appeared');
-        io.unobserve(e.target);
+        const el = e.target as HTMLElement;
+        if (el.dataset.appear === 'slow') el.style.setProperty('--appear-delay', `${i++ * 200}ms`);
+        el.classList.add('is-appeared');
+        io.unobserve(el);
       }
     },
     { threshold: 0.5 },

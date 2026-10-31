@@ -37,10 +37,10 @@ const stars = Array.from({ length: 5 }, () => star).join('');
       </div>
     </div>
     <div class="row">
-      <div class="img" data-appear><Image src={homeImage(image)} alt={imageAlt} widths={[358, 413, 826]} sizes="(max-width: 1199.98px) 100vw, 413px" format="webp" /></div>
+      <div class="img" data-appear="slow"><Image src={homeImage(image)} alt={imageAlt} widths={[358, 413, 826]} sizes="(max-width: 1199.98px) 100vw, 413px" format="webp" /></div>
       {
         items.map((it) => (
-          <figure class="card" data-appear>
+          <figure class="card" data-appear="slow">
             <span class="stars" set:html={stars} aria-hidden="true" />
             <blockquote class="quote">{it.text}</blockquote>
             <figcaption class="author">

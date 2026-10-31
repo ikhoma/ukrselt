@@ -49,6 +49,11 @@ img {
 .js [data-appear].is-appeared {
   opacity: 1;
 }
+/* Відгуки (заміряно на ukrselt.com 31.10): 0.5 с, ease (0.44, 0, 0.56, 1); затримку по черзі ставить motion.ts. */
+.js [data-appear='slow'] {
+  transition: opacity 500ms cubic-bezier(0.44, 0, 0.56, 1);
+  transition-delay: var(--appear-delay, 0ms);
+}
 
 /* Lenis (рекомендовані стилі пакета). */
 html.lenis,

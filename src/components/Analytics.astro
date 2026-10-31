@@ -1,8 +1,8 @@
 ---
 /**
  * Аналітика (ADR-0007, SPEC §7.2): Hotjar 5188670 і GTM-W46JLBGN — ті самі сніпети й порядок, що на живому сайті.
- * Вмикається тільки на production-збірці Vercel (VERCEL_ENV=production), щоб preview і локальні перегляди
- * не засмічували статистику й конверсії. Примусово: PUBLIC_ANALYTICS=true.
+ * Вмикається тільки на production-збірці Vercel (VERCEL_ENV=production) і лише на домені ukrselt.com (перевірка в браузері):
+ * поки домен на Framer, ukrselt.vercel.app не засмічує статистику й конверсії (рішення Івана 31.10). Примусово: PUBLIC_ANALYTICS=true.
  * part="head" — у <head>, part="body" — <noscript> одразу після <body>.
  */
 interface Props {
@@ -16,7 +16,7 @@ const enabled = process.env.VERCEL_ENV === 'production' || import.meta.env.PUBLI
   enabled && part === 'head' && (
     <>
       <script is:inline>
-        (function(h,o,t,j,a,r){
+        if (/(^|\.)ukrselt\.com$/.test(location.hostname)) (function(h,o,t,j,a,r){
             h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
             h._hjSettings={hjid:5188670,hjsv:6};
             a=o.getElementsByTagName('head')[0];
@@ -25,7 +25,7 @@ const enabled = process.env.VERCEL_ENV === 'production' || import.meta.env.PUBLI
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
       </script>
-      <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      <script is:inline>if (/(^|\.)ukrselt\.com$/.test(location.hostname)) (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);

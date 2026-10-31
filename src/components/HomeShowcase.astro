@@ -34,7 +34,7 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
       }
     </div>
     <div class="title-cta" data-title>
-      {variant === 'team' && <Lights size={900} offset={400} />}
+      {variant === 'team' && <Lights size={900} offset={400} class="team-lights" />}
       <div class="text">
         <h2 class="text-heading-2">{title}<br /><span class="accent">{accent}</span></h2>
         <p class="desc">{text}</p>
@@ -95,6 +95,15 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
   }
   .title-cta :global(.btn-secondary) {
     z-index: 1;
+  }
+  /*
+   * Світло Team (Framer: Title + cta/lights) — контейнер 900 px, ширший за блок заголовка, щоб кола не обрізались по його краю.
+   * Заміри: Desktop top -304, кола 900 з виходом 400 за край; Tablet top -441, кола 900 всередині; Phone top +110, кола 435 (top -60).
+   */
+  .title-cta :global(.team-lights) {
+    inset: auto 0;
+    top: -304px;
+    height: 900px;
   }
   .card {
     position: absolute;
@@ -162,6 +171,15 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
   .showcase--team .card--4 { --tx: 540px; --ty: -200px; z-index: 1; }
 
   @media (max-width: 1199.98px) {
+    .title-cta :global(.team-lights) {
+      top: -441px;
+    }
+    .title-cta :global(.team-lights .light--left) {
+      left: 0;
+    }
+    .title-cta :global(.team-lights .light--right) {
+      right: 0;
+    }
     .showcase--services .cards {
       opacity: 0.071885;
       transform: matrix3d(0.0807706, -0.71328, 0, 0, 0.71328, 0.0807706, 0, 0, 0, 0, 1, -0.000833333, 0, 0, 0, 1);
@@ -176,6 +194,20 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
     .showcase--services .card--4 { top: calc(50% - 175px); left: calc(50% + 242px); }
   }
   @media (max-width: 809.98px) {
+    .title-cta :global(.team-lights) {
+      top: 110px;
+    }
+    .title-cta :global(.team-lights .light) {
+      top: -60px;
+      width: 435px;
+      height: 435px;
+    }
+    .title-cta :global(.team-lights .light--left) {
+      left: -149px;
+    }
+    .title-cta :global(.team-lights .light--right) {
+      right: -162px;
+    }
     .showcase--services {
       padding: 0 0 40px;
     }

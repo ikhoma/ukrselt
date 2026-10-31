@@ -128,7 +128,8 @@ function criticalProgress(onChange: (p: number) => void) {
     ...[...document.querySelectorAll<HTMLImageElement>('img[data-critical]')].map((img) =>
       img.complete ? Promise.resolve() : new Promise((r) => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); }),
     ),
-    document.fonts?.ready ?? Promise.resolve(),
+    // Шрифти Hero і меню: явно просимо потрібні накреслення з кирилицею (інакше fonts.ready може спрацювати раніше, ніж їх запитали).
+    document.fonts ? Promise.all(['300 96px', '400 16px'].map((f) => document.fonts.load(`${f} "Open Sans"`, 'Змінюємо Ukrselt'))).catch(() => {}) : Promise.resolve(),
   ];
   let done = 0;
   onChange(0);

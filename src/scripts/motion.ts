@@ -127,18 +127,16 @@ function startLoop() {
 
 if (preloader) {
   lenis?.stop();
-  const reveal = () => {
-    const wait = Math.max(0, PRELOADER_MIN_MS - performance.now());
-    setTimeout(() => {
-      preloader.style.transition = `transform 520ms ${CURTAIN_EASE}`;
-      preloader.style.transform = 'translateY(-100%)';
-      preloader.addEventListener('transitionend', () => preloader.remove(), { once: true });
-      lenis?.start();
-      startLoop();
-    }, wait);
-  };
-  if (document.readyState === 'complete') reveal();
-  else window.addEventListener('load', reveal, { once: true });
+  // Модуль виконується після розбору HTML; картинок не чекаємо. Мінімум 2 с від початку навігації, як у Framer.
+  const wait = Math.max(0, PRELOADER_MIN_MS - performance.now());
+  setTimeout(() => {
+    preloader.style.animation = 'none';
+    preloader.style.transition = `transform 520ms ${CURTAIN_EASE}`;
+    preloader.style.transform = 'translateY(-100%)';
+    setTimeout(() => preloader.remove(), 600);
+    lenis?.start();
+    startLoop();
+  }, wait);
 } else {
   startLoop();
 }

@@ -1,8 +1,10 @@
 ---
 /**
  * Прелоадер головної (Framer: Preloader + Curtain, SPEC §4.1): темна шторка на весь екран з анімованим логотипом
- * (logo-preloader.svg, SMIL 1 с). Через ~2 с від початку завантаження (і не раніше події load) шторка їде вгору
- * за ~520 мс (заміряна крива, src/scripts/motion.ts). Без JS не показується.
+ * (logo-preloader.svg: синій хрест «виростає» знизу, 1 с, easing 0.5 0 0 1). Через ~2 с від початку завантаження шторка
+ * їде вгору за ~520 мс (src/scripts/motion.ts). Не чекаємо картинок (load): на повільній мережі шторка інакше висить.
+ * Анімація лого — CSS, а не SMIL: SMIL у вбудованому SVG стартує лише після load.
+ * Запобіжник: якщо JS не спрацював, шторка зникає сама через 6 с. Без JS не показується.
  */
 import logo from '../assets/logo/logo-preloader.svg?raw';
 ---
@@ -24,6 +26,25 @@ import logo from '../assets/logo/logo-preloader.svg?raw';
     justify-content: center;
     background: var(--color-almost-black);
     will-change: transform;
+  }
+  :global(.js) .preloader {
+    animation: preloader-failsafe 0.5s ease 6s forwards;
+  }
+  @keyframes preloader-failsafe {
+    to {
+      transform: translateY(-100%);
+      visibility: hidden;
+    }
+  }
+  .logo :global(.wipe) {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: wipe 1s cubic-bezier(0.5, 0, 0, 1) both;
+  }
+  @keyframes wipe {
+    from {
+      transform: scaleY(0);
+    }
   }
   .logo :global(svg) {
     display: block;

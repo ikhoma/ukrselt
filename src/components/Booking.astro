@@ -14,11 +14,14 @@ interface Props {
   service: string;
   /** section — блок унизу сторінки (#book); overlay — той самий блок в оверлеї «Записатися» (BookingOverlay). */
   variant?: 'section' | 'overlay';
+  /** Текст кнопки: «Записатися на прийом» (за замовчуванням) або «Записатися на діагностику» (сторінки послуг під рекламу). */
+  submit?: 'default' | 'diagnostics';
 }
-const { service, variant = 'section' } = Astro.props;
+const { service, variant = 'section', submit = 'default' } = Astro.props;
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
+const submitText = t(submit === 'diagnostics' ? 'form.submitDiagnostics' : 'form.submit');
 const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-9]/gi, '-')}`;
 ---
 
@@ -31,6 +34,7 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
       <h2 class="text-heading-2">{c.title}</h2>
       <p class="intro">{c.text}</p>
       <form class="form" method="post" action="/api/contact" data-booking-form data-service={service} novalidate>
+        <div class="fields">
         <label class="field">
           <span class="label">{c.nameLabel}</span>
           <span class="control"><input type="text" name="name" autocomplete="name" maxlength="100" placeholder={t('form.namePlaceholder')} /></span>
@@ -40,13 +44,14 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
           <span class="control"><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder={t('form.phonePlaceholder')} aria-describedby={`${uid}-phone-error`} /></span>
           <span class="field-error" id={`${uid}-phone-error`} data-phone-error hidden>{t('form.phoneRequired')}</span>
         </label>
+        </div>
         <input type="hidden" name="service" value={service} />
         <input type="hidden" name="page" value={Astro.url.pathname} />
         <input type="hidden" name="elapsed" value="" data-elapsed />
         <!-- honeypot (ADR-0004) -->
         <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="submit" type="submit" data-submit data-text-idle={t('form.submit')} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
-          <span class="submit-label" data-submit-label>{t('form.submit')}</span>
+        <button class="submit" type="submit" data-submit data-text-idle={submitText} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
+          <span class="submit-label" data-submit-label>{submitText}</span>
         </button>
         <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
         <p class="note">{t('form.note')}</p>
@@ -98,7 +103,15 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
     flex-direction: column;
     gap: 32px;
   }
+  /* Ім'я і Телефон в один рядок (рішення Івана 31.10); на телефоні — одне під одним. */
+  .fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
   .field {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -246,6 +259,10 @@ const uid = `book-${variant === 'overlay' ? 'overlay' : service.replace(/[^a-z0-
   @media (max-width: 809.98px) {
     .booking {
       padding: 40px 15px 80px;
+    }
+    .fields {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
     }
     .booking--overlay {
       width: 100%;

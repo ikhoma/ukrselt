@@ -1,30 +1,87 @@
 ---
 /**
- * Прелоадер головної (Framer: Preloader + Curtain, SPEC §4.1): темна шторка на весь екран з анімованим логотипом
- * Стоїть першим у <body> (слот preloader у PageLayout), щоб на повільній мережі шапка не малювалась раніше.
- * (logo-preloader.svg: синій хрест «виростає» знизу, easing 0.5 0 0 1). Ритм (рішення Івана 31.10): хрест заповнюється
- * за реальним прогресом критичного (фото Hero, оверлей, шрифт), але не швидше ніж за 1 с; 1 с тримається заповненим;
- * далі лого швидко гасне і шторка їде вгору (~520 мс). Логіка — src/scripts/motion.ts.
- * Без JS не показується; якщо JS не спрацював, CSS-запобіжник: лого за 1 с, шторка зникає сама через 8 с.
+ * Прелоадер головної (Framer: Preloader + Curtain, SPEC §4.1). Ритм (рішення Івана 31.10):
+ * синій хрест заповнюється за реальним прогресом (HTML розібраний, фото Hero, оверлей, шрифти), але не швидше ніж за 1 с;
+ * 1 с тримається заповненим; далі лого гасне за 0.2 с і шторка їде вгору (~520 мс, заміряна крива).
+ *
+ * Чому так влаштовано (баги на повільній мережі 31.10, docs/QA.md):
+ *  - стоїть першим у <body> зі стилями інлайном — шторка малюється раніше за шапку і без CSS-файлів;
+ *  - лого показується лише коли SVG прийшов повністю — інакше браузер малює його частинами;
+ *  - керує інлайн-скрипт одразу після розмітки: стартує з першим шматком HTML і не залежить від модуля анімацій,
+ *    який виконується лише після всього HTML. Таймер-запобіжника на CSS немає: він відкривав шторку посеред
+ *    завантаження, а потім JS повертав її назад («перезапуск»).
+ * Коли шторка пішла: window.__preloaderDone = true і подія 'ukrselt:preloader-done' (motion.ts запускає скрол і ротатор).
+ * Без JS не показується.
  */
 import logo from '../assets/logo/logo-preloader.svg?raw';
 ---
 
-<!-- Стилі інлайном і без scoped-класів: шторка має бути намальована першою, ще до завантаження CSS-файлів. -->
 <style is:inline>
   .preloader { display: none; }
   .js .preloader {
     position: fixed; z-index: 1000; inset: 0;
     display: flex; align-items: center; justify-content: center;
     background: #2a2a2b; will-change: transform;
-    animation: preloader-failsafe 0.5s ease 8s forwards;
   }
-  @keyframes preloader-failsafe { to { transform: translateY(-100%); visibility: hidden; } }
-  .preloader .wipe { transform-box: fill-box; transform-origin: 50% 100%; animation: preloader-wipe 1s cubic-bezier(0.5, 0, 0, 1) both; }
-  @keyframes preloader-wipe { from { transform: scaleY(0); } }
   .preloader svg { display: block; width: 223px; height: 66px; }
+  .preloader .wipe { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
+  .js .preloader .logo { visibility: hidden; }
+  .js .preloader .logo.is-ready { visibility: visible; }
 </style>
 
 <div class="preloader" data-preloader aria-hidden="true">
   <div class="logo" set:html={logo} />
+  <script is:inline>
+    (function () {
+      var pre = document.currentScript.parentElement;
+      var logo = pre.querySelector('.logo');
+      var wipe = pre.querySelector('.wipe');
+      logo.classList.add('is-ready'); // SVG вище вже розібраний повністю
+
+      var FILL_MIN = 1000, HOLD = 1000, TIMEOUT = 6000; // TIMEOUT — від моменту, коли HTML розібраний
+      var CURTAIN = 'linear(0 0%, 0.12 12%, 0.51 24%, 0.79 37%, 0.92 49%, 0.96 61%, 0.99 73%, 1 100%)';
+      // cubic-bezier(0.5, 0, 0, 1) — крива заповнення хреста
+      function ease(x) {
+        function f(a, b, t) { return 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t; }
+        var lo = 0, hi = 1, t = x;
+        for (var i = 0; i < 25; i++) { t = (lo + hi) / 2; if (f(0.5, 0, t) < x) lo = t; else hi = t; }
+        return f(0, 1, t);
+      }
+
+      var total = 1, done = 0, target = 0;
+      function step() { done++; target = Math.max(target, done / total); }
+      function onParsed() {
+        var tasks = [].slice.call(document.querySelectorAll('img[data-critical]')).map(function (img) {
+          return img.complete ? Promise.resolve() : new Promise(function (r) { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); });
+        });
+        if (document.fonts && document.fonts.load) {
+          tasks.push(Promise.all(['300 96px', '400 16px'].map(function (f) { return document.fonts.load(f + ' "Open Sans"', 'Змінюємо Ukrselt'); })).catch(function () {}));
+        }
+        total = 1 + tasks.length;
+        step(); // HTML розібраний
+        tasks.forEach(function (t) { t.then(step); });
+        setTimeout(function () { target = 1; }, TIMEOUT);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onParsed, { once: true });
+      else onParsed();
+
+      var t0 = performance.now();
+      function tick(now) {
+        var x = Math.min(1, (now - t0) / FILL_MIN);
+        var shown = Math.min(target, x >= 1 ? 1 : ease(x)); // на кінці бісекція дає 0.99999…, тому 1 явно
+        wipe.style.transform = 'scaleY(' + shown + ')';
+        if (shown < 1) return requestAnimationFrame(tick);
+        setTimeout(function () {
+          logo.style.transition = 'opacity 200ms ease-out';
+          logo.style.opacity = '0';
+          pre.style.transition = 'transform 520ms ' + CURTAIN;
+          pre.style.transform = 'translateY(-100%)';
+          window.__preloaderDone = true;
+          document.dispatchEvent(new CustomEvent('ukrselt:preloader-done'));
+          setTimeout(function () { pre.remove(); }, 600);
+        }, HOLD);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
 </div>

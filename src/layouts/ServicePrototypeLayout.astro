@@ -1,0 +1,29 @@
+---
+/** Shared chrome for service prototypes; deliberately excludes live booking overlays. */
+import BaseLayout from './BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import MainNavigation from '../components/MainNavigation.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title: string; description: string; }
+---
+<BaseLayout {...Astro.props} noindex noSmoothScroll>
+  <div class="page">
+    <header class="site-header"><TopBar /><MainNavigation /></header>
+    <main id="main"><slot /></main>
+  </div>
+  <Footer />
+</BaseLayout>
+<script>
+  // Existing header CTA opens a live overlay elsewhere. Here it leads to the local demo form.
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest('[data-open-booking]')) return;
+    event.preventDefault();
+    const target = document.getElementById('book');
+    target?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    target?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true });
+  });
+</script>
+<style>
+  .page { position: relative; z-index: 1; background: var(--color-almost-black); }
+  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+</style>

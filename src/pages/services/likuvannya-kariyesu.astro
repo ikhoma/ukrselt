@@ -1,0 +1,190 @@
+---
+import { Image } from 'astro:assets';
+import ServicePrototypeLayout from '../../layouts/ServicePrototypeLayout.astro';
+import ServiceEnquiry from '../../components/ServiceEnquiry.astro';
+import treatmentImage from '../../assets/team/motorna-photo-1.png';
+import doctorImage from '../../assets/team/motorna-intro.png';
+import prices from '../../content/price/uk.json';
+import motorna from '../../content/team/uk/motorna.json';
+
+const priceOf = (service: string) => {
+  const item = prices.items.find((item) => item.service === service);
+  if (!item) throw new Error(`Missing price: ${service}`);
+  return item.price.replace(/\s*–\s*/g, '–');
+};
+const filling = priceOf('Накладання пломби з композитів світлового твердіння');
+const startingPrice = Number(filling.split('–')[0]).toLocaleString('uk-UA');
+const rows = [
+  { name: 'Пломба зі світлотвердного композиту', note: 'Залежно від обсягу відновлення', value: filling },
+  { name: 'Консультація лікаря-стоматолога', note: 'Потребу й склад огляду уточнюємо під час запису', value: priceOf('Консультація лікаря-стоматолога') },
+  { name: 'Цифрова дентальна діагностика', note: 'Якщо потрібна за результатами огляду', value: priceOf('Цифрова дентальна діагностика') },
+  { name: 'Знеболення', note: 'За потреби; склад лікування погоджуємо до початку', value: priceOf('Знеболення') },
+];
+const steps = [
+  { title: 'Огляд', text: 'З’ясовуємо причину скарг і перевіряємо стан зуба.' },
+  { title: 'План і вартість', text: 'Обговорюємо потрібні етапи, знеболення та вартість.' },
+  { title: 'Лікування', text: 'Виконуємо погоджені етапи відповідно до діагнозу.' },
+  { title: 'Відновлення', text: 'Відновлюємо форму зуба й перевіряємо прикус.' },
+];
+const faq = [
+  { question: 'Як зрозуміти, скільки коштуватиме лікування?', answer: 'Ціна пломби залежить від обсягу відновлення. Огляд, діагностику, знеболення та інші потрібні процедури уточнюємо окремо. Остаточний план і вартість погоджуємо після огляду.' },
+  { question: 'Якщо зуб не болить, чи потрібне лікування?', answer: 'Відсутність болю не показує стан зуба повністю. Потребу в лікуванні визначає лікар після огляду.' },
+  { question: 'Чи завжди достатньо пломби?', answer: 'Не завжди. Якщо ураження дісталося внутрішніх тканин, може знадобитися лікування каналів. Рішення приймають після діагностики; лікування каналів не входить у стартову ціну пломби.' },
+  { question: 'Чи вилікуєте зуб за один візит?', answer: 'Кількість візитів залежить від глибини ураження та обсягу лікування. Ваш план і тривалість лікар пояснить після огляду.' },
+  { question: 'Що відбувається після заявки?', answer: 'У робочій версії адміністратор зв’яжеться з вами в години роботи клініки й погодить дату візиту. Заявка ще не є підтвердженим записом на конкретний час. У цьому прототипі форми демонстраційні й нічого не надсилають.' },
+];
+---
+<ServicePrototypeLayout title="Лікування карієсу у Києві — Ukrselt · Прототип" description="Прототип сторінки лікування карієсу Ukrselt: вартість, лікар, етапи та відповіді на питання.">
+  <section class="hero section" aria-labelledby="service-title">
+    <nav class="breadcrumbs" aria-label="Навігаційний шлях"><a href="/">Головна</a><span aria-hidden="true">/</span><a href="/services">Послуги</a><span aria-hidden="true">/</span><span aria-current="page">Лікування карієсу</span></nav>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Ukrselt · Київ, біля метро Либідська</p>
+        <h1 id="service-title">Лікування карієсу<br /><span>у Києві</span></h1>
+        <p class="lead">З’ясуємо, що відбувається із зубом, і підберемо лікування. Перед пломбуванням перевіримо, наскільки глибоке ураження.</p>
+        <div class="starting-price"><span>Пломба зі світлотвердного композиту</span><p>від <strong>{startingPrice}</strong> грн</p><small>Це ціна пломби. Інші потрібні процедури уточнюються окремо.</small></div>
+        <ServiceEnquiry id="form-top" />
+      </div>
+      <figure class="hero-photo">
+        <Image src={treatmentImage} alt="Валерія Моторна обговорює лікування з колегою в кабінеті Ukrselt" widths={[630, 960, 1260]} sizes="(max-width: 1199.98px) 50vw, 630px" format="webp" loading="eager" />
+        <figcaption><span>Спочатку — огляд.</span><span>Далі — зрозумілий план лікування.</span></figcaption>
+      </figure>
+    </div>
+    <div class="hero-bottom"><span class="prototype-label">Прототип для погодження · демо-форми</span><nav aria-label="На цій сторінці"><a href="#cost">Вартість</a><a href="#doctor">Лікар</a><a href="#steps">Етапи</a><a href="#faq">Питання</a></nav></div>
+  </section>
+
+  <section class="section cost" id="cost" aria-labelledby="cost-title">
+    <div class="section-heading"><p class="eyebrow">01 / Вартість</p><h2 id="cost-title">Скільки коштує<br /><span>відновити зуб</span></h2><p>Ціна пломби — частина вартості лікування. Потрібний обсяг робіт і додаткові процедури лікар пояснить після огляду.</p></div>
+    <div class="price-table" role="table" aria-label="Вартість лікування карієсу та супутніх процедур">
+      {rows.map((row) => <div class="price-row" role="row"><div role="cell"><h3>{row.name}</h3><p>{row.note}</p></div><span role="cell" class="amount">{row.value} <small>грн</small></span></div>)}
+    </div>
+    <div class="price-foot"><p>Орієнтир за чинним прайсом. Ціни та склад робіт потребують підтвердження клінікою перед публікацією.</p><a class="text-link" href="/price">Повний прайс <span aria-hidden="true">↗</span></a></div>
+  </section>
+
+  <section class="section doctor" id="doctor" aria-labelledby="doctor-title">
+    <div class="doctor-photo"><Image src={doctorImage} alt={motorna.page.imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 809.98px) calc(100vw - 32px), 50vw" format="webp" /></div>
+    <div class="doctor-copy"><p class="eyebrow">02 / Ваш лікар</p><h2 id="doctor-title">Валерія<br /><span>Моторна</span></h2><p class="role">{motorna.role}</p><p>Лікування карієсу, естетична реставрація зубів і професійна гігієна — серед напрямів роботи лікарки.</p><dl><div><dt>Освіта</dt><dd>Українська медична стоматологічна академія, стоматологічний факультет, 2020 р.</dd></div><div><dt>Спеціалізація</dt><dd>Терапевтична стоматологія, НМУ імені О. О. Богомольця, 2025 р.</dd></div></dl><a class="outline-link" href="/team/motorna">Детальніше про лікарку <span aria-hidden="true">↗</span></a></div>
+  </section>
+
+  <section class="section steps" id="steps" aria-labelledby="steps-title">
+    <div class="section-heading"><p class="eyebrow">03 / Як проходить лікування</p><h2 id="steps-title">Від огляду<br /><span>до відновлення</span></h2></div>
+    <ol class="step-list">{steps.map((step, i) => <li><span class="step-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol>
+    <p class="steps-note">Кількість візитів і тривалість залежать від стану зуба. Їх уточнюємо після діагностики.</p>
+  </section>
+
+  <section class="section faq" id="faq" aria-labelledby="faq-title">
+    <div class="section-heading"><p class="eyebrow">04 / Питання та відповіді</p><h2 id="faq-title">До першого<br /><span>візиту</span></h2><a class="text-link" href="tel:+380630763022">Уточнити телефоном <span aria-hidden="true">↗</span></a></div>
+    <div class="questions">{faq.map((item) => <details><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div>
+  </section>
+
+  <section class="section final-booking" aria-labelledby="booking-title">
+    <div class="final-copy"><p class="eyebrow">Наступний крок — огляд</p><h2 id="booking-title">Подбаймо<br /><span>про ваш зуб</span></h2><p>Залиште номер — погодимо час огляду та пояснимо, з чого почати.</p><a class="phone" href="tel:+380630763022">+38 (063) 076-3022</a><p class="address">Київ, Велика Васильківська, 134<br />Пн–Пт: 09:00–21:00 · Сб–Нд: 09:00–15:30</p><a class="text-link" href="/contacts">Контакти та маршрут <span aria-hidden="true">↗</span></a></div>
+    <div class="final-form"><ServiceEnquiry id="book" title="Погодимо час вашого візиту" /></div>
+  </section>
+  <aside class="review-notes section"><details><summary>Примітки до прототипу <span aria-hidden="true">+</span></summary><ul><li>Ціни взяті зі спільного прайсу. Склад лікування, актуальність сум і медичні тексти потрібно підтвердити клінікою.</li><li>Профіль Моторної — з поточного сайту; спеціалізація 2025 року — з повідомлення клініки в Telegram. Призначення лікарки для цієї сторінки потребує погодження.</li><li>Блок прикладів робіт додамо після підтвердження пар фото, авторства й можливості публікації. Непідписані клінічні фото не подані як готові кейси.</li><li>Форми лише демонструють сценарій. Вони не надсилають дані й не створюють рекламних конверсій. Сторінка закрита від індексації на етапі прототипу.</li></ul></details></aside>
+  <nav class="mobile-actions" aria-label="Зв’язатися з клінікою" hidden data-mobile-actions><a href="tel:+380630763022">Зателефонувати</a><a class="mobile-book" href="#book">Записатися <span aria-hidden="true">↗</span></a></nav>
+</ServicePrototypeLayout>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const actions = document.querySelector<HTMLElement>('[data-mobile-actions]');
+  const bottomForm = document.getElementById('book');
+  if (hero && actions && bottomForm) {
+    let pastHero = false, bookingVisible = false;
+    const update = () => { actions.hidden = !pastHero || bookingVisible; };
+    new IntersectionObserver(([entry]) => { pastHero = !entry.isIntersecting && entry.boundingClientRect.bottom < 0; update(); }).observe(hero);
+    new IntersectionObserver(([entry]) => { bookingVisible = entry.isIntersecting; update(); }).observe(bottomForm);
+  }
+</script>
+
+<style>
+  .section { padding: 80px; color: var(--color-clean-white); scroll-margin-top: 32px; }
+  .hero { padding-top: 200px; }
+  .breadcrumbs { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; color: var(--color-light-grey); font-size: 12px; line-height: 1.5; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--color-lighter-blue); outline-offset: 6px; }
+  .breadcrumbs a:hover, .text-link:hover, .hero-bottom a:hover { color: var(--color-lighter-blue); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; }
+  .eyebrow { color: var(--color-ukrselt-blue); font-size: 12px; line-height: 1.5; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 24px; }
+  h1 { font-size: 77px; font-weight: 300; line-height: 1.1; letter-spacing: -3px; margin-bottom: 32px; }
+  h1 span, h2 span { color: var(--color-ukrselt-blue); }
+  .lead { color: var(--color-light-grey); font-size: 16px; line-height: 1.5; max-width: 522px; }
+  .starting-price { margin: 32px 0; padding-left: 24px; border-left: 1px solid var(--color-ukrselt-blue); }
+  .starting-price > span { color: var(--color-light-grey); font-size: 14px; }
+  .starting-price p { margin: 8px 0; font-size: 20px; font-weight: 300; }
+  .starting-price strong { font-size: 40px; line-height: 1.2; font-weight: 300; letter-spacing: -1px; }
+  .starting-price small { display: block; max-width: 414px; font-size: 12px; line-height: 1.5; color: var(--color-light-grey); }
+  .hero-photo { position: relative; min-width: 0; overflow: hidden; border-radius: 80px; }
+  .hero-photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 40% center; }
+  .hero-photo figcaption { position: absolute; inset: auto 0 0; padding: 80px 40px 40px; background: linear-gradient(transparent, var(--color-night-black)); font-size: 24px; font-weight: 300; line-height: 1.4; }
+  figcaption span { display: block; }
+  .hero-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgb(255 255 255 / .09); }
+  .prototype-label { font-size: 12px; color: var(--color-somewhat-light-grey); line-height: 1.5; }
+  .hero-bottom nav { display: flex; flex-wrap: wrap; gap: 32px; color: var(--color-light-grey); font-size: 14px; }
+  .cost, .steps { background: var(--color-night-black); }
+  .section-heading { display: grid; grid-template-columns: 1fr 1fr; column-gap: 80px; margin-bottom: 40px; align-items: end; }
+  .section-heading .eyebrow { grid-column: 1 / -1; }
+  h2 { font-size: var(--text-heading-2-size); line-height: 1.1; font-weight: 300; letter-spacing: -2px; }
+  .section-heading > p:last-child { max-width: 522px; color: var(--color-light-grey); font-size: 16px; line-height: 1.5; }
+  .price-table { display: flex; flex-direction: column; }
+  .price-row { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 32px; border-radius: 32px; }
+  .price-row:nth-child(odd) { background: var(--color-dark-grey); }
+  .price-row h3 { font-size: 20px; font-weight: 400; line-height: 1.4; }
+  .price-row p { font-size: 14px; line-height: 1.5; color: var(--color-light-grey); margin-top: 8px; }
+  .amount { flex: none; font-size: 24px; font-weight: 300; white-space: nowrap; }
+  .amount small { font-size: 14px; color: var(--color-light-grey); }
+  .price-foot { display: flex; justify-content: space-between; gap: 32px; margin-top: 32px; }
+  .price-foot p { max-width: 630px; font-size: 12px; line-height: 1.5; color: var(--color-somewhat-light-grey); }
+  .text-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; font-size: 14px; line-height: 1.5; }
+  .doctor { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .doctor-photo { overflow: hidden; border-radius: 80px; aspect-ratio: 630 / 560; }
+  .doctor-photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .doctor-copy > p:not(.eyebrow) { max-width: 522px; color: var(--color-light-grey); font-size: 16px; line-height: 1.5; margin-top: 24px; }
+  .doctor-copy > p.role { font-size: 20px; color: var(--color-clean-white); }
+  dl { margin: 32px 0; display: grid; gap: 24px; }
+  dt { font-size: 12px; color: var(--color-somewhat-light-grey); margin-bottom: 8px; }
+  dd { margin: 0; max-width: 522px; font-size: 14px; line-height: 1.5; color: var(--color-light-grey); }
+  .outline-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 64px; padding: 20px 24px; border: 1px solid rgb(255 255 255 / .2); border-radius: 40px; font-size: 14px; }
+  .outline-link:hover { border-color: var(--color-ukrselt-blue); }
+  .step-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+  .step-list li { border-top: 1px solid rgb(255 255 255 / .2); padding-top: 24px; }
+  .step-number { display: block; color: var(--color-ukrselt-blue); font-size: 14px; margin-bottom: 32px; }
+  .step-list h3 { font-size: 24px; font-weight: 300; line-height: 1.3; margin-bottom: 16px; }
+  .step-list p { color: var(--color-light-grey); font-size: 14px; line-height: 1.5; }
+  .steps-note { margin-top: 40px; font-size: 14px; line-height: 1.5; color: var(--color-somewhat-light-grey); }
+  .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .faq .section-heading { display: block; margin: 0; }
+  .faq .text-link { margin-top: 32px; }
+  details { border-bottom: 1px solid rgb(255 255 255 / .15); }
+  summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 24px 0; font-size: 20px; line-height: 1.4; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary > span { font-size: 24px; color: var(--color-ukrselt-blue); }
+  details[open] summary > span { transform: rotate(45deg); }
+  .questions details:first-child summary { padding-top: 0; }
+  details > p { padding-bottom: 24px; color: var(--color-light-grey); font-size: 16px; line-height: 1.5; }
+  .final-booking { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding-bottom: 160px; border-radius: 0 0 40px 40px; }
+  .final-copy > p:not(.eyebrow) { max-width: 414px; color: var(--color-light-grey); font-size: 16px; line-height: 1.5; margin-top: 24px; }
+  .phone { display: block; font-size: 24px; font-weight: 300; margin-top: 32px; }
+  .final-copy > p.address { font-size: 14px; line-height: 1.6; }
+  .final-copy > .text-link { margin-top: 20px; }
+  .final-form { align-self: center; padding: 40px; background: var(--color-night-black); border-radius: 40px; }
+  .review-notes { padding-top: 0; padding-bottom: 40px; }
+  .review-notes summary { font-size: 14px; color: var(--color-somewhat-light-grey); }
+  .review-notes ul { max-width: 960px; padding-left: 20px; color: var(--color-light-grey); font-size: 14px; line-height: 1.6; }
+  .review-notes li { margin-bottom: 16px; }
+  .mobile-actions { display: none; }
+  [hidden] { display: none !important; }
+  @media (max-width: 1439.98px) { .section { padding-left: 32px; padding-right: 32px; } .hero-grid, .doctor, .faq, .final-booking { gap: 40px; } .section-heading { column-gap: 40px; } h1 { font-size: 64px; } }
+  @media (max-width: 1199.98px) { .hero { padding-top: 180px; } .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 32px; } h1 { font-size: 56px; letter-spacing: -2px; } .hero-photo { border-radius: 60px; } .hero-photo figcaption { font-size: 20px; padding: 80px 24px 32px; } .section { padding-bottom: 80px; } .step-list { grid-template-columns: 1fr 1fr; } .price-row { padding: 24px; } .final-form { padding: 32px; } }
+  @media (max-width: 809.98px) {
+    .section { padding: 40px 16px; } .hero { padding-top: 144px; } .breadcrumbs { gap: 10px; font-size: 10px; margin-bottom: 32px; } .hero-grid, .doctor, .faq, .final-booking, .section-heading { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    h1 { font-size: 40px; line-height: 1.15; letter-spacing: -1.44px; margin-bottom: 24px; } .eyebrow { margin-bottom: 20px; font-size: 10px; } .lead { font-size: 14px; } .starting-price { margin: 24px 0; padding-left: 20px; } .starting-price strong { font-size: 32px; }
+    .hero-photo { display: none; } .hero-bottom { margin-top: 32px; gap: 20px; } .hero-bottom nav { gap: 24px; } .section-heading { margin-bottom: 32px; gap: 20px; } .section-heading .eyebrow { margin-bottom: 0; } .section-heading > p:last-child { font-size: 14px; }
+    h2 { font-size: 40px; line-height: 1.1; letter-spacing: -1.44px; } .price-row { padding: 24px 16px; gap: 16px; align-items: flex-start; flex-direction: column; border-radius: 20px; } .price-row h3 { font-size: 16px; } .price-row p { font-size: 12px; } .amount { font-size: 24px; align-self: flex-end; } .price-foot { flex-direction: column; gap: 20px; } .price-foot .text-link { align-self: flex-start; }
+    .doctor-photo { border-radius: 40px; } .doctor-copy > p:not(.eyebrow) { font-size: 14px; } .step-list { gap: 32px 20px; } .step-list h3 { font-size: 20px; } .step-number { margin-bottom: 24px; } .step-list p { font-size: 12px; }
+    .faq { gap: 32px; } summary { font-size: 16px; } details > p { font-size: 14px; } .final-booking { padding-bottom: 40px; } .final-form { padding: 24px 20px; border-radius: 32px; } .review-notes { padding-top: 0; padding-bottom: 100px; } .review-notes ul { font-size: 12px; }
+    .mobile-actions { position: fixed; z-index: 20; bottom: max(16px, env(safe-area-inset-bottom)); left: 16px; right: 16px; display: flex; gap: 8px; padding: 8px; border: 1px solid rgb(255 255 255 / .15); border-radius: 48px; background: var(--color-night-black); box-shadow: 0 10px 30px rgb(0 0 0 / .2); }
+    .mobile-actions a { flex: 1; display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 46px; padding: 12px; border-radius: 40px; font-size: 12px; color: var(--color-clean-white); } .mobile-actions .mobile-book { background: var(--color-ukrselt-blue); }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>

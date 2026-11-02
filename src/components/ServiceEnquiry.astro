@@ -1,0 +1,69 @@
+---
+/** Demo-only enquiry: never sends contact details or records a conversion. */
+interface Props { id: string; title?: string; }
+const { id, title = 'Почнімо з огляду' } = Astro.props;
+---
+<div class="enquiry" id={id}>
+  <h2>{title}</h2>
+  <form data-service-demo aria-label={title}>
+    <label>Ім’я <span class="optional">(необов’язково)</span>
+      <input autocomplete="name" type="text" maxlength="100" placeholder="Як до вас звертатися" />
+    </label>
+    <label>Телефон
+      <input data-demo-phone type="tel" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder="+380 XX XXX XX XX" aria-describedby={`${id}-error`} />
+    </label>
+    <p class="error" id={`${id}-error`} hidden>Перевірте номер телефону.</p>
+    <button type="submit" disabled>Записатися на діагностику <span aria-hidden="true">↗</span></button>
+    <p class="note">Адміністратор зв’яжеться з вами в робочий час і погодить дату візиту.</p>
+    <output role="status" aria-live="polite"></output>
+  </form>
+  <p class="demo-note">Демо-форма: використовуйте тестові дані. Заявки не надсилаються.</p>
+  <noscript><p class="demo-note">Для перевірки демо-форми увімкніть JavaScript.</p></noscript>
+</div>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-service-demo]')) {
+    const phone = form.querySelector<HTMLInputElement>('[data-demo-phone]')!;
+    const error = form.querySelector<HTMLElement>('.error')!;
+    const output = form.querySelector<HTMLOutputElement>('output')!;
+    form.querySelector<HTMLButtonElement>('button')!.disabled = false;
+    phone.addEventListener('input', () => {
+      phone.removeAttribute('aria-invalid'); error.hidden = true; output.textContent = '';
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const digits = phone.value.replace(/\D/g, '');
+      const valid = digits.startsWith('380') ? digits.length === 12 : digits.length >= 10 && digits.length <= 15;
+      error.hidden = valid;
+      phone.setAttribute('aria-invalid', String(!valid));
+      if (!valid) { phone.focus(); return; }
+      output.textContent = 'Демо завершено. Дані не надіслано; запис до клініки не створено.';
+      form.reset();
+    });
+  }
+</script>
+
+<style>
+  .enquiry { scroll-margin-top: 32px; color: var(--color-clean-white); }
+  h2 { font-size: 24px; font-weight: 300; line-height: 1.3; margin-bottom: 24px; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  label { display: block; min-width: 0; color: var(--color-light-grey); font-size: 14px; line-height: 1.4; }
+  .optional { font-size: 12px; }
+  input { display: block; width: 100%; min-width: 0; margin-top: 10px; height: 56px; padding: 0 20px; border-radius: 20px; border: 1px solid rgb(255 255 255 / .09); background: var(--color-dark-grey); color: var(--color-clean-white); font: 16px var(--font-family); }
+  input::placeholder { color: var(--color-somewhat-light-grey); }
+  input:focus-visible, button:focus-visible { outline: 2px solid var(--color-lighter-blue); outline-offset: 4px; }
+  input[aria-invalid='true'] { border-color: var(--color-light-grey); }
+  button { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 64px; padding: 20px 24px; border: 0; border-radius: 48px; background: var(--color-ukrselt-blue); color: var(--color-clean-white); font: 16px var(--font-family); cursor: pointer; }
+  button:hover { background: var(--color-lighter-blue); }
+  button:disabled { cursor: default; opacity: .5; }
+  button span { font-size: 24px; line-height: 1; }
+  .note, .demo-note { font-size: 12px; line-height: 1.5; color: var(--color-light-grey); }
+  .note, output, .error { grid-column: 1 / -1; }
+  .demo-note { margin-top: 12px; color: var(--color-somewhat-light-grey); }
+  output:empty { display: none; }
+  output { font-size: 14px; line-height: 1.5; color: var(--color-blue-light); }
+  .error { font-size: 14px; line-height: 1.4; color: var(--color-clean-white); }
+  [hidden] { display: none !important; }
+  @media (max-width: 809.98px) { form { gap: 16px; } .optional { display: none; } input { padding: 0 16px; } h2 { margin-bottom: 20px; } }
+  @media (max-width: 375px) { form { grid-template-columns: 1fr; } }
+</style>

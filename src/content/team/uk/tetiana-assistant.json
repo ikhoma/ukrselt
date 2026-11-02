@@ -1,0 +1,8 @@
+{
+  "group": "assistants",
+  "order": 3,
+  "name": "Тетяна",
+  "role": "Асистент стоматолога",
+  "photo": "../../../assets/team/final-tetiana-assistant.png",
+  "photoAlt": "Тетяна, асистент стоматолога, Ukrselt"
+}

@@ -7,6 +7,8 @@ import { locales, defaultLocale } from './src/i18n/config.ts';
 // Редиректи: SPEC §1. www → ukrselt.com налаштовується в доменах Vercel, не тут.
 const redirects = {
   '/success': { status: 301, destination: '/' },
+  '/team/demyanchuk': { status: 301, destination: '/team' },
+  '/team/berehova': { status: 301, destination: '/team' },
   '/team/brusova': { status: 301, destination: '/team' },
   '/team/marahovich': { status: 301, destination: '/team' },
   // На живому сайті sitemap лежить на /sitemap.xml (вказаний у robots.txt і, ймовірно, у Search Console).
@@ -32,7 +34,8 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !/\/(404|success)$/.test(page) && !Object.keys(redirects).some((r) => page.endsWith(r)),
+        !/\/(404|success)$/.test(page) && !page.endsWith('/services/likuvannya-kariyesu') && !Object.keys(redirects).some((r) => page.endsWith(r)),
     }),
   ],
 });
+

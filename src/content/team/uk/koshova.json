@@ -1,0 +1,9 @@
+{
+  "group": "doctors",
+  "order": 4,
+  "name": "Анастасія Кошова",
+  "role": "Лікар-стоматолог",
+  "photo": "../../../assets/team/final-koshova.png",
+  "photoAlt": "Анастасія Кошова, лікар-стоматолог, Ukrselt",
+  "homePhoto": "../../../assets/team/final-koshova.png"
+}

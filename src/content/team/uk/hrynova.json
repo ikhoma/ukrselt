@@ -1,0 +1,9 @@
+{
+  "group": "doctors",
+  "order": 3,
+  "name": "Тетяна Гриньова",
+  "role": "Лікар-стоматолог, пародонтолог",
+  "photo": "../../../assets/team/final-hrynova.png",
+  "photoAlt": "Тетяна Гриньова, лікар-стоматолог, пародонтолог, Ukrselt",
+  "homePhoto": "../../../assets/team/final-hrynova.png"
+}

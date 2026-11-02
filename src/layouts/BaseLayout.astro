@@ -68,7 +68,13 @@ const schema = {
 <html lang={localeHtmlLang[locale]} style={transitionCssVars()} data-no-smooth-scroll={noSmoothScroll || undefined}>
   <head>
     <meta charset="utf-8" />
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Чи людина сама рухала сторінку — з першого байта HTML, а не з моменту завантаження модуля анімацій (motion.ts).
+      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (e) {
+        addEventListener(e, function () { window.__userMoved = true; }, { once: true, passive: true });
+      });
+    </script>
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={description} />

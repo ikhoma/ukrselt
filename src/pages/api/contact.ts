@@ -8,7 +8,7 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-/** Мінімальний час від першої взаємодії з формою до відправки (мс). Швидше — бот. */
+/** Мінімальний час від першої взаємодії з формою до відправки (мс). Швидше — позначка «можливо бот» (автозаповнення теж швидке, тож не відкидаємо). */
 const MIN_FILL_MS = 2500;
 
 type Result = { ok: boolean; status: number; dryRun?: boolean; error?: 'phone' | 'send' };
@@ -31,9 +31,10 @@ function kyivTime(d = new Date()) {
   return new Intl.DateTimeFormat('uk-UA', { timeZone: 'Europe/Kyiv', dateStyle: 'short', timeStyle: 'short' }).format(d);
 }
 
-export function buildMessage({ name, phone, service, page }: { name: string; phone: string; service: string; page: string }) {
+export function buildMessage({ name, phone, service, page, fastMs }: { name: string; phone: string; service: string; page: string; fastMs?: number }) {
   return [
     '<b>Нова заявка з сайту</b>',
+    ...(fastMs !== undefined ? [`⚠️ Заповнено за ${(fastMs / 1000).toFixed(1)} с — можливо бот або автозаповнення`] : []),
     `Ім'я: ${name ? escapeHtml(name) : '—'}`,
     `Телефон: <a href="tel:+${phone}">+${phone}</a>`,
     `Сторінка: ${escapeHtml(service || page || '—')}`,
@@ -57,17 +58,19 @@ async function sendTelegram(text: string): Promise<boolean> {
 async function handle(form: FormData): Promise<Result> {
   const get = (k: string) => String(form.get(k) ?? '').trim();
 
-  // Антиспам: honeypot і занадто швидке заповнення → тихо «успіх», нічого не шлемо.
+  // Антиспам. Honeypot (приховане поле, людина його не бачить) → тихо «успіх», нічого не шлемо.
+  // Швидке заповнення НЕ відкидаємо: автозаповнення телефону теж займає < 2.5 с, а втрачена заявка гірша за спам.
+  // Таку заявку надсилаємо з позначкою (код-рев'ю 01.11, п.1).
   if (get('company')) return { ok: true, status: 200 };
   const elapsed = Number(get('elapsed'));
-  if (get('elapsed') && Number.isFinite(elapsed) && elapsed < MIN_FILL_MS) return { ok: true, status: 200 };
+  const fastMs = get('elapsed') && Number.isFinite(elapsed) && elapsed < MIN_FILL_MS ? elapsed : undefined;
 
   const phone = normalizePhone(get('phone'));
   if (!phone) return { ok: false, status: 400, error: 'phone' };
   const name = get('name').slice(0, 100);
   const service = get('service').slice(0, 100);
   const page = get('page').slice(0, 200);
-  const text = buildMessage({ name, phone, service, page });
+  const text = buildMessage({ name, phone, service, page, fastMs });
 
   if (!env('BOT_TOKEN') || !env('CHAT_ID')) {
     // Бот ще не підключений (SPEC §7.1, задача перед запуском). На production — помилка, щоб людина подзвонила;

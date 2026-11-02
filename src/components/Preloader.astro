@@ -38,7 +38,8 @@ import logo from '../assets/logo/logo-preloader.svg?raw';
       var wipe = pre.querySelector('.wipe');
       logo.classList.add('is-ready'); // SVG вище вже розібраний повністю
 
-      var FILL_MIN = 1000, HOLD = 1000, TIMEOUT = 6000; // TIMEOUT — від моменту, коли HTML розібраний
+      // TIMEOUT — від моменту, коли HTML розібраний; HARD_CAP — від появи шторки, хай що (код-рев'ю 01.11, п.2).
+      var FILL_MIN = 1000, HOLD = 1000, TIMEOUT = 6000, HARD_CAP = 15000;
       var CURTAIN = 'linear(0 0%, 0.12 12%, 0.51 24%, 0.79 37%, 0.92 49%, 0.96 61%, 0.99 73%, 1 100%)';
       // cubic-bezier(0.5, 0, 0, 1) — крива заповнення хреста
       function ease(x) {
@@ -62,8 +63,16 @@ import logo from '../assets/logo/logo-preloader.svg?raw';
         tasks.forEach(function (t) { t.then(step); });
         setTimeout(function () { target = 1; }, TIMEOUT);
       }
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onParsed, { once: true });
-      else onParsed();
+      // «interactive» настає, щойно HTML розібраний, — раніше за DOMContentLoaded, який чекає ще й модулі JS.
+      var parsed = false;
+      function whenParsed() {
+        if (parsed || document.readyState === 'loading') return;
+        parsed = true;
+        onParsed();
+      }
+      document.addEventListener('readystatechange', whenParsed);
+      whenParsed();
+      setTimeout(function () { target = 1; }, HARD_CAP);
 
       var t0 = performance.now();
       function tick(now) {

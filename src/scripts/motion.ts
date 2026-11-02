@@ -16,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 /* ── Оновлення сторінки починається згори (як «Smooth Scroll» у Framer, SPEC §4.0), якщо в адресі немає якоря ── */
 // ScrollTrigger сам керує history.scrollRestoration і пам'яттю скролу — тому через його API.
 ScrollTrigger.clearScrollMemory('manual');
-if (!location.hash) window.scrollTo(0, 0);
+if (!location.hash && !(window as unknown as { __userMoved?: boolean }).__userMoved) window.scrollTo(0, 0);
 
 /* ── Плавний скрол ─────────────────────────────────────────── */
 const smooth = !document.documentElement.hasAttribute('data-no-smooth-scroll');
@@ -146,9 +146,12 @@ if (preloader && !(window as unknown as { __preloaderDone?: boolean }).__preload
   startLoop();
 }
 
+/** Людина вже сама рухала сторінку (прапорець ставить інлайн-скрипт у BaseLayout) — тоді позицію не чіпаємо. */
+const userMoved = () => !!(window as unknown as { __userMoved?: boolean }).__userMoved;
 window.addEventListener('load', () => {
-  // Браузер може відновити позицію вже після нашого scrollTo(0, 0) — повертаємо на початок ще раз.
-  if (!location.hash) {
+  // Браузер може відновити позицію вже після нашого scrollTo(0, 0) — повертаємо на початок ще раз,
+  // але не якщо людина вже почала читати (інакше пізня картинка смикала б сторінку нагору; код-рев'ю 01.11, п.3).
+  if (!location.hash && !userMoved()) {
     if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     else window.scrollTo(0, 0);
   }

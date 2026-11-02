@@ -17,12 +17,7 @@ const locale = getLocale(Astro.url);
 const c = getPage(locale, 'team');
 const team = await getTeam(locale);
 
-const sizes: Record<string, string> = {
-  doctors: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(50vw - 42px), 630px',
-  assistants: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(50vw - 42px), 630px',
-  nurses: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(33vw - 32px), 416px',
-  administration: '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(100vw - 64px), 1280px',
-};
+const cardSizes = '(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc((100vw - 84px) / 2), (max-width: 1439.98px) calc((100vw - 104px) / 3), calc((100vw - 200px) / 3)';
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
@@ -50,7 +45,7 @@ const sizes: Record<string, string> = {
                     href={p.data.page ? localizePath(`/team/${entrySlug(p.id)}`, locale) : undefined}
                     moreLabel={c.more}
                     moreAriaLabel={`${c.more}: ${p.data.name}`}
-                    sizes={sizes[g.key]}
+                    sizes={cardSizes}
                   />
                 ))}
               </div>
@@ -92,22 +87,19 @@ const sizes: Record<string, string> = {
   }
   .grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 80px 20px;
   }
-  .group--nurses .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 16px;
-  }
-  .group--administration .grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   @media (max-width: 1439.98px) {
     .intro,
     .staff {
       padding-left: 32px;
       padding-right: 32px;
+    }
+  }
+  @media (max-width: 1199.98px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (max-width: 809.98px) {
@@ -118,8 +110,7 @@ const sizes: Record<string, string> = {
       gap: 40px;
       padding: 0 16px;
     }
-    .grid,
-    .group--nurses .grid {
+    .grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
     }

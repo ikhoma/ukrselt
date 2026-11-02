@@ -1,0 +1,9 @@
+{
+  "group": "doctors",
+  "order": 5,
+  "name": "Софія Вольська",
+  "role": "Лікар-стоматолог",
+  "photo": "../../../assets/team/final-sofia.png",
+  "photoAlt": "Софія Вольська, лікар-стоматолог, Ukrselt",
+  "homePhoto": "../../../assets/team/final-sofia.png"
+}

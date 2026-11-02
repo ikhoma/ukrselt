@@ -1,0 +1,8 @@
+{
+  "group": "administration",
+  "order": 3,
+  "name": "Діана",
+  "role": "Адміністратор",
+  "photo": "../../../assets/team/final-diana.png",
+  "photoAlt": "Діана, адміністратор, Ukrselt"
+}

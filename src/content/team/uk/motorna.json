@@ -1,11 +1,11 @@
 {
   "group": "doctors",
-  "order": 3,
+  "order": 2,
   "name": "Валерія Моторна",
   "role": "Стоматолог-терапевт",
-  "photo": "../../../assets/team/motorna-card.png",
+  "photo": "../../../assets/team/final-motorna.png",
   "photoAlt": "Валерія Моторна, стоматолог-терапевт, у стоматологічному кабінеті Ukrselt",
-  "homePhoto": "../../../assets/team/motorna-home.png",
+  "homePhoto": "../../../assets/team/final-motorna.png",
   "page": {
     "seo": {
       "title": "Валерія Моторна — стоматолог-терапевт — Ukrselt",
@@ -23,7 +23,7 @@
         "text": "Українська медична стоматологічна академія, стоматологічний факультет, 2020 р."
       }
     ],
-    "image": "../../../assets/team/motorna-intro.png",
+    "image": "../../../assets/team/final-motorna.png",
     "imageAlt": "Портрет Валерії Моторної",
     "sections": [
       {

@@ -30,6 +30,12 @@ if (smooth) {
   document.addEventListener('ukrselt:scroll-lock', () => lenis!.stop());
   document.addEventListener('ukrselt:scroll-unlock', () => lenis!.start());
 }
+// Миттєва прокрутка на запит сторінки (пошук у прайсі тримає список у видимій зоні).
+document.addEventListener('ukrselt:scroll-to', (e) => {
+  const top = (e as CustomEvent<number>).detail;
+  if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+  else window.scrollTo(0, top);
+});
 
 /* ── Поява при скролі ──────────────────────────────────────── */
 const appearItems = document.querySelectorAll<HTMLElement>('[data-appear]');

@@ -23,23 +23,12 @@ const norm = (s: string) =>
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
+  <div class="price-body">
   <section class="intro">
     <Lights size={400} top={61} offset={-360} class="intro-lights" />
     <PageTitle title={c.title} text={c.intro} />
   </section>
   <section class="list" data-price>
-    <div class="tools">
-      <label class="search">
-        <span class="sr-only">{c.search.label}</span>
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
-        <input type="search" placeholder={c.search.placeholder} autocomplete="off" enterkeyhint="search" data-price-search />
-        <button type="button" class="clear" aria-label={c.search.clear} data-price-clear hidden><span></span><span></span></button>
-      </label>
-      <p class="count" aria-live="polite" data-price-count data-template={c.search.found}></p>
-    </div>
-    <nav class="toc" aria-label={c.search.toc} data-price-toc>
-      {c.categories.map((cat) => <a href={`#${cat.id}`}>{cat.title}</a>)}
-    </nav>
     {
       c.categories.map((cat) => (
         <section class="cat" id={cat.id} data-price-cat>
@@ -76,6 +65,16 @@ const norm = (s: string) =>
       <button type="button" class="empty-cta" data-open-callback>{c.search.emptyCta}</button>
     </div>
   </section>
+    <div class="tools" data-price-tools>
+      <label class="search">
+        <span class="sr-only">{c.search.label}</span>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+        <input type="search" placeholder={c.search.placeholder} autocomplete="off" enterkeyhint="search" data-price-search />
+        <span class="count" aria-live="polite" data-price-count data-template={c.search.found}></span>
+        <button type="button" class="clear" aria-label={c.search.clear} data-price-clear hidden><span></span><span></span></button>
+      </label>
+    </div>
+  </div>
   <Booking service="price" />
   <BookingOverlay kind="callback" />
 </PageLayout>
@@ -83,8 +82,9 @@ const norm = (s: string) =>
 <script>
   // Пошук по прайсу: усі рядки є в HTML (SEO), скрипт лише ховає зайві.
   // Кожне слово запиту має знайтися в рядку; закінчення слів відкидаються (чистка/чистку, зуби/зуба).
-  const root = document.querySelector<HTMLElement>('[data-price]');
-  if (root) {
+  const root = document.querySelector<HTMLElement>('.price-body');
+  const list = document.querySelector<HTMLElement>('[data-price]');
+  if (root && list) {
     const input = root.querySelector<HTMLInputElement>('[data-price-search]')!;
     const clear = root.querySelector<HTMLButtonElement>('[data-price-clear]')!;
     const count = root.querySelector<HTMLElement>('[data-price-count]')!;
@@ -109,7 +109,7 @@ const norm = (s: string) =>
     const apply = () => {
       const terms = norm(input.value).split(' ').filter(Boolean).map(stem);
       const searching = terms.length > 0;
-      root.classList.toggle('is-searching', searching);
+      list.classList.toggle('is-searching', searching);
       clear.hidden = !input.value;
       if (!searching) {
         rows.forEach((r) => (r.hidden = false));
@@ -134,50 +134,60 @@ const norm = (s: string) =>
       empty.hidden = shown.length > 0;
     };
 
-    input.addEventListener('input', apply);
+    // Поле внизу екрана, а результати — у списку: при введенні тримаємо початок списку у видимій зоні,
+    // інакше на першому екрані (Intro) результатів не видно, а в глибині сторінки список «зникає» під ногами.
+    const toList = () => {
+      const top = list!.getBoundingClientRect().top + scrollY - 24;
+      if (Math.abs(scrollY - top) > 8) document.dispatchEvent(new CustomEvent('ukrselt:scroll-to', { detail: top }));
+    };
+    input.addEventListener('input', () => {
+      apply();
+      toList();
+    });
     clear.addEventListener('click', () => {
       input.value = '';
       apply();
       input.focus();
     });
-    // Перехід зі змісту під час пошуку: скинути пошук, щоб категорія була видима.
-    root.querySelectorAll('[data-price-toc] a').forEach((a) =>
-      a.addEventListener('click', () => {
-        if (input.value) {
-          input.value = '';
-          apply();
-        }
-      }, { capture: true }),
-    );
     // Відновлення значення поля браузером (назад/вперед).
     if (input.value) apply();
   }
 </script>
 
 <style>
+  .price-body {
+    padding-bottom: 80px;
+    background: var(--color-almost-black);
+  }
   .intro {
     position: relative;
     padding: 200px 80px 80px;
     background: var(--color-almost-black);
   }
   .list {
-    padding: 49px 80px 80px;
+    padding: 49px 80px 0;
     background: var(--color-almost-black);
   }
 
   /* ── Пошук і зміст (нові елементи, у Framer їх немає; стилі з поля форми і btn/secondary — на погодження) ── */
+  /* Поле пошуку закріплене внизу екрана поверх прайсу (рішення Івана 03.11): sticky в обгортці Intro+прайс —
+     видно з першого екрана, а в кінці прайсу воно «паркується» під списком і не налазить на форму та футер. */
   .tools {
     display: none; /* без JS пошук не працює — не показуємо */
   }
   :global(html.js) .tools {
+    position: sticky;
+    bottom: 24px;
+    z-index: 5;
     display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 24px;
+    justify-content: center;
+    padding: 24px 80px 0;
+    pointer-events: none;
   }
   .search {
     position: relative;
     flex: 0 1 560px;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -185,7 +195,7 @@ const norm = (s: string) =>
     padding: 0 20px;
     border-radius: 20px;
     background-image: linear-gradient(rgb(54, 54, 55) 0%, rgb(50, 50, 51) 100%);
-    box-shadow: 0 10px 30px 0 rgba(31, 31, 31, 0.1);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
     color: var(--color-somewhat-light-grey);
   }
   .search::after {
@@ -252,42 +262,11 @@ const norm = (s: string) =>
     background: var(--color-clean-white);
   }
   .count {
-    margin: 0;
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line-height);
+    flex: none;
+    font-size: var(--text-body-3-size);
+    line-height: 20px;
     color: var(--text-body-color);
-  }
-  .toc {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .toc a {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    height: 48px;
-    padding: 0 20px;
-    border-radius: 48px;
-    font-size: 16px;
-    line-height: 16px;
-    color: var(--color-clean-white);
-    text-decoration: none;
     white-space: nowrap;
-  }
-  .toc a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 1px solid rgba(253, 253, 254, 0.5);
-    border-radius: inherit;
-    pointer-events: none;
-    transition: border-color var(--dur-hover-outline) var(--ease-hover-outline);
-  }
-  .toc a:hover::after,
-  .toc a:focus-visible::after {
-    border-color: rgb(253, 253, 254);
   }
 
   .sr-only {
@@ -431,6 +410,10 @@ const norm = (s: string) =>
     white-space: nowrap;
   }
   @media (max-width: 1439.98px) {
+    :global(html.js) .tools {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
     .intro,
     .list {
       padding-left: 32px;
@@ -442,26 +425,17 @@ const norm = (s: string) =>
       padding: 160px 16px 40px;
     }
     .list {
-      padding: 46px 16px 40px;
+      padding: 46px 16px 0;
+    }
+    .price-body {
+      padding-bottom: 40px;
     }
     :global(html.js) .tools {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
+      bottom: 16px;
+      padding: 16px 16px 0;
     }
     .search {
-      flex: none;
-    }
-    /* Телефон: категорії одним рядком із горизонтальним гортанням. */
-    .toc {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      margin: 0 -16px 8px;
-      padding: 0 16px;
-      scrollbar-width: none;
-    }
-    .toc::-webkit-scrollbar {
-      display: none;
+      flex: 1 1 auto;
     }
     .cat {
       padding-top: 48px;

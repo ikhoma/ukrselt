@@ -3,9 +3,9 @@
   "order": 1,
   "name": "Ігор Сервінський",
   "role": "Лікар стоматолог, стоматолог-ортопед, хірург-імплантолог, лікар гнатолог",
-  "photo": "../../../assets/team/servinsky-card.png",
+  "photo": "../../../assets/team/final-servinsky.png",
   "photoAlt": "Ігор Сервінський, стоматолог-ортопед і хірург-імплантолог, у стоматологічному кабінеті Ukrselt",
-  "homePhoto": "../../../assets/team/servinsky-home.png",
+  "homePhoto": "../../../assets/team/final-servinsky.png",
   "page": {
     "seo": {
       "title": "Ігор Сервінський — ортопед, імплантолог — Ukrselt",
@@ -28,7 +28,7 @@
         "text": "Національний медичний університет ім. О.О. Богомольця, стоматологічний факультет, Київ. 1984 р."
       }
     ],
-    "image": "../../../assets/team/servinsky-intro.png",
+    "image": "../../../assets/team/final-servinsky.png",
     "imageAlt": "Портрет Ігоря Сервінського",
     "sections": [
       {

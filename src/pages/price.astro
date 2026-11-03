@@ -282,6 +282,10 @@ const norm = (s: string) =>
   .cat {
     padding-top: 80px;
   }
+  /* Перша категорія без верхнього відступу: від тексту Intro до прайсу лишається відступ Framer (80 + 49). */
+  .cat:first-of-type {
+    padding-top: 0;
+  }
   .cat-title {
     margin: 0 0 24px;
     padding: 0 32px;
@@ -439,6 +443,9 @@ const norm = (s: string) =>
     }
     .cat {
       padding-top: 48px;
+    }
+    .cat:first-of-type {
+      padding-top: 0;
     }
     .cat-title {
       padding: 0 16px;

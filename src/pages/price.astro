@@ -161,11 +161,12 @@ const norm = (s: string) =>
   }
   .intro {
     position: relative;
-    padding: 200px 80px 80px;
+    /* Знизу 56 (у Framer 80 + 49 у списку): прайс ближче до першого екрана, рішення Івана 03.11. */
+    padding: 200px 80px 56px;
     background: var(--color-almost-black);
   }
   .list {
-    padding: 49px 80px 0;
+    padding: 0 80px;
     background: var(--color-almost-black);
   }
 
@@ -177,7 +178,7 @@ const norm = (s: string) =>
   }
   :global(html.js) .tools {
     position: sticky;
-    bottom: 24px;
+    bottom: 32px; /* десктоп: як від дільника TopBar до меню (рішення Івана 03.11) */
     z-index: 5;
     display: flex;
     justify-content: center;
@@ -415,6 +416,7 @@ const norm = (s: string) =>
   }
   @media (max-width: 1439.98px) {
     :global(html.js) .tools {
+      bottom: 24px;
       padding-left: 32px;
       padding-right: 32px;
     }

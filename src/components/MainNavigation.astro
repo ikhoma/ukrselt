@@ -75,6 +75,10 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   if (nav && btn && menu) {
     const labelOpen = btn.querySelector<HTMLElement>('[data-label-open]')!;
     const labelClose = btn.querySelector<HTMLElement>('[data-label-close]')!;
+    let hideTimer = 0;
+    const menuPadBottom = (el: HTMLElement) => parseFloat(getComputedStyle(el.querySelector('.mobile-nav')!).paddingBottom) || 0;
+    const widestLink = (el: HTMLElement) =>
+      Math.max(...[...el.querySelectorAll<HTMLElement>('.mobile-link')].map((l) => l.getBoundingClientRect().right));
     const setOpen = (open: boolean) => {
       btn.setAttribute('aria-expanded', String(open));
       labelOpen.hidden = open;
@@ -83,28 +87,32 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
       // Block Scroll (Framer University): блокуємо скрол сторінки, поки меню відкрите.
       document.documentElement.style.overflow = open ? 'hidden' : '';
       document.dispatchEvent(new CustomEvent(open ? 'ukrselt:scroll-lock' : 'ukrselt:scroll-unlock'));
+      // Референс: «Full-Screen Perspective Travel Menu Overlay» (gridmorphic, freefrontend.com) — рішення Івана 04.11.
+      // Сторінка (#main) стає «карткою»: зменшується і з нахилом відʼїжджає — на телефоні вниз під пункти меню,
+      // ширше 810 — вправо від них. Пункти меню цілими виїжджають з-під маски.
+      const root = document.documentElement;
+      const main = document.getElementById('main');
+      window.clearTimeout(hideTimer);
       if (open) {
         menu.hidden = false;
-        // Коло розкривається з центру кнопки-бургера; радіус — до найдальшого кута overlay.
-        const m = menu.getBoundingClientRect();
-        const b = btn.getBoundingClientRect();
-        const cx = b.left + b.width / 2 - m.left;
-        const cy = b.top + b.height / 2 - m.top;
-        const r = Math.hypot(Math.max(cx, m.width - cx), Math.max(cy, m.height - cy)) + 2;
-        menu.style.setProperty('--cx', `${cx}px`);
-        menu.style.setProperty('--cy', `${cy}px`);
-        menu.style.setProperty('--r', `${r}px`);
-        requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('is-visible')));
+        const list = menu.querySelector<HTMLElement>('.mobile-nav')!.getBoundingClientRect();
+        // Пункти ще під маскою, але їхні місця вже відомі: картка стає під/праворуч від останнього пункту.
+        root.style.setProperty('--menu-origin', `${window.scrollY}px`);
+        root.style.setProperty('--menu-drop', `${Math.round(list.bottom - menuPadBottom(menu) + 32)}px`);
+        root.style.setProperty('--menu-shift', `${Math.round(widestLink(menu) + 64)}px`);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          menu.classList.add('is-visible');
+          root.classList.add('menu-open');
+        }));
       } else {
         menu.classList.remove('is-visible');
-        // Чекаємо кінця анімації самого overlay (пункти меню теж шлють transitionend — їх пропускаємо).
-        const done = (e: TransitionEvent) => {
-          if (e.target !== menu) return;
-          menu.removeEventListener('transitionend', done);
+        root.classList.remove('menu-open');
+        // Ховаємо overlay, коли картка повернулась на місце (тривалість + затримка з CSS).
+        hideTimer = window.setTimeout(() => {
           if (!nav.classList.contains('is-open')) menu.hidden = true;
-        };
-        menu.addEventListener('transitionend', done);
+        }, 900);
       }
+      void main;
     };
     btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
     document.addEventListener('keydown', (e) => {
@@ -257,22 +265,11 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     left: 0;
     right: 0;
     height: calc(100dvh - 48px); /* під TopBar (48px) */
-    background: var(--color-almost-black);
-    /* Референс: «Circular Reveal Fullscreen Navigation Menu» (Sikriti Dakua, freefrontend.com) — рішення Івана 04.11.
-       Overlay розкривається колом (clip-path) з кнопки-бургера: маска не деформує вміст, на відміну від scaleY. */
-    clip-path: circle(0px at var(--cx, 100%) var(--cy, 0px));
-    will-change: clip-path;
-    /* Закриття, крок 2: коло стягується назад у бургер, коли пункти вже сховались. */
-    transition: clip-path 550ms cubic-bezier(0.65, 0, 0.35, 1) 300ms;
+    /* Без фону: під пунктами видно темний фон сторінки, а збоку/знизу — сторінку-«картку». */
     overflow-y: auto;
   }
-  /* Відкриття, крок 1: коло розкривається на весь overlay. */
-  .mobile-menu.is-visible {
-    clip-path: circle(var(--r, 150vmax) at var(--cx, 100%) var(--cy, 0px));
-    transition: clip-path 750ms cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  /* Пункти меню цілком виїжджають знизу з-під маски на своїх місцях, з легкою пружиною (у референсі — по літерах,
-     рішення Івана: цілими пунктами). Маска — li з overflow: hidden; padding/margin, щоб не різало «у», «р», «д». */
+  /* Пункти меню цілими виїжджають знизу з-під маски на своїх місцях (у референсі — по літерах; рішення Івана —
+     цілими пунктами). Маска — li з overflow: hidden; padding/margin, щоб не різало «у», «р», «д». */
   .mobile-nav li {
     overflow: hidden;
     padding-bottom: 0.2em;
@@ -280,25 +277,53 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   }
   .mobile-link {
     display: inline-block;
-    transform: translateY(115%) rotate(4deg);
-    transform-origin: left bottom;
+    transform: translateY(115%);
     /* Закриття, крок 1: ховаються вниз, останній пункт першим. */
     transition:
-      transform 240ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
+      transform 260ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
       color var(--dur-hover) var(--ease-hover);
   }
-  /* Відкриття, крок 2: коли коло пройшло приблизно половину, пункти виїжджають по черзі. */
+  /* Відкриття, крок 2: поки картка відʼїжджає, пункти по черзі виїжджають. */
   .mobile-menu.is-visible .mobile-link {
     transform: none;
     transition:
-      transform 800ms cubic-bezier(0.34, 1.4, 0.64, 1) calc(320ms + var(--i) * 60ms),
+      transform 900ms cubic-bezier(0.16, 1, 0.3, 1) calc(200ms + var(--i) * 55ms),
       color var(--dur-hover) var(--ease-hover);
   }
+
+  /* Сторінка-«картка». #main лежить поза компонентом, тому :global. Початок координат — верх видимої області
+     (--menu-origin = scrollY), щоб картка зменшувалась від екрана, а не від верху всієї сторінки. */
+  :global(#main) {
+    transform-origin: 50% var(--menu-origin, 0px);
+    /* Закриття, крок 2: картка повертається, коли пункти вже сховались. */
+    transition:
+      transform 750ms cubic-bezier(0.76, 0, 0.24, 1) 180ms,
+      clip-path 750ms cubic-bezier(0.76, 0, 0.24, 1) 180ms;
+  }
+  :global(html.menu-open #main) {
+    /* Телефон: картка зменшується, трохи нахиляється назад і опускається під останній пункт меню. */
+    transform: perspective(1200px) translateY(var(--menu-drop)) rotateX(8deg) scale(0.88);
+    clip-path: inset(var(--menu-origin, 0px) 0 0 0 round 32px);
+    pointer-events: none;
+    transition:
+      transform 900ms cubic-bezier(0.76, 0, 0.24, 1),
+      clip-path 900ms cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  @media (min-width: 810px) {
+    /* Планшет і вузький десктоп (до 1279): як у референсі — картка відʼїжджає вправо з поворотом. */
+    :global(#main) {
+      transform-origin: 0 calc(var(--menu-origin, 0px) + 50vh);
+    }
+    :global(html.menu-open #main) {
+      transform: perspective(1400px) translateX(var(--menu-shift)) rotateY(-14deg) scale(0.8);
+      clip-path: inset(var(--menu-origin, 0px) 0 0 0 round 40px);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .mobile-menu,
-    .mobile-menu.is-visible,
     .mobile-link,
-    .mobile-menu.is-visible .mobile-link {
+    .mobile-menu.is-visible .mobile-link,
+    :global(#main),
+    :global(html.menu-open #main) {
       transition-duration: 1ms;
       transition-delay: 0ms;
     }

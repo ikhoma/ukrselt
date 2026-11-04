@@ -77,6 +77,24 @@ for (const el of document.querySelectorAll<HTMLElement>('[data-scrub-reveal]')) 
   );
 }
 
+/* ── Послуги на головній: горизонтальна стрічка (експеримент, референс archi-malinstudio.com) ── */
+// Секція стає вищою за екран на довжину ходу стрічки; поки вміст закріплений (sticky 100vh), стрічка їде вліво.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+for (const section of document.querySelectorAll<HTMLElement>('[data-hscroll]')) {
+  if (reduceMotion) break;
+  const strip = section.querySelector<HTMLElement>('[data-hscroll-strip]')!;
+  const travel = () => Math.max(0, strip.scrollWidth - section.clientWidth);
+  const setTravel = () => section.style.setProperty('--travel', `${travel()}px`);
+  section.classList.add('is-pinned');
+  setTravel();
+  ScrollTrigger.addEventListener('refreshInit', setTravel);
+  gsap.to(strip, {
+    x: () => -travel(),
+    ease: 'none',
+    scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true },
+  });
+}
+
 /* ── Team на головній ──────────────────────────────────────── */
 /** Кінцеві позиції карток: перші 4 — із Framer (doc1, doc2, doc5, doc6); 5-та і 6-та — на вільних місцях
  *  (рішення Івана 04.11, оновлений склад з 6 лікарів): десктоп — ліворуч посередині і праворуч унизу,

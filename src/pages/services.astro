@@ -9,7 +9,7 @@ import Booking from '../components/Booking.astro';
 import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
-import { getServices } from '../content/collections';
+import { getServices, entrySlug } from '../content/collections';
 
 const locale = getLocale(Astro.url);
 const c = getPage(locale, 'services');
@@ -21,6 +21,7 @@ const services = await getServices(locale);
   {
     services.map((s, i) => (
       <ServiceBlock
+        id={entrySlug(s.id)}
         first={i === 0}
         title={s.data.title}
         lead={s.data.lead}

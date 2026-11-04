@@ -32,7 +32,6 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
 
   {/* Експеримент (05.11): стрічка напрямів замість анімації карток. Старий блок — нижче в коментарі для порівняння. */}
   <HomeServices
-    label={`${c.services.title} ${c.services.accent}`}
     text={c.services.text}
     cta={c.services.cta}
     href={localizePath('/services', locale)}

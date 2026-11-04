@@ -3,7 +3,7 @@
  * Послуги на головній — експеримент (гілка experiment/home-services, ідея Івана 05.11).
  * Референс: секція «Sélection de projets» на archi-malinstudio.com — секція закріплена на висоту екрана,
  * горизонтальна стрічка квадратних фото з підписом «назва … номер» під час прокрутки їде вліво,
- * угорі праворуч — короткий заголовок і текст, унизу — великий заголовок на всю ширину.
+ * угорі праворуч — текст і кнопка, унизу — заголовок «Послуги» (Heading 1). Без номерів і підзаголовка (рішення Івана 05.11).
  * Без JS або при «зменшити рух» стрічка просто гортається вбік (overflow-x).
  */
 import { Image } from 'astro:assets';
@@ -11,20 +11,18 @@ import type { ImageMetadata } from 'astro';
 import BtnSecondary from './BtnSecondary.astro';
 
 interface Props {
-  label: string;
   text: string;
   cta: string;
   href: string;
   bigTitle: string;
   items: { title: string; image: ImageMetadata; alt: string; href: string }[];
 }
-const { label, text, cta, href, bigTitle, items } = Astro.props;
+const { text, cta, href, bigTitle, items } = Astro.props;
 ---
 
 <section class="home-services" data-hscroll>
   <div class="sticky">
     <div class="intro">
-      <h2 class="label">{label}</h2>
       <div class="intro-body">
         <p class="text">{text}</p>
         <BtnSecondary href={href} label={cta} />
@@ -33,23 +31,20 @@ const { label, text, cta, href, bigTitle, items } = Astro.props;
     <div class="viewport">
       <ul class="strip" data-hscroll-strip>
         {
-          items.map((it, i) => (
+          items.map((it) => (
             <li>
               <a class="item" href={it.href}>
                 <span class="pic">
                   <Image src={it.image} alt={it.alt} widths={[300, 450, 600]} sizes="(max-width: 809.98px) 220px, 300px" format="webp" loading="lazy" />
                 </span>
-                <span class="caption">
-                  <span class="name">{it.title}</span>
-                  <span class="num">{String(i + 1).padStart(2, '0')}</span>
-                </span>
+                <span class="caption">{it.title}</span>
               </a>
             </li>
           ))
         }
       </ul>
     </div>
-    <p class="big" aria-hidden="true">{bigTitle}</p>
+    <h2 class="text-heading-1 big">{bigTitle}</h2>
   </div>
 </section>
 
@@ -82,15 +77,6 @@ const { label, text, cta, href, bigTitle, items } = Astro.props;
     justify-content: flex-end;
     gap: 32px;
     padding: 0 80px;
-  }
-  .label {
-    flex: 0 0 auto;
-    max-width: 240px;
-    margin: 0;
-    font-size: var(--text-heading-4-size);
-    line-height: var(--text-heading-4-line-height);
-    font-weight: var(--text-heading-4-weight);
-    color: var(--color-clean-white);
   }
   .intro-body {
     display: flex;
@@ -150,26 +136,12 @@ const { label, text, cta, href, bigTitle, items } = Astro.props;
     transform: scale(1.04);
   }
   .caption {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
-  }
-  .num {
-    flex: none;
-    color: var(--color-somewhat-light-grey);
   }
   .big {
     margin: 0;
     padding: 0 80px;
-    /* Великий заголовок і картки залежать і від ширини, і від висоти екрана — щоб закріплений блок вміщався у вікно. */
-    font-size: clamp(72px, min(14vw, 21vh), 220px);
-    line-height: 1;
-    font-weight: 300;
-    letter-spacing: -0.04em;
-    color: var(--color-clean-white);
     white-space: nowrap;
   }
 
@@ -209,7 +181,6 @@ const { label, text, cta, href, bigTitle, items } = Astro.props;
     }
     .big {
       padding: 0 16px;
-      font-size: min(26vw, 12vh);
     }
   }
 </style>

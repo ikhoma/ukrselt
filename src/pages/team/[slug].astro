@@ -137,6 +137,10 @@ const [first, ...rest] = p.sections;
     height: 100%;
     object-fit: cover;
   }
+  /* Портрет 5:6 у широкій рамці (630×560): кадр від верху фото, щоб не різало голову. Рішення Івана 04.11. */
+  .pic :global(img) {
+    object-position: center top;
+  }
 
   .benefit {
     display: flex;

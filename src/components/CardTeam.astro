@@ -22,9 +22,19 @@ const { name, role, photo, photoAlt, href, moreLabel, moreAriaLabel, sizes } = A
 ---
 
 <article class="card-team">
-  <div class="pic">
-    <Image src={photo} alt={photoAlt} widths={[358, 470, 630, 960, 1280]} sizes={sizes} format="webp" />
-  </div>
+  {
+    href ? (
+      /* Фото теж веде на сторінку лікаря (рішення Івана 04.11). Для клавіатури й читачів екрана посилання одне —
+         кнопка «Детальніше», тому тут tabindex=-1 і aria-hidden. */
+      <a class="pic pic--link" href={href} tabindex="-1" aria-hidden="true">
+        <Image src={photo} alt={photoAlt} widths={[358, 470, 630, 960, 1280]} sizes={sizes} format="webp" />
+      </a>
+    ) : (
+      <div class="pic">
+        <Image src={photo} alt={photoAlt} widths={[358, 470, 630, 960, 1280]} sizes={sizes} format="webp" />
+      </div>
+    )
+  }
   <div class="info">
     <div class="text">
       <h3 class="text-heading-3">{name}</h3>
@@ -40,6 +50,15 @@ const { name, role, photo, photoAlt, href, moreLabel, moreAriaLabel, sizes } = A
     flex-direction: column;
     gap: 16px;
     min-width: 0;
+  }
+  .pic--link {
+    display: block;
+  }
+  .pic--link :global(img) {
+    transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .pic--link:hover :global(img) {
+    transform: scale(1.03);
   }
   .pic {
     aspect-ratio: 5 / 6;

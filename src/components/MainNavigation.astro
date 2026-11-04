@@ -261,7 +261,7 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     transition: transform var(--dur-menu) var(--ease-menu);
   }
   /* Пункти меню цілими виїжджають з-під маски на своїх місцях, а не сплющуються разом з overlay (рішення Івана 04.11;
-     рух пунктів — з референсу «Full-Screen Perspective Travel Menu Overlay», gridmorphic, але цілими, не по літерах).
+     поява по черзі з-під маски — з референсу «Full-Screen Perspective Travel Menu Overlay», gridmorphic, але цілими, не по літерах).
      Маска — li з overflow: hidden; padding/margin знизу, щоб маска не обрізала «у», «р», «д». */
   .mobile-nav li {
     overflow: hidden;
@@ -270,8 +270,9 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   }
   .mobile-link {
     display: inline-block;
-    transform: translateY(115%);
-    /* Закриття, крок 1: ховаються вниз (останній пункт першим), швидко. */
+    /* Пункти приходять зверху — в тому ж напрямку, що й overlay (рішення Івана 04.11). */
+    transform: translateY(-115%);
+    /* Закриття, крок 1: ховаються назад угору (останній пункт першим), швидко. */
     transition:
       transform 260ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
       color var(--dur-hover) var(--ease-hover);

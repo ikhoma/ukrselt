@@ -17,7 +17,7 @@ interface Props {
   text: string;
   cta: string;
   href: string;
-  cards: { image: ImageMetadata; alt: string }[];
+  cards: { image: ImageMetadata; alt: string; position?: string }[];
 }
 const { variant, title, accent, text, cta, href, cards } = Astro.props;
 ---
@@ -28,7 +28,7 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
       {
         cards.map((c, i) => (
           <div class:list={['card', `card--${i + 1}`]} data-card>
-            <Image src={c.image} alt={c.alt} widths={[250, 375, 700]} sizes={variant === 'team' ? '375px' : '350px'} format="webp" />
+            <Image src={c.image} alt={c.alt} widths={[250, 375, 700]} sizes={variant === 'team' ? '375px' : '350px'} format="webp" style={c.position ? `object-position: ${c.position}` : undefined} />
           </div>
         ))
       }

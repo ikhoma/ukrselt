@@ -3,7 +3,8 @@
  * Послуги на головній — експеримент (гілка experiment/home-services, ідея Івана 05.11).
  * Референс: секція «Sélection de projets» на archi-malinstudio.com — секція закріплена на висоту екрана,
  * горизонтальна стрічка квадратних фото з підписом «назва … номер» під час прокрутки їде вліво,
- * угорі праворуч — текст і кнопка, унизу — заголовок «Послуги» (Heading 1). Без номерів і підзаголовка (рішення Івана 05.11).
+ * унизу в ряд — заголовок «Послуги» (Heading 1) і опис з кнопкою. Без номерів і підзаголовка;
+ * назви напрямів — Heading 4, як назви пунктів у перевагах (рішення Івана 05.11).
  * Без JS або при «зменшити рух» стрічка просто гортається вбік (overflow-x).
  */
 import { Image } from 'astro:assets';
@@ -22,12 +23,6 @@ const { text, cta, href, bigTitle, items } = Astro.props;
 
 <section class="home-services" data-hscroll>
   <div class="sticky">
-    <div class="intro">
-      <div class="intro-body">
-        <p class="text">{text}</p>
-        <BtnSecondary href={href} label={cta} />
-      </div>
-    </div>
     <div class="viewport">
       <ul class="strip" data-hscroll-strip>
         {
@@ -35,7 +30,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
             <li>
               <a class="item" href={it.href}>
                 <span class="pic">
-                  <Image src={it.image} alt={it.alt} widths={[300, 450, 600]} sizes="(max-width: 809.98px) 220px, 300px" format="webp" loading="lazy" />
+                  <Image src={it.image} alt={it.alt} widths={[280, 420, 560, 840]} sizes="(max-width: 809.98px) 280px, 420px" format="webp" loading="lazy" />
                 </span>
                 <span class="caption">{it.title}</span>
               </a>
@@ -44,7 +39,13 @@ const { text, cta, href, bigTitle, items } = Astro.props;
         }
       </ul>
     </div>
-    <h2 class="text-heading-1 big">{bigTitle}</h2>
+    <div class="bottom">
+      <h2 class="text-heading-1 big">{bigTitle}</h2>
+      <div class="intro-body">
+        <p class="text">{text}</p>
+        <BtnSecondary href={href} label={cta} />
+      </div>
+    </div>
   </div>
 </section>
 
@@ -72,10 +73,11 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     overflow: hidden;
   }
 
-  .intro {
+  .bottom {
     display: flex;
-    justify-content: flex-end;
-    gap: 32px;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
     padding: 0 80px;
   }
   .intro-body {
@@ -115,7 +117,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: clamp(200px, 32vh, 300px);
+    width: clamp(240px, 46vh, 420px);
     color: var(--color-clean-white);
     text-decoration: none;
   }
@@ -135,20 +137,21 @@ const { text, cta, href, bigTitle, items } = Astro.props;
   .item:hover .pic :global(img) {
     transform: scale(1.04);
   }
+  /* Як назви пунктів у перевагах (CheckList): Heading 4. */
   .caption {
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line-height);
+    font-size: var(--text-heading-4-size);
+    line-height: var(--text-heading-4-line-height);
+    font-weight: var(--text-heading-4-weight);
+    color: var(--text-heading-4-color);
   }
   .big {
     margin: 0;
-    padding: 0 80px;
     white-space: nowrap;
   }
 
   @media (max-width: 1439.98px) {
-    .intro,
-    .strip,
-    .big {
+    .bottom,
+    .strip {
       padding-left: 32px;
       padding-right: 32px;
     }
@@ -160,9 +163,10 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     :global(html.js) .home-services.is-pinned .sticky {
       gap: 20px;
     }
-    .intro {
+    .bottom {
       flex-direction: column;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 16px;
       padding: 0 16px;
     }
     .intro-body {
@@ -173,14 +177,11 @@ const { text, cta, href, bigTitle, items } = Astro.props;
       padding: 0 16px;
     }
     .item {
-      width: min(220px, 28vh);
+      width: min(280px, 38vh);
       gap: 12px;
     }
     .pic {
       border-radius: 24px;
-    }
-    .big {
-      padding: 0 16px;
     }
   }
 </style>

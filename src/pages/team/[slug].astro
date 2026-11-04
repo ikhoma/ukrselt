@@ -38,7 +38,7 @@ const [first, ...rest] = p.sections;
         </dl>
       </div>
       <div class="pic">
-        <Image src={p.image} alt={p.imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" loading="eager" fetchpriority="high" />
+        <Image src={p.image} alt={p.imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" loading="eager" fetchpriority="high" style={entry.data.photoPosition ? `object-position: ${entry.data.photoPosition}` : undefined} />
       </div>
     </div>
   </section>

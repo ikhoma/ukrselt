@@ -55,7 +55,7 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
     text={c.team.text}
     cta={c.team.cta}
     href={localizePath('/team', locale)}
-    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.homePhotoPosition }))}
+    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.photoPosition }))}
   />
 
   <VisitUs />

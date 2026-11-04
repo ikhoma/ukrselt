@@ -24,8 +24,8 @@ const team = defineCollection({
       photoAlt: z.string(),
       /** Фото для блоку Team на головній (Framer: doc1…doc6). Є — людина показується на головній. */
       homePhoto: image().optional(),
-      /** Точка кадрування фото в квадраті на головній (CSS object-position), якщо стандартна «center top» лишає забагато місця над головою. */
-      homePhotoPosition: z.string().optional(),
+      /** Точка кадрування портрета (CSS object-position) у квадраті на головній і в рамці на сторінці лікаря, якщо стандартна «center top» лишає забагато місця над головою. */
+      photoPosition: z.string().optional(),
       /** Окрема сторінка /team/<slug> (slug = ім'я файлу). Немає — немає кнопки «Детальніше». */
       page: z
         .object({

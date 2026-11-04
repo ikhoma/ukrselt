@@ -74,10 +74,13 @@ const { divider = true } = Astro.props;
     flex: none;
   }
 
-  @media (max-width: 1199.98px) {
+  /* Бічні відступи — як у рядка меню на кожній ширині (80 / 32 / 15), щоб контакти й логотип стояли по одній сітці. */
+  @media (max-width: 1439.98px) {
     .top-bar {
       padding: 0 32px;
     }
+  }
+  @media (max-width: 1199.98px) {
     .phone-3 {
       display: none;
     }

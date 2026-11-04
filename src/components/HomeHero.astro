@@ -50,13 +50,15 @@ const locale = getLocale(Astro.url);
     overflow: hidden;
     background: var(--color-almost-black);
   }
-  /* Фото фіксованого розміру, прив'язане до низу Hero (заміряно: низ фото на 70 px нижче за низ Hero). */
+  /* Фото прив'язане до низу Hero (заміряно: низ фото на 70 px нижче за низ Hero), висота як у Framer (960),
+     але не менша за сам Hero: у високому вузькому вікні (половина екрана Mac, ~1230×1240) фото інакше
+     не діставало до верху і лишалась темна смуга (так само й на живому сайті). Рішення Івана 04.11. */
   .hero-image {
     position: absolute;
     bottom: -70px;
     left: 0;
     right: 0;
-    height: 960px;
+    height: max(960px, calc(100% + 70px));
   }
   .hero-image :global(img),
   .overlay {
@@ -153,7 +155,7 @@ const locale = getLocale(Astro.url);
       left: -443px;
       right: -210px;
       bottom: 0;
-      height: 1119px;
+      height: max(1119px, 100%);
     }
     .title {
       width: 630px;

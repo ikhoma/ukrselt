@@ -1,8 +1,10 @@
 ---
 /**
  * main-navigation (Framer).
- *  ≥1200: логотип + пігулки nav/items + кнопка «Записатися».
- *  ≤1199: логотип + кнопка + hamburger; меню відкривається на весь екран під TopBar.
+ *  ≥1280: логотип + пігулки nav/items + кнопка «Записатися».
+ *  ≤1279: логотип + кнопка + hamburger; меню відкривається на весь екран під TopBar.
+ *  У Framer межа 1200, але пігулки з кнопкою потребують ~1272 px і на 1200–1271 вилазили за екран
+ *  (половина екрана Mac); межу піднято до 1280 (рішення Івана 04.11).
  * Значення: docs/reference/stage-1/*.json.
  */
 import Logo from './Logo.astro';
@@ -96,7 +98,7 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && nav.classList.contains('is-open')) setOpen(false);
     });
-    window.matchMedia('(min-width: 1200px)').addEventListener('change', (e) => {
+    window.matchMedia('(min-width: 1280px)').addEventListener('change', (e) => {
       if (e.matches) setOpen(false);
     });
   }
@@ -268,15 +270,15 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     color: var(--color-greyish);
   }
 
-  /* Small Desktop 1200–1439 */
+  /* Small Desktop 1280–1439 */
   @media (max-width: 1439.98px) {
     .desktop {
       padding: 0 32px;
     }
   }
 
-  /* Tablet 810–1199 */
-  @media (max-width: 1199.98px) {
+  /* Tablet 810–1279 (компактна шапка) */
+  @media (max-width: 1279.98px) {
     .desktop {
       display: none;
     }

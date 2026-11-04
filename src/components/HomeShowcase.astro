@@ -165,6 +165,10 @@ const { variant, title, accent, text, cta, href, cards } = Astro.props;
     border-radius: 40px;
     transform: translate(var(--tx), var(--ty)) scale(0.8);
   }
+  /* Портрети 5:6 у квадратних картках: кадр від верху фото, щоб не різало голову (як на /team). Рішення Івана 04.11. */
+  .showcase--team .card :global(img) {
+    object-position: center top;
+  }
   .showcase--team .card--1 { --tx: -432px; --ty: -240px; z-index: 4; }
   .showcase--team .card--2 { --tx: 218px; --ty: -274px; z-index: 3; }
   .showcase--team .card--3 { --tx: -217px; --ty: 275px; z-index: 2; }

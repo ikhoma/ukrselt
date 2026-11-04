@@ -85,7 +85,16 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
       document.dispatchEvent(new CustomEvent(open ? 'ukrselt:scroll-lock' : 'ukrselt:scroll-unlock'));
       if (open) {
         menu.hidden = false;
-        requestAnimationFrame(() => menu.classList.add('is-visible'));
+        // Коло розкривається з центру кнопки-бургера; радіус — до найдальшого кута overlay.
+        const m = menu.getBoundingClientRect();
+        const b = btn.getBoundingClientRect();
+        const cx = b.left + b.width / 2 - m.left;
+        const cy = b.top + b.height / 2 - m.top;
+        const r = Math.hypot(Math.max(cx, m.width - cx), Math.max(cy, m.height - cy)) + 2;
+        menu.style.setProperty('--cx', `${cx}px`);
+        menu.style.setProperty('--cy', `${cy}px`);
+        menu.style.setProperty('--r', `${r}px`);
+        requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('is-visible')));
       } else {
         menu.classList.remove('is-visible');
         // Чекаємо кінця анімації самого overlay (пункти меню теж шлють transitionend — їх пропускаємо).
@@ -249,19 +258,21 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     right: 0;
     height: calc(100dvh - 48px); /* під TopBar (48px) */
     background: var(--color-almost-black);
-    transform-origin: top center;
-    transform: scaleY(0);
-    /* Закриття, крок 2: overlay згортається після того, як пункти сховались під маску. */
-    transition: transform 450ms cubic-bezier(0.65, 0, 0.35, 1) 340ms;
+    /* Референс: «Circular Reveal Fullscreen Navigation Menu» (Sikriti Dakua, freefrontend.com) — рішення Івана 04.11.
+       Overlay розкривається колом (clip-path) з кнопки-бургера: маска не деформує вміст, на відміну від scaleY. */
+    clip-path: circle(0px at var(--cx, 100%) var(--cy, 0px));
+    will-change: clip-path;
+    /* Закриття, крок 2: коло стягується назад у бургер, коли пункти вже сховались. */
+    transition: clip-path 550ms cubic-bezier(0.65, 0, 0.35, 1) 300ms;
     overflow-y: auto;
   }
-  /* Відкриття, крок 1: overlay розгортається (тривалість і крива як у Framer). */
+  /* Відкриття, крок 1: коло розкривається на весь overlay. */
   .mobile-menu.is-visible {
-    transform: scaleY(1);
-    transition: transform var(--dur-menu) var(--ease-menu);
+    clip-path: circle(var(--r, 150vmax) at var(--cx, 100%) var(--cy, 0px));
+    transition: clip-path 750ms cubic-bezier(0.65, 0, 0.35, 1);
   }
-  /* Пункти меню виїжджають з-під маски на своїх місцях (рішення Івана 04.11), а не сплющуються разом з overlay.
-     Маска — li з overflow: hidden; padding/margin знизу, щоб маска не обрізала «у», «р», «д». */
+  /* Пункти меню цілком виїжджають знизу з-під маски на своїх місцях, з легкою пружиною (у референсі — по літерах,
+     рішення Івана: цілими пунктами). Маска — li з overflow: hidden; padding/margin, щоб не різало «у», «р», «д». */
   .mobile-nav li {
     overflow: hidden;
     padding-bottom: 0.2em;
@@ -269,17 +280,18 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   }
   .mobile-link {
     display: inline-block;
-    transform: translateY(110%);
-    /* Закриття, крок 1: ховаються знизу вгору (останній пункт першим), швидко. */
+    transform: translateY(115%) rotate(4deg);
+    transform-origin: left bottom;
+    /* Закриття, крок 1: ховаються вниз, останній пункт першим. */
     transition:
-      transform 220ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
+      transform 240ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
       color var(--dur-hover) var(--ease-hover);
   }
-  /* Відкриття, крок 2: коли overlay майже розгорнувся (~90% на 250 мс), пункти виїжджають по черзі. */
+  /* Відкриття, крок 2: коли коло пройшло приблизно половину, пункти виїжджають по черзі. */
   .mobile-menu.is-visible .mobile-link {
     transform: none;
     transition:
-      transform 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(250ms + var(--i) * 45ms),
+      transform 800ms cubic-bezier(0.34, 1.4, 0.64, 1) calc(320ms + var(--i) * 60ms),
       color var(--dur-hover) var(--ease-hover);
   }
   @media (prefers-reduced-motion: reduce) {

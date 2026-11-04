@@ -78,11 +78,16 @@ for (const el of document.querySelectorAll<HTMLElement>('[data-scrub-reveal]')) 
 }
 
 /* ── Team на головній ──────────────────────────────────────── */
-/** Кінцеві позиції карток із Framer (doc1, doc2, doc5, doc6). Для 5-ї і далі — повтор по колу (рішення TBD, QUESTIONS п.19). */
+/** Кінцеві позиції карток: перші 4 — із Framer (doc1, doc2, doc5, doc6); 5-та і 6-та — на вільних місцях
+ *  (рішення Івана 04.11, оновлений склад з 6 лікарів): десктоп — ліворуч посередині і праворуч унизу,
+ *  телефон — нижній ряд дзеркально до верхнього. Підібрано, щоб вміщалось у 1440×900, 1280×720 і 390×844. */
 const teamEnd = {
-  desktop: { from: 1.5, to: 0.8, pos: [[-432, -240], [218, -274], [-217, 275], [540, -200]] },
-  phone: { from: 1, to: 0.5, pos: [[-140, -240], [0, -280], [140, 240], [140, -240]] },
+  desktop: { from: 1.5, to: 0.8, pos: [[-432, -240], [218, -274], [-217, 275], [540, -200], [-520, 40], [450, 240]] },
+  phone: { from: 1, to: 0.5, pos: [[-140, -240], [0, -280], [140, 240], [140, -240], [-140, 240], [0, 270]] },
 };
+/** Ширина, під яку задані зсуви у Framer. Вужче — горизонтальні зсуви стискаються пропорційно, щоб крайні
+ *  картки не виходили за екран (планшет, вузький десктоп, телефон 375). Вертикальні — без змін. */
+const teamBase = { desktop: 1440, phone: 390 };
 const team = document.querySelector<HTMLElement>('[data-showcase="team"]');
 if (team) {
   const cards = [...team.querySelectorAll<HTMLElement>('[data-card]')];
@@ -90,7 +95,8 @@ if (team) {
   const timeline = team.querySelector<HTMLElement>('.timeline')!;
   team.classList.add('is-animated');
   const mm = gsap.matchMedia();
-  const build = (cfg: (typeof teamEnd)['desktop']) => {
+  const build = (cfg: (typeof teamEnd)['desktop'], base: number) => {
+    const fx = () => Math.min(1, window.innerWidth / base);
     // Sticky (100vh) закріплений, поки Animation Timeline (800) проходить під ним — це і є діапазон анімації.
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
@@ -99,13 +105,13 @@ if (team) {
     });
     cards.forEach((card, i) => {
       const [x, y] = cfg.pos[i % cfg.pos.length];
-      tl.fromTo(card, { x: 0, y: 0, scale: cfg.from }, { x, y, scale: cfg.to, duration: 1 }, 0);
+      tl.fromTo(card, { x: 0, y: 0, scale: cfg.from }, { x: () => x * fx(), y, scale: cfg.to, duration: 1 }, 0);
     });
     // Заголовок з'являється на останніх 252 з 800 px (opacity 0 → 1, scale 0.9 → 1).
     tl.fromTo(title, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 252 / 800 }, 1 - 252 / 800);
   };
-  mm.add('(min-width: 810px)', () => build(teamEnd.desktop));
-  mm.add('(max-width: 809.98px)', () => build(teamEnd.phone));
+  mm.add('(min-width: 810px)', () => build(teamEnd.desktop, teamBase.desktop));
+  mm.add('(max-width: 809.98px)', () => build(teamEnd.phone, teamBase.phone));
 }
 
 /* ── Прелоадер і ротатор (головна) ─────────────────────────── */

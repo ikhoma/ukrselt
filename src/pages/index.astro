@@ -20,7 +20,7 @@ import { getTeam } from '../content/collections';
 
 const locale = getLocale(Astro.url);
 const c = getPage(locale, 'home');
-const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 4);
+const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6); // 6 позицій у анімації Team (motion.ts)
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description} topBarDivider={false}>

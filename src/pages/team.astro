@@ -1,6 +1,7 @@
 ---
 /**
  * /team (Framer): Intro (як на «Ціни») → Staff (групи з картками, між групами divider) → booking.
+ * Divider між Intro і першою групою прибраний, відступ текст → «Лікарі» як на «Ціни» (рішення Івана 03.11).
  * Картки — з колекції team; групи і їх порядок — src/content/pages/<locale>/team.json.
  */
 import PageLayout from '../layouts/PageLayout.astro';
@@ -31,12 +32,12 @@ const sizes: Record<string, string> = {
   </section>
   <section class="staff">
     {
-      c.groups.map((g: { key: string; title: string }) => {
+      c.groups.map((g: { key: string; title: string }, i: number) => {
         const people = team.filter((p) => p.data.group === g.key);
         if (!people.length) return null;
         return (
           <>
-            <div class="divider" aria-hidden="true" />
+            {i > 0 && <div class="divider" aria-hidden="true" />}
             <div class:list={['group', `group--${g.key}`]}>
               <h2 class="text-heading-2">{g.title}</h2>
               <div class="grid">
@@ -66,7 +67,7 @@ const sizes: Record<string, string> = {
 <style>
   .intro {
     position: relative;
-    padding: 200px 80px 80px;
+    padding: 200px 80px 56px; /* у Framer 80 + divider + 80; тепер як на «Ціни» */
     background: var(--color-almost-black);
   }
   .staff {
@@ -109,14 +110,9 @@ const sizes: Record<string, string> = {
       padding-right: 32px;
     }
   }
-  @media (max-width: 1199.98px) {
-    .intro {
-      padding-bottom: 40px;
-    }
-  }
   @media (max-width: 809.98px) {
     .intro {
-      padding: 160px 16px 40px;
+      padding: 160px 16px 86px; /* як на «Ціни»: 40 + 46 */
     }
     .staff {
       gap: 40px;

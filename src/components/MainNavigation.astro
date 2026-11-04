@@ -247,7 +247,10 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     top: 0;
     left: 0;
     right: 0;
-    height: calc(100dvh - 48px); /* під TopBar (48px) */
+    /* Під TopBar (48px), на всю висоту екрана. Не dvh: на iOS dvh не включає зону під плаваючою панеллю Safari,
+       і знизу просвічувала сторінка (зауваження Івана 04.11). lvh — повна висота; vh — запасний варіант. */
+    height: calc(100vh - 48px);
+    height: calc(100lvh - 48px);
     background: var(--color-almost-black);
     transform-origin: top center;
     transform: scaleY(0);

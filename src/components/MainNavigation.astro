@@ -56,8 +56,8 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   <div class="mobile-menu" id="mobile-menu" data-menu data-lenis-prevent hidden>
     <ul class="mobile-nav">
       {
-        mobileNav.map((k) => (
-          <li>
+        mobileNav.map((k, i) => (
+          <li style={`--i:${i};--n:${mobileNav.length}`}>
             <a class:list={['mobile-link', { 'is-active': isActive(k, path) }]} href={routes[k]} aria-current={isActive(k, path) ? 'page' : undefined}>
               {label(k)}
             </a>
@@ -88,10 +88,13 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
         requestAnimationFrame(() => menu.classList.add('is-visible'));
       } else {
         menu.classList.remove('is-visible');
-        const done = () => {
+        // Чекаємо кінця анімації самого overlay (пункти меню теж шлють transitionend — їх пропускаємо).
+        const done = (e: TransitionEvent) => {
+          if (e.target !== menu) return;
+          menu.removeEventListener('transitionend', done);
           if (!nav.classList.contains('is-open')) menu.hidden = true;
         };
-        menu.addEventListener('transitionend', done, { once: true });
+        menu.addEventListener('transitionend', done);
       }
     };
     btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
@@ -248,11 +251,45 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     background: var(--color-almost-black);
     transform-origin: top center;
     transform: scaleY(0);
-    transition: transform var(--dur-menu) var(--ease-menu);
+    /* Закриття, крок 2: overlay згортається після того, як пункти сховались під маску. */
+    transition: transform 450ms cubic-bezier(0.65, 0, 0.35, 1) 340ms;
     overflow-y: auto;
   }
+  /* Відкриття, крок 1: overlay розгортається (тривалість і крива як у Framer). */
   .mobile-menu.is-visible {
     transform: scaleY(1);
+    transition: transform var(--dur-menu) var(--ease-menu);
+  }
+  /* Пункти меню виїжджають з-під маски на своїх місцях (рішення Івана 04.11), а не сплющуються разом з overlay.
+     Маска — li з overflow: hidden; padding/margin знизу, щоб маска не обрізала «у», «р», «д». */
+  .mobile-nav li {
+    overflow: hidden;
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
+  }
+  .mobile-link {
+    display: inline-block;
+    transform: translateY(110%);
+    /* Закриття, крок 1: ховаються знизу вгору (останній пункт першим), швидко. */
+    transition:
+      transform 220ms cubic-bezier(0.55, 0, 1, 0.45) calc((var(--n) - 1 - var(--i)) * 20ms),
+      color var(--dur-hover) var(--ease-hover);
+  }
+  /* Відкриття, крок 2: коли overlay майже розгорнувся (~90% на 250 мс), пункти виїжджають по черзі. */
+  .mobile-menu.is-visible .mobile-link {
+    transform: none;
+    transition:
+      transform 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(250ms + var(--i) * 45ms),
+      color var(--dur-hover) var(--ease-hover);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .mobile-menu.is-visible,
+    .mobile-link,
+    .mobile-menu.is-visible .mobile-link {
+      transition-duration: 1ms;
+      transition-delay: 0ms;
+    }
   }
   .mobile-nav {
     display: flex;
@@ -263,7 +300,6 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     font-weight: 300;
     color: var(--color-clean-white);
     text-decoration: none;
-    transition: color var(--dur-hover) var(--ease-hover);
   }
   .mobile-link.is-active,
   .mobile-link:hover {

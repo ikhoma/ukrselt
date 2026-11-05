@@ -4,6 +4,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 import PageTitle from '../components/PageTitle.astro';
 import Booking from '../components/Booking.astro';
 import VisitUs from '../components/VisitUs.astro';
+import Lights from '../components/Lights.astro';
 import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
@@ -19,6 +20,7 @@ const groups = [
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
   <section class="intro">
+    <Lights size={400} top={61} offset={-360} />
     <PageTitle title={c.title} text={c.text} />
     <div class="row">
       <div class="pic">
@@ -58,6 +60,8 @@ const groups = [
     background: var(--color-almost-black);
   }
   .row {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 10px;

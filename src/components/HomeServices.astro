@@ -3,8 +3,10 @@
  * Послуги на головній — експеримент (гілка experiment/home-services, ідея Івана 05.11).
  * Референс: секція «Sélection de projets» на archi-malinstudio.com — секція закріплена на висоту екрана,
  * горизонтальна стрічка квадратних фото з підписом «назва … номер» під час прокрутки їде вліво,
- * унизу в ряд — заголовок «Послуги» (Heading 1) і опис з кнопкою. Без номерів і підзаголовка;
- * назви напрямів — Heading 4, як назви пунктів у перевагах (рішення Івана 05.11).
+ * Лейаут — макет Івана у Figma (Ukrselt, node 3055:1518, 05.11): заголовок «Послуги» зверху, під ним стрічка,
+ * під стрічкою опис і кнопка. Десктоп: сітка 12 колонок, поля 80, гаттер 20; картка = 3 колонки,
+ * опис — колонки 7–9, кнопка — 10–12. Телефон: картка 240, гаттер 16, опис і кнопка на всю ширину.
+ * Назви напрямів: 20 px Regular, інтерліньяж 1.3 (з макета).
  * Без JS або при «зменшити рух» стрічка просто гортається вбік (overflow-x).
  */
 import { Image } from 'astro:assets';
@@ -23,6 +25,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
 
 <section class="home-services" data-hscroll>
   <div class="sticky">
+    <h2 class="text-heading-1 big">{bigTitle}</h2>
     <div class="viewport">
       <ul class="strip" data-hscroll-strip>
         {
@@ -30,7 +33,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
             <li>
               <a class="item" href={it.href}>
                 <span class="pic">
-                  <Image src={it.image} alt={it.alt} widths={[280, 420, 560, 840]} sizes="(max-width: 809.98px) 280px, 420px" format="webp" loading="lazy" />
+                  <Image src={it.image} alt={it.alt} widths={[240, 320, 480, 640, 860]} sizes="(max-width: 809.98px) 240px, calc((100vw - 380px) / 4 + 40px)" format="webp" loading="lazy" />
                 </span>
                 <span class="caption">{it.title}</span>
               </a>
@@ -40,25 +43,29 @@ const { text, cta, href, bigTitle, items } = Astro.props;
       </ul>
     </div>
     <div class="bottom">
-      <h2 class="text-heading-1 big">{bigTitle}</h2>
-      <div class="intro-body">
-        <p class="text">{text}</p>
-        <BtnSecondary href={href} label={cta} />
-      </div>
+      <p class="text">{text}</p>
+      <div class="cta"><BtnSecondary href={href} label={cta} /></div>
     </div>
   </div>
 </section>
 
 <style>
+  /* Сітка блоку (макет): --pad поля, --gutter гаттер, --col ширина колонки з 12, --card ширина картки. */
   .home-services {
+    --pad: 80px;
+    --gutter: 20px;
+    --cols: 12;
+    --card-cols: 3;
     position: relative;
     background: var(--color-almost-black);
   }
   .sticky {
+    --col: calc((100cqw - 2 * var(--pad) - (var(--cols) - 1) * var(--gutter)) / var(--cols));
+    --card: calc(var(--card-cols) * var(--col) + (var(--card-cols) - 1) * var(--gutter));
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    padding: 120px 0 40px;
+    padding: 80px 0;
   }
   /* З JS: секція вища за екран на довжину ходу стрічки (--travel), вміст закріплений на висоту екрана. */
   :global(html.js) .home-services.is-pinned {
@@ -73,25 +80,12 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     overflow: hidden;
   }
 
-  .bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 40px;
-    padding: 0 80px;
-  }
-  .intro-body {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
-    max-width: 360px;
-  }
-  .text {
-    margin: 0;
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line-height);
-    color: var(--text-body-color);
+  /* Заголовок: стиль Heading 1; інтерліньяж 1, як у макеті (від заголовка до карток 40). */
+  .big {
+    margin: 0 0 40px;
+    padding: 0 var(--pad);
+    line-height: 1;
+    white-space: nowrap;
   }
 
   .viewport {
@@ -106,22 +100,22 @@ const { text, cta, href, bigTitle, items } = Astro.props;
   }
   .strip {
     display: flex;
-    gap: 20px;
+    align-items: flex-start;
+    gap: var(--gutter);
     width: max-content;
     margin: 0;
-    padding: 0 80px;
+    padding: 0 var(--pad);
     list-style: none;
     will-change: transform;
   }
   .item {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    width: clamp(240px, 46vh, 420px);
+    gap: 20px;
+    width: var(--card);
     color: var(--color-clean-white);
     text-decoration: none;
   }
-  /* Скруглення й відступи — як у картках «Команди» (CardTeam): 80 / 40 (≤1199), 20 між картками, 16 до назви. */
   .pic {
     display: block;
     aspect-ratio: 1;
@@ -138,52 +132,81 @@ const { text, cta, href, bigTitle, items } = Astro.props;
   .item:hover .pic :global(img) {
     transform: scale(1.04);
   }
-  /* Як назви пунктів у перевагах (CheckList): Heading 4. */
   .caption {
-    font-size: var(--text-heading-4-size);
-    line-height: var(--text-heading-4-line-height);
-    font-weight: var(--text-heading-4-weight);
-    color: var(--text-heading-4-color);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-clean-white);
   }
-  .big {
+
+  /* Опис — колонки 7–9, кнопка — 10–12 (під 3-ю і 4-ю карткою). */
+  .bottom {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
+    row-gap: 32px;
+    align-items: start;
+    margin-top: 40px;
+    padding: 0 var(--pad);
+  }
+  .text {
+    grid-column: 7 / span 3;
     margin: 0;
-    white-space: nowrap;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .cta {
+    grid-column: 10 / span 3;
+    display: flex;
+  }
+  .cta :global(.btn-secondary) {
+    width: 100%;
   }
 
   @media (max-width: 1439.98px) {
-    .bottom,
-    .strip {
-      padding-left: 32px;
-      padding-right: 32px;
+    .home-services {
+      --pad: 32px;
     }
   }
+  /* Планшет: окремого макета нема — тимчасово картка на 4 колонки, опис 1–6, кнопка 7–12. */
   @media (max-width: 1199.98px) {
+    .home-services {
+      --card-cols: 4;
+    }
     .pic {
       border-radius: 40px;
     }
+    .text {
+      grid-column: 1 / span 6;
+    }
+    .cta {
+      grid-column: 7 / span 6;
+    }
   }
+  /* Телефон (макет iPhone 17): сітка 4 колонки, поля 16, гаттер 16; картка 240, радіус 60. */
   @media (max-width: 809.98px) {
-    .sticky {
-      gap: 24px;
+    .home-services {
+      --pad: 16px;
+      --gutter: 16px;
     }
-    :global(html.js) .home-services.is-pinned .sticky {
-      gap: 20px;
-    }
-    .bottom {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 0 16px;
-    }
-    .intro-body {
-      max-width: none;
-    }
-    .strip {
-      padding: 0 16px;
+    .big {
+      margin-bottom: 32px;
     }
     .item {
-      width: min(280px, 38vh);
+      width: 240px;
+      gap: 16px;
     }
-
+    .pic {
+      border-radius: 60px;
+    }
+    .caption {
+      max-width: 166px;
+    }
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 </style>

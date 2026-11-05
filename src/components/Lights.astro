@@ -25,6 +25,9 @@ const svg = `<svg viewBox="0 0 600 600" fill="none" aria-hidden="true" focusable
     overflow: hidden;
     pointer-events: none;
     z-index: 0;
+    /* Плями вищі за секцію обрізаються її нижнім краєм — без маски на стику з наступною секцією видно шов. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 240px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 240px), transparent);
   }
   .light {
     position: absolute;

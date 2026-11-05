@@ -69,3 +69,20 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: clip;
 }
+
+/* Паралакс hero через scroll-driven animation (див. motion.ts). Змінні ставить скрипт.
+   Таймлайн окремим правилом: мініфікатор інакше злиє все в shorthand `animation` з scroll(),
+   а такий shorthand Chrome відкидає повністю. */
+[data-parallax].is-css-parallax {
+  animation-name: ukrselt-parallax;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+.is-css-parallax[data-parallax] {
+  animation-timeline: scroll(root block);
+  animation-range: 0px var(--parallax-end);
+}
+@keyframes ukrselt-parallax {
+  from { transform: translateY(0); }
+  to { transform: translateY(var(--parallax-shift)); }
+}

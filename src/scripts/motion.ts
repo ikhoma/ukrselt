@@ -57,14 +57,29 @@ if (appearItems.length) {
   appearItems.forEach((el) => io.observe(el));
 }
 
-/* ── Паралакс hero ─────────────────────────────────────────── */
+/* ── Паралакс hero ─────────────────────────────────────────────
+   Де браузер вміє scroll-driven animations (Safari 26+, Chrome 115+), рух рахує сам браузер разом зі скролом:
+   на iOS скрол іде поза JS, і JS-паралакс (як і на живому Framer-сайті) відставав і смикався.
+   Ефект той самий: зсув = scrollY × speed, доки низ секції не дійде до верху вікна. Інакше — GSAP. */
+const cssParallax = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: scroll()');
 for (const el of document.querySelectorAll<HTMLElement>('[data-parallax]')) {
   const speed = Number(el.dataset.parallax) || 0.1;
   const host = el.closest('section') ?? el.parentElement!;
+  const end = () => host.getBoundingClientRect().bottom + window.scrollY;
+  if (cssParallax) {
+    const set = () => {
+      el.style.setProperty('--parallax-end', `${end()}px`);
+      el.style.setProperty('--parallax-shift', `${end() * speed}px`);
+    };
+    set();
+    el.classList.add('is-css-parallax');
+    ScrollTrigger.addEventListener('refreshInit', set);
+    continue;
+  }
   gsap.to(el, {
-    y: () => (host.getBoundingClientRect().bottom + window.scrollY) * speed,
+    y: () => end() * speed,
     ease: 'none',
-    scrollTrigger: { start: 0, end: () => host.getBoundingClientRect().bottom + window.scrollY, scrub: true, invalidateOnRefresh: true },
+    scrollTrigger: { start: 0, end, scrub: true, invalidateOnRefresh: true },
   });
 }
 

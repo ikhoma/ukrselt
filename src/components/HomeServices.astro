@@ -121,11 +121,12 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     color: var(--color-clean-white);
     text-decoration: none;
   }
+  /* Скруглення й відступи — як у картках «Команди» (CardTeam): 80 / 40 (≤1199), 20 між картками, 16 до назви. */
   .pic {
     display: block;
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: 40px;
+    border-radius: 80px;
   }
   .pic :global(img) {
     display: block;
@@ -156,6 +157,11 @@ const { text, cta, href, bigTitle, items } = Astro.props;
       padding-right: 32px;
     }
   }
+  @media (max-width: 1199.98px) {
+    .pic {
+      border-radius: 40px;
+    }
+  }
   @media (max-width: 809.98px) {
     .sticky {
       gap: 24px;
@@ -173,15 +179,11 @@ const { text, cta, href, bigTitle, items } = Astro.props;
       max-width: none;
     }
     .strip {
-      gap: 12px;
       padding: 0 16px;
     }
     .item {
       width: min(280px, 38vh);
-      gap: 12px;
     }
-    .pic {
-      border-radius: 24px;
-    }
+
   }
 </style>

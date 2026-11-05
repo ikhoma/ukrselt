@@ -1,6 +1,7 @@
 ---
 /**
  * Головна (Framer «/»): Hero → Services → Benefits 1 → Benefits 2 → Testimonials → Team → Visit us → booking.
+ * Експеримент (05.11, рішення Івана): Team одразу після Services — лікарі в перших ~40% сторінки.
  * Прелоадер і анімації появи — етап 6.
  */
 import PageLayout from '../layouts/PageLayout.astro';
@@ -50,6 +51,16 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
   />
   */}
 
+  <HomeShowcase
+    variant="team"
+    title={c.team.title}
+    accent={c.team.accent}
+    text={c.team.text}
+    cta={c.team.cta}
+    href={localizePath('/team', locale)}
+    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.photoPosition }))}
+  />
+
   <section class="benefits benefits--1">
     <Lights size={900} offset={400} />
     <MediaSplit variant="layout" image={homeImage(c.benefits1.image)} imageAlt={c.benefits1.imageAlt} imagePosition="right" items={c.benefits1.items} />
@@ -61,15 +72,7 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
 
   <Testimonials {...c.testimonials} />
 
-  <HomeShowcase
-    variant="team"
-    title={c.team.title}
-    accent={c.team.accent}
-    text={c.team.text}
-    cta={c.team.cta}
-    href={localizePath('/team', locale)}
-    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.photoPosition }))}
-  />
+
 
   <VisitUs />
   <Booking service="home" />

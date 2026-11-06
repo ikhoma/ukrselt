@@ -19,6 +19,7 @@ interface Props {
 }
 const { title, words, h1, text, cta } = Astro.props;
 const locale = getLocale(Astro.url);
+import ButtonCta from './ButtonCta.astro';
 ---
 
 <section class="hero">
@@ -38,7 +39,7 @@ const locale = getLocale(Astro.url);
     </div>
     <div class="row">
       <p class="text">{text}</p>
-      <a class="cta" href={localizePath('/', locale) + '#book'} data-open-callback>{cta}</a>
+      <ButtonCta size="l" href={localizePath('/', locale) + '#book'} action="callback">{cta}</ButtonCta>
     </div>
   </div>
 </section>
@@ -125,25 +126,6 @@ const locale = getLocale(Astro.url);
     line-height: var(--text-body-line-height);
     color: #fdfdfe;
   }
-  .cta {
-    flex: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 304px;
-    height: 64px;
-    padding: 20px 24px;
-    border-radius: 48px;
-    background: var(--color-ukrselt-blue);
-    color: var(--color-clean-white);
-    font-size: 16px;
-    line-height: 24px;
-    text-decoration: none;
-    transition: background-color var(--dur-hover) var(--ease-hover);
-  }
-  .cta:hover {
-    background: var(--color-lighter-blue);
-  }
 
   @media (max-width: 1439.98px) {
     .title {
@@ -190,9 +172,6 @@ const locale = getLocale(Astro.url);
     .title {
       left: 15px;
       width: 321px;
-    }
-    .cta {
-      width: auto;
     }
   }
 </style>

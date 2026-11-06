@@ -1,16 +1,38 @@
 ---
-/** buttons/cta (Framer): синя кнопка «Записатися». Desktop 64px (20/24), Small 46px (16/20, текст 14). */
+/**
+ * buttons/cta (Framer): синя кнопка-пігулка. Єдиний компонент для всіх синіх кнопок сайту (рішення Івана 06.11).
+ * Розміри: s — 48 (16/20, текст 14/16), m — 56 (16/24, текст 16/24), l — 64 (20/24, текст 16/24).
+ * Ширина завжди за вмістом (без фіксованих ширин); розтягнути на всю ширину може тільки батьківський лейаут.
+ * as="button" — для кнопки відправки форми; action — який оверлей відкриває посилання.
+ */
+import type { HTMLAttributes } from 'astro/types';
 import { bookHref } from '../data/site';
 
-interface Props {
-  size?: 'desktop' | 'small';
+type Props = {
+  size?: 's' | 'm' | 'l';
+  as?: 'a' | 'button';
   href?: string;
+  action?: 'booking' | 'callback' | 'none';
   class?: string;
-}
-const { size = 'desktop', href = bookHref, class: cls } = Astro.props;
+} & Omit<HTMLAttributes<'a'> & HTMLAttributes<'button'>, 'class' | 'href'>;
+
+const { size = 'l', as = 'a', href = bookHref, action = 'booking', class: cls, ...rest } = Astro.props;
+const classes = ['cta', `cta--${size}`, cls];
 ---
 
-<a class:list={['cta', `cta--${size}`, cls]} href={href} data-open-booking><slot /></a>
+{
+  as === 'button' ? (
+    <button class:list={classes} {...rest}><slot /></button>
+  ) : (
+    <a
+      class:list={classes}
+      href={href}
+      data-open-booking={action === 'booking' ? '' : undefined}
+      data-open-callback={action === 'callback' ? '' : undefined}
+      {...rest}
+    ><slot /></a>
+  )
+}
 
 <style>
   .cta {
@@ -18,6 +40,7 @@ const { size = 'desktop', href = bookHref, class: cls } = Astro.props;
     align-items: center;
     justify-content: center;
     flex: none;
+    border: 0;
     border-radius: 48px;
     background: var(--color-ukrselt-blue);
     color: var(--color-clean-white);
@@ -25,21 +48,28 @@ const { size = 'desktop', href = bookHref, class: cls } = Astro.props;
     font-weight: 400;
     text-decoration: none;
     white-space: nowrap;
+    cursor: pointer;
     transition: background-color var(--dur-hover) var(--ease-hover);
   }
   .cta:hover {
     background: var(--color-lighter-blue);
   }
-  .cta--desktop {
+  .cta--l {
     height: 64px;
     padding: 20px 24px;
     font-size: 16px;
     line-height: 24px;
   }
-  .cta--small {
-    height: 46px;
+  .cta--m {
+    height: 56px;
+    padding: 16px 24px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .cta--s {
+    height: 48px;
     padding: 16px 20px;
     font-size: 14px;
-    line-height: 14px;
+    line-height: 16px;
   }
 </style>

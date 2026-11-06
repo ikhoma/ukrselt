@@ -34,16 +34,16 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
         }
       </ul>
     </div>
-    <ButtonCta size="desktop">{t('nav.book')}</ButtonCta>
+    <ButtonCta size="l">{t('nav.book')}</ButtonCta>
   </div>
 
   <!-- Tablet / Phone -->
   <div class="compact">
     <Logo size="large" class="logo-tablet" />
-    <Logo size="small" class="logo-phone" />
+    <Logo size="s" class="logo-phone" />
     <div class="compact-actions">
-      <ButtonCta size="desktop" class="cta-tablet">{t('nav.book')}</ButtonCta>
-      <ButtonCta size="small" class="cta-phone">{t('nav.book')}</ButtonCta>
+      <ButtonCta size="l" class="cta-tablet">{t('nav.book')}</ButtonCta>
+      <ButtonCta size="s" class="cta-phone">{t('nav.book')}</ButtonCta>
       <button class="hamburger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
         <span class="sr-only" data-label-open>{t('menu.open')}</span>
         <span class="sr-only" data-label-close hidden>{t('menu.close')}</span>

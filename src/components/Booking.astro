@@ -30,6 +30,7 @@ const callback = kind === 'callback';
 const title = callback ? c.callback.title : c.title;
 const text = callback ? c.callback.text : c.text;
 const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
+import ButtonCta from './ButtonCta.astro';
 ---
 
 <section class:list={['booking', `booking--${variant}`, `booking--${kind}`]} id={variant === 'section' ? 'book' : undefined}>
@@ -59,9 +60,9 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
         <input type="hidden" name="elapsed" value="" data-elapsed />
         <!-- honeypot (ADR-0004) -->
         <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="submit" type="submit" data-submit data-text-idle={submitText} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
+        <ButtonCta as="button" size={callback ? 'm' : 'l'} class="submit" type="submit" data-submit data-text-idle={submitText} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
           <span class="submit-label" data-submit-label>{submitText}</span>
-        </button>
+        </ButtonCta>
         <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
       </form>
     </div>
@@ -190,22 +191,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     height: 1px;
     opacity: 0;
   }
-  .submit {
-    height: 70px;
-    padding: 24px 32px;
-    border: 0;
-    border-radius: 40px;
-    background: var(--color-ukrselt-blue);
-    color: var(--color-clean-white);
-    font-family: var(--font-family);
-    font-size: 16px;
-    line-height: 22.4px;
-    cursor: pointer;
-    transition: background-color var(--dur-hover) var(--ease-hover);
-  }
-  .submit:hover {
-    background: var(--color-lighter-blue);
-  }
+  /* Кнопка — ButtonCta (l, у «Замовити дзвінок» — m); тут лише стани відправки. */
   .submit[disabled] {
     cursor: default;
   }
@@ -280,8 +266,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   .booking--callback .submit {
     align-self: start;
     margin-top: 32.4px; /* висота підпису поля (22.4) + відступ 10 — кнопка на рівні поля */
-    height: 56px;
-    padding: 0 24px;
   }
   .booking--callback .form-error {
     grid-column: 1 / -1;
@@ -310,7 +294,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     }
     .booking--callback .submit {
       margin-top: 0;
-      height: 70px;
     }
     .booking--overlay {
       width: 100%;

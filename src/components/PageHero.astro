@@ -65,8 +65,9 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
     width: 100%;
     text-align: center;
   }
+  /* 6 центральних колонок сітки (06.11): на 1440 це ті самі 630 з Framer. */
   .text {
-    width: 630px;
+    width: calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 6 + 5 * var(--grid-gutter));
     max-width: 100%;
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
@@ -86,7 +87,7 @@ const { title, text, image, imageAlt, tabletOffset = false } = Astro.props;
   }
   @media (max-width: 809.98px) {
     .page-hero {
-      padding: 160px 15px 80px;
+      padding: 160px 16px 80px;
     }
     .page-hero .image {
       top: 0;

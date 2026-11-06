@@ -94,6 +94,23 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     height: 100%;
     object-fit: cover;
   }
+  /* Сітка 12 колонок (06.11): фото 1–6, форма 8–12. Оверлей лишається як у Framer (630 + 108). */
+  .booking:not(.booking--overlay) .container {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+  }
+  .booking:not(.booking--overlay) .pic {
+    grid-column: 1 / span 6;
+    width: auto;
+    height: auto;
+    aspect-ratio: 630 / 560;
+  }
+  .booking:not(.booking--overlay) .form-col {
+    grid-column: 8 / span 5;
+    width: auto;
+    padding-left: 0;
+  }
   .form-col {
     width: 630px;
     padding-left: 108px;
@@ -236,7 +253,9 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     .booking {
       padding: 40px 32px 80px;
     }
-    .container {
+    .container,
+    .booking:not(.booking--overlay) .container {
+      display: flex;
       flex-direction: column;
       align-items: stretch;
     }
@@ -285,7 +304,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   }
   @media (max-width: 809.98px) {
     .booking {
-      padding: 40px 15px 80px;
+      padding: 40px 16px 80px;
     }
     .fields {
       grid-template-columns: minmax(0, 1fr);

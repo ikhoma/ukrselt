@@ -16,11 +16,13 @@ interface Props {
   imageAlt: string;
   imagePosition: 'left' | 'right';
   first?: boolean;
+  /** Якір (/services#<id>) — на нього ведуть картки напрямів з головної. */
+  id?: string;
 }
-const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false } = Astro.props;
+const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false, id } = Astro.props;
 ---
 
-<section class:list={['service', `service--image-${imagePosition}`, { 'service--first': first }]}>
+<section id={id} class:list={['service', `service--image-${imagePosition}`, { 'service--first': first }]}>
   {imagePosition === 'right' && <Lights size={900} offset={400} />}
   <div class="text">
     <h2 class="text-heading-2" data-appear>{title}</h2>

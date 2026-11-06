@@ -34,7 +34,7 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
         }
       </ul>
     </div>
-    <ButtonCta size="desktop">{t('nav.book')}</ButtonCta>
+    <ButtonCta size="l">{t('nav.book')}</ButtonCta>
   </div>
 
   <!-- Tablet / Phone -->
@@ -42,8 +42,8 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     <Logo size="large" class="logo-tablet" />
     <Logo size="small" class="logo-phone" />
     <div class="compact-actions">
-      <ButtonCta size="desktop" class="cta-tablet">{t('nav.book')}</ButtonCta>
-      <ButtonCta size="small" class="cta-phone">{t('nav.book')}</ButtonCta>
+      <ButtonCta size="l" class="cta-tablet">{t('nav.book')}</ButtonCta>
+      <ButtonCta size="s" class="cta-phone">{t('nav.book')}</ButtonCta>
       <button class="hamburger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
         <span class="sr-only" data-label-open>{t('menu.open')}</span>
         <span class="sr-only" data-label-close hidden>{t('menu.close')}</span>
@@ -210,10 +210,12 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     display: flex;
     align-items: center;
   }
+  /* Зона натискання 48×48 (як у хрестика оверлею, рішення Івана 06.11); margin -4, щоб місце в шапці лишилось як у Framer (40). */
   .hamburger {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
+    margin: -4px;
     padding: 0;
     border: 0;
     background: none;
@@ -221,7 +223,7 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   }
   .bar {
     position: absolute;
-    left: 8px;
+    left: 12px;
     width: 24px;
     height: 2px;
     border-radius: 1px;
@@ -229,10 +231,10 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     transition: transform var(--dur-hover) var(--ease-hover);
   }
   .bar-1 {
-    top: 14px;
+    top: 18px;
   }
   .bar-2 {
-    top: 24px;
+    top: 28px;
   }
   .is-open .bar-1 {
     transform: translateY(5px) rotate(45deg);

@@ -1,6 +1,7 @@
 ---
 /**
  * Головна (Framer «/»): Hero → Services → Benefits 1 → Benefits 2 → Testimonials → Team → Visit us → booking.
+ * Експеримент (05.11, рішення Івана): Team одразу після Services — лікарі в перших ~40% сторінки.
  * Прелоадер і анімації появи — етап 6.
  */
 import PageLayout from '../layouts/PageLayout.astro';
@@ -8,18 +9,21 @@ import HomeHero from '../components/HomeHero.astro';
 import Preloader from '../components/Preloader.astro';
 import BookingOverlay from '../components/BookingOverlay.astro';
 import HomeShowcase from '../components/HomeShowcase.astro';
+import HomeServices from '../components/HomeServices.astro';
 import MediaSplit from '../components/MediaSplit.astro';
 import Lights from '../components/Lights.astro';
 import Testimonials from '../components/Testimonials.astro';
 import VisitUs from '../components/VisitUs.astro';
 import Booking from '../components/Booking.astro';
-import { getLocale, localizePath } from '../i18n';
+import { getLocale, localizePath, useTranslations } from '../i18n';
 import { getPage } from '../content/pages';
 import { homeImage } from '../content/images';
-import { getTeam } from '../content/collections';
+import { getTeam, getServices, entrySlug } from '../content/collections';
 
 const locale = getLocale(Astro.url);
 const c = getPage(locale, 'home');
+const services = await getServices(locale);
+const t = useTranslations(locale);
 const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6); // 6 позицій у анімації Team (motion.ts)
 ---
 
@@ -27,6 +31,15 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
   <Preloader slot="preloader" />
   <HomeHero title={c.hero.title} words={c.hero.words} h1={c.hero.h1} text={c.hero.text} cta={c.hero.cta} />
 
+  {/* Експеримент (05.11): стрічка напрямів замість анімації карток. Старий блок — нижче в коментарі для порівняння. */}
+  <HomeServices
+    text={c.services.text}
+    cta={c.services.cta}
+    href={localizePath('/services', locale)}
+    bigTitle={t('nav.services')}
+    items={services.map((s) => ({ title: s.data.title, image: s.data.image, alt: s.data.imageAlt, href: localizePath('/services', locale) + '#' + entrySlug(s.id) }))}
+  />
+  {/*
   <HomeShowcase
     variant="services"
     title={c.services.title}
@@ -35,6 +48,17 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
     cta={c.services.cta}
     href={localizePath('/services', locale)}
     cards={c.services.cards.map((k: { image: string; alt: string }) => ({ image: homeImage(k.image), alt: k.alt }))}
+  />
+  */}
+
+  <HomeShowcase
+    variant="team"
+    title={c.team.title}
+    accent={c.team.accent}
+    text={c.team.text}
+    cta={c.team.cta}
+    href={localizePath('/team', locale)}
+    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.photoPosition }))}
   />
 
   <section class="benefits benefits--1">
@@ -48,15 +72,7 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
 
   <Testimonials {...c.testimonials} />
 
-  <HomeShowcase
-    variant="team"
-    title={c.team.title}
-    accent={c.team.accent}
-    text={c.team.text}
-    cta={c.team.cta}
-    href={localizePath('/team', locale)}
-    cards={team.map((p) => ({ image: p.data.homePhoto!, alt: p.data.photoAlt, position: p.data.photoPosition }))}
-  />
+
 
   <VisitUs />
   <Booking service="home" />

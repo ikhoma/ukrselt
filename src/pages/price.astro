@@ -405,6 +405,7 @@ const norm = (s: string) =>
   }
   .service {
     flex: 1;
+    min-width: 0;
     font-size: var(--text-body-2-size);
     line-height: 28px;
     letter-spacing: var(--text-body-2-letter-spacing);
@@ -457,6 +458,17 @@ const norm = (s: string) =>
     .cat-title {
       padding: 0 16px;
       font-size: 24px;
+    }
+    /* Телефон: рядок з паддінгом 32 і проміжком 32 не вміщав довгі ціни («12000 – 41750») — сторінка
+       ставала ширшою за екран і справа з'являлась темна смуга. Тому на телефоні ціна під назвою, на всю ширину. */
+    .price-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 24px 16px;
+    }
+    .price {
+      text-align: left;
     }
     .group-title,
     .see-also {

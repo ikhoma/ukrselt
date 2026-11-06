@@ -1,8 +1,9 @@
 ---
 /**
  * Секція «фото + список з галочками».
- *  variant="layout"  — Framer «Layout» (Стерилізація): фото 630×560, колонка 630 зі списком 522 (відступ 108 з боку фото).
- *  variant="benefit" — Framer «benefit-1» (Про нас): фото 576×512, список 576, між ними простір.
+ *  variant="layout"  — Framer «Layout» (Стерилізація, головна), variant="benefit" — Framer «benefit-1» (Про нас).
+ *  У Framer були різні фіксовані ширини (630+108 / 576 з простором); з 06.11 обидва на сітці: фото 6 колонок,
+ *  список 5 колонок через одну від фото (рішення Івана). Варіант лишено як мітку.
  * Tablet/Phone: колонка, фото завжди зверху.
  */
 import { Image } from 'astro:assets';
@@ -21,7 +22,7 @@ const { image, imageAlt, imagePosition = 'left', items, variant = 'layout' } = A
 
 <div class:list={['media-split', `media-split--${variant}`, `media-split--image-${imagePosition}`]}>
   <div class="pic">
-    <Image src={image} alt={imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" />
+    <Image src={image} alt={imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 50vw" format="webp" />
   </div>
   <div class="list">
     <CheckList items={items} />
@@ -29,21 +30,35 @@ const { image, imageAlt, imagePosition = 'left', items, variant = 'layout' } = A
 </div>
 
 <style>
+  /* Сітка 12 колонок (рішення Івана 06.11): фото — 6 колонок, список — 5 колонок через одну від фото
+     (фото ліворуч: 1–6 і 8–12; праворуч: 7–12 і 1–5). Обидва варіанти однакові; пропорція фото 630:560 з Framer. */
   .media-split {
     position: relative;
     z-index: 1;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
     align-items: center;
-    gap: 20px;
     width: 100%;
-  }
-  .media-split--image-right .pic {
-    order: 2;
+    container-type: inline-size;
   }
   .pic {
-    flex: none;
+    grid-row: 1;
+    grid-column: 1 / span 6;
+    aspect-ratio: 630 / 560;
     overflow: hidden;
     border-radius: 80px;
+  }
+  .list {
+    grid-row: 1;
+    grid-column: 8 / span 5;
+    display: flex;
+  }
+  .media-split--image-right .pic {
+    grid-column: 7 / span 6;
+  }
+  .media-split--image-right .list {
+    grid-column: 1 / span 5;
   }
   .pic :global(img) {
     display: block;
@@ -51,49 +66,20 @@ const { image, imageAlt, imagePosition = 'left', items, variant = 'layout' } = A
     height: 100%;
     object-fit: cover;
   }
-  .media-split--layout .pic {
-    width: 630px;
-    height: 560px;
-  }
-  .media-split--layout .list {
-    width: 630px;
-    display: flex;
-  }
-  .media-split--layout.media-split--image-left .list {
-    padding-left: 108px;
-  }
-  .media-split--layout.media-split--image-right .list {
-    padding-right: 108px;
-  }
-  .media-split--benefit {
-    justify-content: space-between;
-  }
-  .media-split--benefit .pic {
-    width: 576px;
-    height: 512px;
-  }
-  .media-split--benefit .list {
-    width: 576px;
-  }
 
   @media (max-width: 1199.98px) {
     .media-split {
+      display: flex;
       flex-direction: column;
       align-items: stretch;
       gap: 40px;
     }
-    .media-split--image-right .pic {
-      order: 0;
-    }
     .media-split .pic {
       width: 100%;
-      height: auto;
-      aspect-ratio: 630 / 560;
       border-radius: 60px;
     }
     .media-split .list {
       width: 100%;
-      padding: 0 !important;
     }
   }
   @media (max-width: 809.98px) {

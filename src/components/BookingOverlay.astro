@@ -67,11 +67,13 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
   .booking-overlay.is-open .content {
     opacity: 1;
   }
+  /* Хрестик стоїть там, де бургер у шапці (рішення Івана 06.11): ≤1279 — точно на місці бургера (48×48),
+     на десктопі бургера нема — по правому полю сітки й по центру кнопки «Записатися» в шапці (центр 112). */
   .close {
     position: fixed;
     z-index: 2; /* вище за .booking (z-index 1) */
-    top: 40px;
-    right: 40px;
+    top: 88px;
+    right: var(--grid-pad);
     width: 48px;
     height: 48px;
     padding: 0;
@@ -103,10 +105,16 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
   .close:focus-visible {
     outline: none;
   }
+  @media (max-width: 1279.98px) {
+    .close {
+      top: 66px;
+      right: 28px;
+    }
+  }
   @media (max-width: 809.98px) {
     .close {
-      top: 15px;
-      right: 15px;
+      top: 56px;
+      right: 11px;
     }
     .content {
       margin: 0;

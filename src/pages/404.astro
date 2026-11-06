@@ -23,7 +23,7 @@ const c = getPage(getLocale(Astro.url), '404');
       <p class="text">{c.text}</p>
       <div class="actions">
         <a class="secondary" href="/">{c.home}</a>
-        <ButtonCta size="desktop" class="cta-404">{c.book}</ButtonCta>
+        <ButtonCta size="l" class="cta-404">{c.book}</ButtonCta>
       </div>
     </div>
   </main>
@@ -84,9 +84,6 @@ const c = getPage(getLocale(Astro.url), '404');
     margin-top: 0;
   }
   .secondary,
-  :global(.cta-404) {
-    width: 193px;
-  }
   .secondary {
     position: relative;
     display: inline-flex;

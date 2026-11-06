@@ -1,0 +1,218 @@
+---
+/**
+ * Послуги на головній — експеримент (гілка experiment/home-services, ідея Івана 05.11).
+ * Референс: секція «Sélection de projets» на archi-malinstudio.com — секція закріплена на висоту екрана,
+ * горизонтальна стрічка квадратних фото з підписом «назва … номер» під час прокрутки їде вліво,
+ * Лейаут — макет Івана у Figma (Ukrselt, node 3055:1518, 05.11): заголовок «Послуги» зверху, під ним стрічка,
+ * під стрічкою опис і кнопка. Десктоп: сітка 12 колонок, поля 80, гаттер 20; картка = 3 колонки,
+ * опис — колонки 7–9, кнопка — 10–12. Телефон: 4 колонки, гаттер 16, картка = 3 колонки, опис і кнопка на всю ширину.
+ * Планшет: 8 колонок, гаттер 20, поля 32, картка = 3 колонки, опис 1–4, кнопка 5–8.
+ * Ширини рахуються від сітки, а не фіксовані (уточнення Івана 05.11).
+ * Назви напрямів: 20 px Regular, інтерліньяж 1.3 (з макета).
+ * Без JS або при «зменшити рух» стрічка просто гортається вбік (overflow-x).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BtnSecondary from './BtnSecondary.astro';
+
+interface Props {
+  text: string;
+  cta: string;
+  href: string;
+  bigTitle: string;
+  items: { title: string; image: ImageMetadata; alt: string; href: string }[];
+}
+const { text, cta, href, bigTitle, items } = Astro.props;
+---
+
+<section class="home-services" data-hscroll>
+  <div class="sticky">
+    <h2 class="text-heading-1 big">{bigTitle}</h2>
+    <div class="viewport">
+      <ul class="strip" data-hscroll-strip>
+        {
+          items.map((it) => (
+            <li>
+              <a class="item" href={it.href}>
+                <span class="pic">
+                  <Image src={it.image} alt={it.alt} widths={[240, 320, 480, 640, 860]} sizes="(max-width: 809.98px) calc((100vw - 80px) * 3 / 4 + 32px), (max-width: 1199.98px) calc((100vw - 204px) * 3 / 8 + 40px), calc((100vw - 380px) / 4 + 40px)" format="webp" loading="lazy" />
+                </span>
+                <span class="caption">{it.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="bottom">
+      <p class="text">{text}</p>
+      <div class="cta"><BtnSecondary href={href} label={cta} /></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Сітка блоку (макет): --pad поля, --gutter гаттер, --col ширина колонки з 12, --card ширина картки. */
+  .home-services {
+    --pad: 80px;
+    --gutter: 20px;
+    --cols: 12;
+    --card-cols: 3;
+    --v-gap: 40px;
+    position: relative;
+    background: var(--color-almost-black);
+  }
+  .sticky {
+    --col: calc((100cqw - 2 * var(--pad) - (var(--cols) - 1) * var(--gutter)) / var(--cols));
+    --card: calc(var(--card-cols) * var(--col) + (var(--card-cols) - 1) * var(--gutter));
+    /* Щоб блок влазив у висоту екрана: картка не більша за висоту вікна мінус решту вмісту
+       (заголовок, відступи, підпис у 2–3 рядки, опис, кнопка, мінімальні поля зверху/знизу). */
+    --card-max: calc(100svh - var(--rest));
+    --rest: 394px;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    padding: 80px 0;
+  }
+  /* З JS: секція вища за екран на довжину ходу стрічки (--travel), вміст закріплений на висоту екрана. */
+  :global(html.js) .home-services.is-pinned {
+    height: calc(100vh + var(--travel, 0px));
+  }
+  :global(html.js) .home-services.is-pinned .sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Заголовок: стиль Heading 1; інтерліньяж 1, як у макеті (від заголовка до карток 40). */
+  .big {
+    margin: 0 0 var(--v-gap);
+    padding: 0 var(--pad);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+  :global(html.js) .is-pinned .viewport {
+    overflow: visible;
+  }
+  .strip {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gutter);
+    width: max-content;
+    margin: 0;
+    padding: 0 var(--pad);
+    list-style: none;
+    will-change: transform;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: min(var(--card), var(--card-max));
+    color: var(--color-clean-white);
+    text-decoration: none;
+  }
+  .pic {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 80px;
+  }
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .item:hover .pic :global(img) {
+    transform: scale(1.04);
+  }
+  .caption {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-clean-white);
+  }
+
+  /* Опис — колонки 7–9, кнопка — 10–12 (під 3-ю і 4-ю карткою). */
+  .bottom {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
+    row-gap: 32px;
+    align-items: start;
+    margin-top: var(--v-gap);
+    padding: 0 var(--pad);
+  }
+  .text {
+    grid-column: 7 / span 3;
+    margin: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  .cta {
+    grid-column: 10 / span 3;
+    display: flex;
+  }
+  .cta :global(.btn-secondary) {
+    width: 100%;
+  }
+
+  @media (max-width: 1439.98px) {
+    .home-services {
+      --pad: 32px;
+    }
+  }
+  /* Планшет: сітка 8 колонок, гаттер 20, поля 32 (рішення Івана 06.11); картка = 3 колонки, опис 1–4, кнопка 5–8. */
+  @media (max-width: 1199.98px) {
+    .home-services {
+      --cols: 8;
+    }
+    .pic {
+      border-radius: 40px;
+    }
+    .text {
+      grid-column: 1 / span 4;
+    }
+    .cta {
+      grid-column: 5 / span 4;
+    }
+  }
+  /* Телефон: сітка 4 колонки, поля 16, гаттер 16; картка = 3 колонки, радіус 60. */
+  @media (max-width: 809.98px) {
+    .home-services {
+      --pad: 16px;
+      --gutter: 16px;
+      --cols: 4;
+      --card-cols: 3;
+      --v-gap: 32px;
+    }
+    .sticky {
+      --rest: 416px;
+    }
+    .item {
+      gap: 16px;
+    }
+    .pic {
+      border-radius: 60px;
+    }
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

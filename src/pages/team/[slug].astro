@@ -196,9 +196,11 @@ const [first, ...rest] = p.sections;
     left: 0;
   }
 
+  /* Сітка 12 колонок (06.11): перше фото 1–8, друге 9–12. */
   .photos {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
     padding: 0 80px;
     background: var(--color-almost-black);
   }
@@ -208,10 +210,10 @@ const [first, ...rest] = p.sections;
     border-radius: 80px;
   }
   .photo--1 {
-    flex: 2 1 0;
+    grid-column: 1 / span 8;
   }
   .photo--2 {
-    flex: 1 1 0;
+    grid-column: 9 / span 4;
   }
 
   @media (max-width: 1439.98px) {
@@ -255,7 +257,7 @@ const [first, ...rest] = p.sections;
       padding: 0;
     }
     .photo--1 {
-      flex: 1 1 auto;
+      grid-column: 1 / -1;
       height: auto;
       aspect-ratio: 960 / 853;
     }

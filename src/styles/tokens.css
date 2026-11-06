@@ -23,6 +23,12 @@
   --color-blue-light: #d5ecf5;
   --color-yellow: #ffb700;
 
+  /* ── Сітка (рішення Івана 06.11) ─────────── */
+  /* 12 / 8 / 4 колонки. --grid-span-N: ширина N колонок (з гаттерами) від ширини батька (100%). */
+  --grid-cols: 12;
+  --grid-gutter: 20px;
+  --grid-pad: 80px;
+
   /* ── Шрифт ───────────────────────────────── */
   --font-family: 'Open Sans', sans-serif;
 
@@ -81,12 +87,14 @@
 
 @media (max-width: 1439.98px) {
   :root {
+    --grid-pad: 32px;
     --text-body-2-line-height: 120%;
   }
 }
 
 @media (max-width: 1199.98px) {
   :root {
+    --grid-cols: 8;
     --text-heading-1-size: 77px;
     --text-heading-2-size: 56px;
   }
@@ -94,6 +102,9 @@
 
 @media (max-width: 809.98px) {
   :root {
+    --grid-cols: 4;
+    --grid-gutter: 16px;
+    --grid-pad: 16px;
     --text-heading-1-size: 64px;
     --text-heading-2-size: 40px;
   }

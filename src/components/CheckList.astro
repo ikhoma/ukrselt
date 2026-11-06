@@ -92,9 +92,10 @@ const { items, class: cls } = Astro.props;
     line-height: var(--text-body-line-height);
     color: var(--text-body-color);
   }
+  /* Планшет: текст закінчується на краю 6-ї колонки з 8 (контейнер — MediaSplit), з поправкою на іконку 56 + 24. */
   @media (max-width: 1199.98px) {
     .text {
-      max-width: 630px;
+      max-width: calc((100cqw - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 6 + 5 * var(--grid-gutter) - 80px);
     }
   }
   .line {

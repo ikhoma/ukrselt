@@ -4,6 +4,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 import PageTitle from '../components/PageTitle.astro';
 import Booking from '../components/Booking.astro';
 import VisitUs from '../components/VisitUs.astro';
+import Lights from '../components/Lights.astro';
 import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
@@ -19,10 +20,11 @@ const groups = [
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
   <section class="intro">
+    <Lights size={400} top={61} offset={-360} />
     <PageTitle title={c.title} text={c.text} />
     <div class="row">
       <div class="pic">
-        <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[358, 635, 960, 1270]} sizes="(max-width: 1199.98px) 100vw, 635px" format="webp" />
+        <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[358, 635, 960, 1270]} sizes="(max-width: 1199.98px) 100vw, 50vw" format="webp" />
       </div>
       <div class="contacts">
         {
@@ -57,15 +59,18 @@ const groups = [
     padding: 200px 80px 80px;
     background: var(--color-almost-black);
   }
+  /* Сітка 12 колонок (06.11): фото 1–6, контакти 8–12. Пропорція фото 635:564 з Framer. */
   .row {
-    display: flex;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
     align-items: center;
-    gap: 10px;
   }
   .pic {
-    flex: none;
-    width: 635px;
-    height: 564px;
+    grid-column: 1 / span 6;
+    aspect-ratio: 635 / 564;
     overflow: hidden;
     border-radius: 80px;
   }
@@ -76,8 +81,7 @@ const groups = [
     object-fit: cover;
   }
   .contacts {
-    flex: 1;
-    padding-left: 96px;
+    grid-column: 8 / span 5;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -121,7 +125,10 @@ const groups = [
 
 
   @media (max-width: 1439.98px) {
-    .intro,
+    .intro {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
   }
   @media (max-width: 1199.98px) {
     .intro {
@@ -129,17 +136,13 @@ const groups = [
       padding: 200px 32px 40px;
     }
     .row {
+      display: flex;
       flex-direction: column;
       align-items: stretch;
       gap: 40px;
     }
     .pic {
       width: 100%;
-      height: auto;
-      aspect-ratio: 635 / 564;
-    }
-    .contacts {
-      padding-left: 0;
     }
   }
   @media (max-width: 809.98px) {

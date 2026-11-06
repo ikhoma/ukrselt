@@ -2,6 +2,7 @@
 /**
  * booking (Framer): фото + «Записатися» + форма. Остання секція сторінки (радіус знизу 40).
  * Форма — нова (SPEC §7.1): Ім'я (необов'язкове), Телефон (обов'язковий), «Записатися на діагностику».
+ * Позначаємо необов'язкове поле «(необов'язково)» біля назви, без зірочки й сноски (рішення Івана 06.11).
  * Відправка: /api/contact (ADR-0004). Без JS — звичайний POST; з JS — fetch, стани кнопки, подія form_submit після успіху.
  */
 import { Image } from 'astro:assets';
@@ -29,6 +30,7 @@ const callback = kind === 'callback';
 const title = callback ? c.callback.title : c.title;
 const text = callback ? c.callback.text : c.text;
 const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
+import ButtonCta from './ButtonCta.astro';
 ---
 
 <section class:list={['booking', `booking--${variant}`, `booking--${kind}`]} id={variant === 'section' ? 'book' : undefined}>
@@ -43,7 +45,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
         <div class="fields">
         {!callback && (
         <label class="field">
-          <span class="label">{c.nameLabel}</span>
+          <span class="label">{c.nameLabel} {t('form.optional')}</span>
           <span class="control"><input type="text" name="name" autocomplete="name" maxlength="100" placeholder={t('form.namePlaceholder')} /></span>
         </label>
         )}
@@ -58,11 +60,10 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
         <input type="hidden" name="elapsed" value="" data-elapsed />
         <!-- honeypot (ADR-0004) -->
         <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="submit" type="submit" data-submit data-text-idle={submitText} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
+        <ButtonCta as="button" size={callback ? 'm' : 'l'} class="submit" type="submit" data-submit data-text-idle={submitText} data-text-sending={t('form.sending')} data-text-success={t('form.success')}>
           <span class="submit-label" data-submit-label>{submitText}</span>
-        </button>
+        </ButtonCta>
         <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
-        {!callback && <p class="note">{t('form.note')}</p>}
       </form>
     </div>
   </div>
@@ -93,6 +94,23 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* Сітка 12 колонок (06.11): фото 1–6, форма 8–12. Оверлей лишається як у Framer (630 + 108). */
+  .booking:not(.booking--overlay) .container {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+  }
+  .booking:not(.booking--overlay) .pic {
+    grid-column: 1 / span 6;
+    width: auto;
+    height: auto;
+    aspect-ratio: 630 / 560;
+  }
+  .booking:not(.booking--overlay) .form-col {
+    grid-column: 8 / span 5;
+    width: auto;
+    padding-left: 0;
   }
   .form-col {
     width: 630px;
@@ -173,22 +191,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     height: 1px;
     opacity: 0;
   }
-  .submit {
-    height: 70px;
-    padding: 24px 32px;
-    border: 0;
-    border-radius: 40px;
-    background: var(--color-ukrselt-blue);
-    color: var(--color-clean-white);
-    font-family: var(--font-family);
-    font-size: 16px;
-    line-height: 22.4px;
-    cursor: pointer;
-    transition: background-color var(--dur-hover) var(--ease-hover);
-  }
-  .submit:hover {
-    background: var(--color-lighter-blue);
-  }
+  /* Кнопка — ButtonCta (l, у «Замовити дзвінок» — m); тут лише стани відправки. */
   .submit[disabled] {
     cursor: default;
   }
@@ -221,11 +224,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   .control:has(input[aria-invalid='true'])::after {
     border-color: rgba(255, 107, 107, 0.6);
   }
-  .note {
-    font-size: 14px;
-    line-height: 14px;
-    color: var(--color-light-grey);
-  }
 
   @media (max-width: 1439.98px) {
     .booking {
@@ -236,7 +234,9 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     .booking {
       padding: 40px 32px 80px;
     }
-    .container {
+    .container,
+    .booking:not(.booking--overlay) .container {
+      display: flex;
       flex-direction: column;
       align-items: stretch;
     }
@@ -266,8 +266,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   .booking--callback .submit {
     align-self: start;
     margin-top: 32.4px; /* висота підпису поля (22.4) + відступ 10 — кнопка на рівні поля */
-    height: 56px;
-    padding: 0 24px;
   }
   .booking--callback .form-error {
     grid-column: 1 / -1;
@@ -285,7 +283,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   }
   @media (max-width: 809.98px) {
     .booking {
-      padding: 40px 15px 80px;
+      padding: 40px 16px 80px;
     }
     .fields {
       grid-template-columns: minmax(0, 1fr);
@@ -296,7 +294,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
     }
     .booking--callback .submit {
       margin-top: 0;
-      height: 70px;
     }
     .booking--overlay {
       width: 100%;

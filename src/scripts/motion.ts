@@ -57,14 +57,29 @@ if (appearItems.length) {
   appearItems.forEach((el) => io.observe(el));
 }
 
-/* ── Паралакс hero ─────────────────────────────────────────── */
+/* ── Паралакс hero ─────────────────────────────────────────────
+   Де браузер вміє scroll-driven animations (Safari 26+, Chrome 115+), рух рахує сам браузер разом зі скролом:
+   на iOS скрол іде поза JS, і JS-паралакс (як і на живому Framer-сайті) відставав і смикався.
+   Ефект той самий: зсув = scrollY × speed, доки низ секції не дійде до верху вікна. Інакше — GSAP. */
+const cssParallax = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: scroll()');
 for (const el of document.querySelectorAll<HTMLElement>('[data-parallax]')) {
   const speed = Number(el.dataset.parallax) || 0.1;
   const host = el.closest('section') ?? el.parentElement!;
+  const end = () => host.getBoundingClientRect().bottom + window.scrollY;
+  if (cssParallax) {
+    const set = () => {
+      el.style.setProperty('--parallax-end', `${end()}px`);
+      el.style.setProperty('--parallax-shift', `${end() * speed}px`);
+    };
+    set();
+    el.classList.add('is-css-parallax');
+    ScrollTrigger.addEventListener('refreshInit', set);
+    continue;
+  }
   gsap.to(el, {
-    y: () => (host.getBoundingClientRect().bottom + window.scrollY) * speed,
+    y: () => end() * speed,
     ease: 'none',
-    scrollTrigger: { start: 0, end: () => host.getBoundingClientRect().bottom + window.scrollY, scrub: true, invalidateOnRefresh: true },
+    scrollTrigger: { start: 0, end, scrub: true, invalidateOnRefresh: true },
   });
 }
 
@@ -75,6 +90,24 @@ for (const el of document.querySelectorAll<HTMLElement>('[data-scrub-reveal]')) 
     { opacity: 0, scale: 0.9 },
     { opacity: 1, scale: 1, ease: 'none', scrollTrigger: { trigger: el.closest('section') ?? el, start: 'top top', end: '+=800', scrub: true } },
   );
+}
+
+/* ── Послуги на головній: горизонтальна стрічка (експеримент, референс archi-malinstudio.com) ── */
+// Секція стає вищою за екран на довжину ходу стрічки; поки вміст закріплений (sticky 100vh), стрічка їде вліво.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+for (const section of document.querySelectorAll<HTMLElement>('[data-hscroll]')) {
+  if (reduceMotion) break;
+  const strip = section.querySelector<HTMLElement>('[data-hscroll-strip]')!;
+  const travel = () => Math.max(0, strip.scrollWidth - section.clientWidth);
+  const setTravel = () => section.style.setProperty('--travel', `${travel()}px`);
+  section.classList.add('is-pinned');
+  setTravel();
+  ScrollTrigger.addEventListener('refreshInit', setTravel);
+  gsap.to(strip, {
+    x: () => -travel(),
+    ease: 'none',
+    scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true },
+  });
 }
 
 /* ── Team на головній ──────────────────────────────────────── */

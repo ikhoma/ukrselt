@@ -81,10 +81,7 @@ const service = 'likuvannya-kariyesu';
       <div class="hero-copy">
         <h1 class="text-heading-1 title">Лікування карієсу в&nbsp;Києві</h1>
         <p class="lead">З'ясуємо, що відбувається із зубом, і відновимо його фотополімером з урахуванням кольору та форми.</p>
-        <div class="from">
-          <p class="from-price">Пломба — від {fromPrice} грн</p>
-          <p class="from-note">Композит світлового твердіння. Огляд, знімок і знеболення — окремо, якщо потрібні.</p>
-        </div>
+        <p class="text-heading-2 from-price">від {fromPrice} грн</p>
       </div>
       <div class="hero-form">
         <Booking service={service} variant="inline" submit="diagnostics" demo />
@@ -220,25 +217,8 @@ const service = 'likuvannya-kariyesu';
     letter-spacing: var(--text-body-2-letter-spacing);
     color: var(--text-body-2-color);
   }
-  .from {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .from p {
-    margin: 0;
-  }
-  .from-note {
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line-height);
-    color: var(--text-body-color);
-  }
   .from-price {
-    font-size: var(--text-heading-3-size);
-    line-height: var(--text-heading-3-line-height);
-    letter-spacing: var(--text-heading-3-letter-spacing);
-    font-weight: var(--text-heading-3-weight);
-    color: var(--color-clean-white);
+    margin: 0;
   }
   .hero-form {
     grid-column: 8 / span 5;
@@ -388,9 +368,7 @@ const service = 'likuvannya-kariyesu';
       line-height: 110%;
       letter-spacing: -0.02em;
     }
-    .from-price {
-      font-size: 24px;
-    }
+
     .hero-grid {
       row-gap: 32px;
     }

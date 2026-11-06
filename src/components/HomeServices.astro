@@ -5,7 +5,9 @@
  * горизонтальна стрічка квадратних фото з підписом «назва … номер» під час прокрутки їде вліво,
  * Лейаут — макет Івана у Figma (Ukrselt, node 3055:1518, 05.11): заголовок «Послуги» зверху, під ним стрічка,
  * під стрічкою опис і кнопка. Десктоп: сітка 12 колонок, поля 80, гаттер 20; картка = 3 колонки,
- * опис — колонки 7–9, кнопка — 10–12. Телефон: картка 240, гаттер 16, опис і кнопка на всю ширину.
+ * опис — колонки 7–9, кнопка — 10–12. Телефон: 4 колонки, гаттер 16, картка = 3 колонки, опис і кнопка на всю ширину.
+ * Планшет: 8 колонок, гаттер 20, поля 32, картка = 3 колонки, опис 1–4, кнопка 5–8.
+ * Ширини рахуються від сітки, а не фіксовані (уточнення Івана 05.11).
  * Назви напрямів: 20 px Regular, інтерліньяж 1.3 (з макета).
  * Без JS або при «зменшити рух» стрічка просто гортається вбік (overflow-x).
  */
@@ -33,7 +35,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
             <li>
               <a class="item" href={it.href}>
                 <span class="pic">
-                  <Image src={it.image} alt={it.alt} widths={[240, 320, 480, 640, 860]} sizes="(max-width: 809.98px) 240px, calc((100vw - 380px) / 4 + 40px)" format="webp" loading="lazy" />
+                  <Image src={it.image} alt={it.alt} widths={[240, 320, 480, 640, 860]} sizes="(max-width: 809.98px) calc((100vw - 80px) * 3 / 4 + 32px), (max-width: 1199.98px) calc((100vw - 204px) * 3 / 8 + 40px), calc((100vw - 380px) / 4 + 40px)" format="webp" loading="lazy" />
                 </span>
                 <span class="caption">{it.title}</span>
               </a>
@@ -56,12 +58,17 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     --gutter: 20px;
     --cols: 12;
     --card-cols: 3;
+    --v-gap: 40px;
     position: relative;
     background: var(--color-almost-black);
   }
   .sticky {
     --col: calc((100cqw - 2 * var(--pad) - (var(--cols) - 1) * var(--gutter)) / var(--cols));
     --card: calc(var(--card-cols) * var(--col) + (var(--card-cols) - 1) * var(--gutter));
+    /* Щоб блок влазив у висоту екрана: картка не більша за висоту вікна мінус решту вмісту
+       (заголовок, відступи, підпис у 2–3 рядки, опис, кнопка, мінімальні поля зверху/знизу). */
+    --card-max: calc(100svh - var(--rest));
+    --rest: 394px;
     container-type: inline-size;
     display: flex;
     flex-direction: column;
@@ -82,7 +89,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
 
   /* Заголовок: стиль Heading 1; інтерліньяж 1, як у макеті (від заголовка до карток 40). */
   .big {
-    margin: 0 0 40px;
+    margin: 0 0 var(--v-gap);
     padding: 0 var(--pad);
     line-height: 1;
     white-space: nowrap;
@@ -112,7 +119,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: var(--card);
+    width: min(var(--card), var(--card-max));
     color: var(--color-clean-white);
     text-decoration: none;
   }
@@ -146,7 +153,7 @@ const { text, cta, href, bigTitle, items } = Astro.props;
     column-gap: var(--gutter);
     row-gap: 32px;
     align-items: start;
-    margin-top: 40px;
+    margin-top: var(--v-gap);
     padding: 0 var(--pad);
   }
   .text {
@@ -169,39 +176,38 @@ const { text, cta, href, bigTitle, items } = Astro.props;
       --pad: 32px;
     }
   }
-  /* Планшет: окремого макета нема — тимчасово картка на 4 колонки, опис 1–6, кнопка 7–12. */
+  /* Планшет: сітка 8 колонок, гаттер 20, поля 32 (рішення Івана 06.11); картка = 3 колонки, опис 1–4, кнопка 5–8. */
   @media (max-width: 1199.98px) {
     .home-services {
-      --card-cols: 4;
+      --cols: 8;
     }
     .pic {
       border-radius: 40px;
     }
     .text {
-      grid-column: 1 / span 6;
+      grid-column: 1 / span 4;
     }
     .cta {
-      grid-column: 7 / span 6;
+      grid-column: 5 / span 4;
     }
   }
-  /* Телефон (макет iPhone 17): сітка 4 колонки, поля 16, гаттер 16; картка 240, радіус 60. */
+  /* Телефон: сітка 4 колонки, поля 16, гаттер 16; картка = 3 колонки, радіус 60. */
   @media (max-width: 809.98px) {
     .home-services {
       --pad: 16px;
       --gutter: 16px;
+      --cols: 4;
+      --card-cols: 3;
+      --v-gap: 32px;
     }
-    .big {
-      margin-bottom: 32px;
+    .sticky {
+      --rest: 416px;
     }
     .item {
-      width: 240px;
       gap: 16px;
     }
     .pic {
       border-radius: 60px;
-    }
-    .caption {
-      max-width: 166px;
     }
     .bottom {
       display: flex;

@@ -18,7 +18,7 @@
   "form.phoneRequired": "Вкажіть номер телефону",
   "form.namePlaceholder": "Ваше ім'я",
   "form.phonePlaceholder": "+38 (0__) ___-__-__",
-  "form.note": "*поля обов'язкові до заповнення",
+  "form.optional": "(необов'язково)",
   "nav.ariaLabel": "Основна навігація",
   "menu.open": "Відкрити меню",
   "menu.close": "Закрити меню",

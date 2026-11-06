@@ -2,6 +2,7 @@
 /**
  * booking (Framer): фото + «Записатися» + форма. Остання секція сторінки (радіус знизу 40).
  * Форма — нова (SPEC §7.1): Ім'я (необов'язкове), Телефон (обов'язковий), «Записатися на діагностику».
+ * Позначаємо необов'язкове поле «(необов'язково)» біля назви, без зірочки й сноски (рішення Івана 06.11).
  * Відправка: /api/contact (ADR-0004). Без JS — звичайний POST; з JS — fetch, стани кнопки, подія form_submit після успіху.
  */
 import { Image } from 'astro:assets';
@@ -43,7 +44,7 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
         <div class="fields">
         {!callback && (
         <label class="field">
-          <span class="label">{c.nameLabel}</span>
+          <span class="label">{c.nameLabel} {t('form.optional')}</span>
           <span class="control"><input type="text" name="name" autocomplete="name" maxlength="100" placeholder={t('form.namePlaceholder')} /></span>
         </label>
         )}
@@ -62,7 +63,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
           <span class="submit-label" data-submit-label>{submitText}</span>
         </button>
         <p class="form-error" data-form-error role="alert" hidden>{t('form.error')}</p>
-        {!callback && <p class="note">{t('form.note')}</p>}
       </form>
     </div>
   </div>
@@ -237,11 +237,6 @@ const phoneLabel = callback ? c.callback.phoneLabel : c.phoneLabel;
   }
   .control:has(input[aria-invalid='true'])::after {
     border-color: rgba(255, 107, 107, 0.6);
-  }
-  .note {
-    font-size: 14px;
-    line-height: 14px;
-    color: var(--color-light-grey);
   }
 
   @media (max-width: 1439.98px) {

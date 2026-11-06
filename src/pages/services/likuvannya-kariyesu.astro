@@ -78,8 +78,8 @@ const service = 'likuvannya-kariyesu';
   <section class="hero">
     <Lights size={400} top={61} offset={-360} />
     <div class="hero-grid">
+      <h1 class="text-heading-1 title">Лікування карієсу в&nbsp;Києві</h1>
       <div class="hero-copy">
-        <h1 class="text-heading-1 title">Лікування карієсу в&nbsp;Києві</h1>
         <p class="lead">З'ясуємо, що відбувається із зубом, і відновимо його фотополімером з урахуванням кольору та форми.</p>
         <p class="text-heading-2 from-price">від {fromPrice} грн</p>
       </div>
@@ -208,7 +208,8 @@ const service = 'likuvannya-kariyesu';
     gap: 32px;
   }
   .title {
-    margin: 0;
+    grid-column: 1 / -1;
+    margin: 0 0 32px;
   }
   .lead {
     margin: 0;
@@ -343,6 +344,9 @@ const service = 'likuvannya-kariyesu';
     }
     .hero-grid {
       row-gap: 48px;
+    }
+    .title {
+      margin-bottom: 0;
     }
     .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));

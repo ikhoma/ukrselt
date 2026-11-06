@@ -14,13 +14,16 @@ interface Props {
   /** Ідентифікатор сторінки для події form_submit (SPEC §7.1). */
   service: string;
   /** section — блок унизу сторінки (#book); overlay — той самий блок в оверлеї «Записатися» (BookingOverlay). */
-  variant?: 'section' | 'overlay';
+  variant?: 'section' | 'overlay' | 'inline';
+  /** Демо-режим (прототипи): форма перевіряє поля й показує успіх, але нічого не надсилає і не пише form_submit. */
+  demo?: boolean;
   /** Текст кнопки: «Записатися на прийом» (за замовчуванням) або «Записатися на діагностику» (сторінки послуг під рекламу). */
   submit?: 'default' | 'diagnostics';
   /** booking — Ім'я + Телефон; callback — «Замовити дзвінок»: лише Телефон, поле й кнопка в один рядок (рішення Івана 31.10). */
   kind?: 'booking' | 'callback';
 }
-const { service, variant = 'section', submit = 'default', kind = 'booking' } = Astro.props;
+const { service, variant = 'section', submit = 'default', kind = 'booking', demo = false } = Astro.props;
+const inline = variant === 'inline';
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
@@ -35,13 +38,15 @@ import ButtonCta from './ButtonCta.astro';
 
 <section class:list={['booking', `booking--${variant}`, `booking--${kind}`]} id={variant === 'section' ? 'book' : undefined}>
   <div class="container">
+    {!inline && (
     <div class="pic">
       <Image src={pageImage(c.image)} alt={c.imageAlt} widths={[360, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" />
     </div>
+    )}
     <div class="form-col">
-      <h2 class="text-heading-2">{title}</h2>
-      <p class="intro">{text}</p>
-      <form class="form" method="post" action="/api/contact" data-booking-form data-service={service} novalidate>
+      {!inline && <h2 class="text-heading-2">{title}</h2>}
+      {!inline && <p class="intro">{text}</p>}
+      <form class="form" method="post" action="/api/contact" data-booking-form data-service={service} data-demo={demo ? '' : undefined} novalidate>
         <div class="fields">
         {!callback && (
         <label class="field">
@@ -70,6 +75,26 @@ import ButtonCta from './ButtonCta.astro';
 </section>
 
 <style>
+  /* inline: лише форма, без фото, заголовка й фону — для вбудовування в іншу секцію (прототип сторінки послуги). */
+  .booking.booking--inline {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+  .booking.booking--inline .container {
+    display: block;
+  }
+  .booking.booking--inline .form-col {
+    width: auto;
+    padding: 0;
+  }
+  /* Перший екран на телефоні має вмістити форму: у inline поля й на телефоні в один ряд. */
+  @media (max-width: 809.98px) {
+    .booking.booking--inline .fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+  }
   .booking {
     position: relative;
     z-index: 1;
@@ -96,18 +121,18 @@ import ButtonCta from './ButtonCta.astro';
     object-fit: cover;
   }
   /* Сітка 12 колонок (06.11): фото 1–6, форма 8–12. Оверлей лишається як у Framer (630 + 108). */
-  .booking:not(.booking--overlay) .container {
+  .booking--section .container {
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
     column-gap: var(--grid-gutter);
   }
-  .booking:not(.booking--overlay) .pic {
+  .booking--section .pic {
     grid-column: 1 / span 6;
     width: auto;
     height: auto;
     aspect-ratio: 630 / 560;
   }
-  .booking:not(.booking--overlay) .form-col {
+  .booking--section .form-col {
     grid-column: 8 / span 5;
     width: auto;
     padding-left: 0;
@@ -235,7 +260,7 @@ import ButtonCta from './ButtonCta.astro';
       padding: 40px 32px 80px;
     }
     .container,
-    .booking:not(.booking--overlay) .container {
+    .booking--section .container {
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -427,6 +452,17 @@ import ButtonCta from './ButtonCta.astro';
       showPhoneError(false);
       elapsed.value = String(startedAt ? Date.now() - startedAt : '');
       setState('sending');
+      if (form.hasAttribute('data-demo')) {
+        // Демо (прототип): без відправки й без form_submit — лише показуємо сценарій.
+        window.setTimeout(() => {
+          setState('success');
+          form.reset();
+          startedAt = 0;
+          clearTimeout(resetTimer);
+          resetTimer = window.setTimeout(() => setState('idle'), 6000);
+        }, 700);
+        return;
+      }
       try {
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
         const data = await res.json().catch(() => ({ ok: false }));

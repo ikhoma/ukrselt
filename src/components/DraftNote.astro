@@ -1,0 +1,25 @@
+---
+/**
+ * Позначка чернетки в прототипах: текст або цифра ще не підтверджені клінікою (CLAUDE.md, правило 1).
+ * Прибирається разом з прототипом або коли клініка підтвердить дані.
+ */
+interface Props {
+  text?: string;
+}
+const { text = 'Чернетка — на погодження клініки' } = Astro.props;
+---
+
+<span class="draft-note">{text}</span>
+
+<style>
+  .draft-note {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px dashed rgba(15, 187, 255, 0.6);
+    border-radius: 48px;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--color-lighter-blue);
+  }
+</style>

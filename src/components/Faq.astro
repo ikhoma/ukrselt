@@ -1,0 +1,104 @@
+---
+/**
+ * Питання-відповіді на нативних <details> (працює без JS, доступно з клавіатури).
+ * Стиль — як рядки прайсу: роздільники 15% білого, питання Heading 4, відповідь — Body.
+ */
+interface Props {
+  items: { question: string; answer: string; draft?: boolean }[];
+}
+const { items } = Astro.props;
+import DraftNote from './DraftNote.astro';
+---
+
+<div class="faq">
+  {
+    items.map((it) => (
+      <details class="item">
+        <summary>
+          <span class="q">{it.question}</span>
+          <span class="icon" aria-hidden="true" />
+        </summary>
+        <div class="a">
+          <p>{it.answer}</p>
+          {it.draft && <DraftNote />}
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid rgba(254, 254, 254, 0.15);
+  }
+  .item {
+    border-bottom: 1px solid rgba(254, 254, 254, 0.15);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 32px 0;
+    list-style: none;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .q {
+    font-size: var(--text-heading-4-size);
+    line-height: var(--text-heading-4-line-height);
+    font-weight: var(--text-heading-4-weight);
+    color: var(--text-heading-4-color);
+  }
+  .icon {
+    position: relative;
+    flex: none;
+    width: 24px;
+    height: 24px;
+  }
+  .icon::before,
+  .icon::after {
+    content: '';
+    position: absolute;
+    top: 11px;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-ukrselt-blue);
+    transition: transform var(--dur-hover) var(--ease-hover);
+  }
+  .icon::after {
+    transform: rotate(90deg);
+  }
+  .item[open] .icon::after {
+    transform: rotate(0deg);
+  }
+  .a {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0 48px 32px 0;
+  }
+  .a p {
+    margin: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+  summary:focus-visible {
+    outline: 2px solid var(--color-lighter-blue);
+    outline-offset: 4px;
+  }
+  @media (max-width: 809.98px) {
+    summary {
+      padding: 24px 0;
+    }
+    .a {
+      padding: 0 0 24px;
+    }
+  }
+</style>

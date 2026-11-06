@@ -34,7 +34,9 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !/\/(404|success)$/.test(page) && !Object.keys(redirects).some((r) => page.endsWith(r)),
+        !/\/(404|success)$/.test(page) &&
+        !/\/services\/likuvannya-kariyesu$/.test(page) && // прототип, noindex до погодження
+        !Object.keys(redirects).some((r) => page.endsWith(r)),
     }),
   ],
 });

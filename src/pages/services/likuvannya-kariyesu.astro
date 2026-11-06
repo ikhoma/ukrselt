@@ -5,7 +5,7 @@
  * Heading/Body, MediaSplit, CardTeam, Testimonials, VisitUs, Booking), без окремого лейауту й стилів.
  * Вимоги — «ТЗ розробнику» маркетингу: H1 «… в Києві», перший екран (заголовок → речення → ціна «від» → форма),
  * дві форми (Ім'я + Телефон, «Записатися на діагностику»), блок ціни зі складом, лікарі, етапи, 5 питань.
- * Рішення Івана 06.11: форми демо (нічого не надсилають), лікарі Моторна + Вольська, тексти — чернетка з позначками.
+ * Рішення Івана 06.11: форми демо (нічого не надсилають), лікарі Моторна + Вольська, тексти — чернетка (позначки на сторінці прибрано на прохання Івана; що погодити — у docs/caries-prototype-claude.md).
  * Ціни підтягуються зі спільного прайсу (src/content/price/uk.json), не дублюються.
  * Сторінка noindex і виключена з sitemap до погодження.
  */
@@ -15,7 +15,6 @@ import MediaSplit from '../../components/MediaSplit.astro';
 import CardTeam from '../../components/CardTeam.astro';
 import BtnSecondary from '../../components/BtnSecondary.astro';
 import Faq from '../../components/Faq.astro';
-import DraftNote from '../../components/DraftNote.astro';
 import Testimonials from '../../components/Testimonials.astro';
 import VisitUs from '../../components/VisitUs.astro';
 import Booking from '../../components/Booking.astro';
@@ -89,7 +88,6 @@ const service = 'likuvannya-kariyesu';
       </div>
       <div class="hero-form">
         <Booking service={service} variant="inline" submit="diagnostics" demo />
-        <DraftNote text="Прототип · форми демонстраційні, нічого не надсилають" />
       </div>
     </div>
   </section>
@@ -118,7 +116,6 @@ const service = 'likuvannya-kariyesu';
       </div>
     </div>
     <div class="cost-foot">
-      <DraftNote text="Що входить у ціну пломби, а що оплачується окремо — на погодження клініки" />
       <BtnSecondary href={localizePath('/price', locale)} label="Повний прайс" />
     </div>
   </section>
@@ -127,7 +124,6 @@ const service = 'likuvannya-kariyesu';
     <Lights size={900} offset={400} />
     <div class="head head--steps">
       <h2 class="text-heading-2">Як проходить лікування</h2>
-      <DraftNote text="Етапи й кількість візитів — на погодження клініки" />
     </div>
     <MediaSplit variant="layout" image={stepsImage} imageAlt="Стоматолог працює з мікроскопом під час лікування зуба" imagePosition="left" items={steps} />
   </section>
@@ -156,7 +152,6 @@ const service = 'likuvannya-kariyesu';
   <section class="questions">
     <div class="q-head">
       <h2 class="text-heading-2">Питання перед візитом</h2>
-      <DraftNote text="Відповіді — чернетка на погодження клініки" />
     </div>
     <div class="q-list"><Faq items={faq} /></div>
   </section>
@@ -195,13 +190,6 @@ const service = 'likuvannya-kariyesu';
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
     color: var(--text-body-color);
-  }
-  .head--steps {
-    align-items: center;
-  }
-  .head--steps :global(.draft-note) {
-    grid-column: 8 / span 5;
-    justify-self: start;
   }
 
   /* ── Перший екран: текст 1–6, форма 8–12 ── */
@@ -367,7 +355,6 @@ const service = 'likuvannya-kariyesu';
     .hero-form,
     .head h2,
     .head-text,
-    .head--steps :global(.draft-note),
     .list:first-child,
     .list:last-child,
     .q-head,

@@ -17,7 +17,7 @@
   "form.error": "Не вдалося надіслати. Спробуйте ще раз або зателефонуйте +38 (063) 076-3022",
   "form.phoneRequired": "Вкажіть номер телефону",
   "form.namePlaceholder": "Ваше ім'я",
-  "form.phonePlaceholder": "+38 (0__) ___-__-__",
+  "form.phonePlaceholder": "+38 (0",
   "form.optional": "(необов'язково)",
   "nav.ariaLabel": "Основна навігація",
   "menu.open": "Відкрити меню",

@@ -91,7 +91,7 @@ const service = 'likuvannya-kariyesu';
   <section class="cost" id="cost">
     <div class="head">
       <h2 class="text-heading-2">Скільки коштує</h2>
-      <p class="head-text">Ціна залежить від того, скільки тканин зуба потрібно відновити. Остаточну вартість погоджуємо після огляду, до початку лікування.</p>
+      <p class="head-text">Ціна залежить від того, скільки тканин зуба потрібно відновити.<br />Остаточну вартість погоджуємо після огляду, до початку лікування.</p>
     </div>
     <ul class="rows">
       {cariesPrices.map((it, i) => (
@@ -168,7 +168,7 @@ const service = 'likuvannya-kariyesu';
     margin: 0;
   }
   .head-text {
-    grid-column: 8 / span 5;
+    grid-column: 1 / span 6;
     margin: 0;
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
@@ -223,12 +223,8 @@ const service = 'likuvannya-kariyesu';
     padding-top: 80px;
     padding-bottom: 80px;
   }
-  .cost .head h2,
-  .cost .head-text {
+  .cost .head h2 {
     grid-column: 1 / -1;
-  }
-  .doctors .head-text {
-    grid-column: 1 / span 6;
   }
   .head--steps .accent {
     color: var(--color-ukrselt-blue);
@@ -302,6 +298,7 @@ const service = 'likuvannya-kariyesu';
   }
   .q-head h2 {
     margin: 0;
+    color: var(--color-ukrselt-blue);
   }
   .q-list {
     grid-column: 7 / span 6;
@@ -315,7 +312,6 @@ const service = 'likuvannya-kariyesu';
     .hero-form,
     .head h2,
     .head-text,
-    .doctors .head-text,
     .q-head,
     .q-list {
       grid-column: 1 / -1;

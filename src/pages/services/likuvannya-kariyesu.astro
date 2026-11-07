@@ -106,7 +106,7 @@ const service = 'likuvannya-kariyesu';
   <section class="steps">
     <Lights size={900} offset={400} />
     <div class="head head--steps">
-      <h2 class="text-heading-2">Як проходить лікування</h2>
+      <h2 class="text-heading-2">Як проходить <span class="accent">лікування</span></h2>
     </div>
     <MediaSplit variant="layout" image={stepsImage} imageAlt="Стоматолог працює з мікроскопом під час лікування зуба" imagePosition="left" items={steps} />
   </section>
@@ -227,6 +227,15 @@ const service = 'likuvannya-kariyesu';
   .cost .head-text {
     grid-column: 1 / -1;
   }
+  .doctors .head-text {
+    grid-column: 1 / span 6;
+  }
+  .head--steps .accent {
+    color: var(--color-ukrselt-blue);
+  }
+  .q-list {
+    --faq-icon-color: var(--color-clean-white);
+  }
   .rows {
     margin: 0;
     padding: 0;
@@ -306,6 +315,7 @@ const service = 'likuvannya-kariyesu';
     .hero-form,
     .head h2,
     .head-text,
+    .doctors .head-text,
     .q-head,
     .q-list {
       grid-column: 1 / -1;

@@ -35,16 +35,15 @@ const priceOf = (service: string) => {
   if (!it) throw new Error(`Немає в прайсі: ${service}`);
   return it.price;
 };
-const caries = price.categories.find((c) => c.id === 'karies')!.groups.flatMap((g) => g.items);
-const filling = priceOf('Накладання пломби з композитів світлового твердіння');
+const fillingService = 'Накладання пломби з композитів світлового твердіння';
+const filling = priceOf(fillingService);
 const fromPrice = Number(filling.split('–')[0].trim()).toLocaleString('uk-UA');
-const extras = [
-  'Огляд (до 10 хв)',
+const cariesPrices = [
+  fillingService,
   'Консультація лікаря-стоматолога',
   'Цифрова дентальна діагностика',
   'Знеболення',
   'Накладання кофердаму',
-  'Комплект індивідуального захисту лікарів та пацієнтів',
 ].map((service) => ({ service, price: priceOf(service) }));
 
 const steps = [
@@ -94,24 +93,11 @@ const service = 'likuvannya-kariyesu';
       <h2 class="text-heading-2">Скільки коштує</h2>
       <p class="head-text">Ціна залежить від того, скільки тканин зуба потрібно відновити. Остаточну вартість погоджуємо після огляду, до початку лікування.</p>
     </div>
-    <div class="lists">
-      <div class="list">
-        <h3 class="list-title">Лікування карієсу та реставрації</h3>
-        <ul class="rows">
-          {caries.map((it, i) => (
-            <li class:list={['row', { odd: i % 2 === 0 }]}><span class="service">{it.service}</span><span class="price">{it.price}</span></li>
-          ))}
-        </ul>
-      </div>
-      <div class="list">
-        <h3 class="list-title">Може знадобитися додатково</h3>
-        <ul class="rows">
-          {extras.map((it, i) => (
-            <li class:list={['row', { odd: i % 2 === 0 }]}><span class="service">{it.service}</span><span class="price">{it.price}</span></li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <ul class="rows">
+      {cariesPrices.map((it, i) => (
+        <li class:list={['row', { odd: i % 2 === 0 }]}><span class="service">{it.service}</span><span class="price">{it.price}</span></li>
+      ))}
+    </ul>
     <div class="cost-foot">
       <BtnSecondary href={localizePath('/price', locale)} label="Повний прайс" />
     </div>
@@ -237,25 +223,9 @@ const service = 'likuvannya-kariyesu';
     padding-top: 80px;
     padding-bottom: 80px;
   }
-  .lists {
-    display: grid;
-    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-    column-gap: var(--grid-gutter);
-    row-gap: 56px;
-  }
-  .list:first-child {
-    grid-column: 1 / span 6;
-  }
-  .list:last-child {
-    grid-column: 7 / span 6;
-  }
-  .list-title {
-    margin: 0 0 16px;
-    padding: 0 32px;
-    font-size: var(--text-heading-4-size);
-    line-height: var(--text-heading-4-line-height);
-    font-weight: var(--text-heading-4-weight);
-    color: var(--text-heading-4-color);
+  .cost .head h2,
+  .cost .head-text {
+    grid-column: 1 / -1;
   }
   .rows {
     margin: 0;
@@ -336,8 +306,6 @@ const service = 'likuvannya-kariyesu';
     .hero-form,
     .head h2,
     .head-text,
-    .list:first-child,
-    .list:last-child,
     .q-head,
     .q-list {
       grid-column: 1 / -1;
@@ -382,10 +350,6 @@ const service = 'likuvannya-kariyesu';
     }
     .head {
       margin-bottom: 32px;
-    }
-    .list-title {
-      padding: 0 16px;
-      font-size: 20px;
     }
     .row {
       flex-direction: column;

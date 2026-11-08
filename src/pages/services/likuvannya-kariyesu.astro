@@ -134,7 +134,7 @@ const service = 'likuvannya-kariyesu';
 
   <section class="questions">
     <div class="q-head">
-      <h2 class="text-heading-2">Питання перед візитом</h2>
+      <h2 class="text-heading-2">Питання<br /><span class="accent">перед візитом</span></h2>
     </div>
     <div class="q-list"><Faq items={faq} /></div>
   </section>
@@ -298,6 +298,8 @@ const service = 'likuvannya-kariyesu';
   }
   .q-head h2 {
     margin: 0;
+  }
+  .q-head .accent {
     color: var(--color-ukrselt-blue);
   }
   .q-list {

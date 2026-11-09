@@ -50,7 +50,12 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
 >
   <section class="hero">
     <Lights size={400} top={61} offset={-360} />
-    <a class="services-link text-body" href={localizePath('/services', locale)}>← Усі послуги</a>
+    <a class="services-link text-body" href={localizePath('/services', locale)}>
+      <svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12" fill="none">
+        <path d="M7.5 2 3.5 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      Усі послуги
+    </a>
     <div class="hero-grid">
       <h1 class="text-heading-1 title">{title.replace(/(?<!\S)(у|в|і|й|з|та|до|на|за|по|від|для|під|над|при) /giu, "$1\u00A0")}</h1>
       <div class="hero-copy">
@@ -175,9 +180,11 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     padding-bottom: 80px;
   }
   .services-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 16px;
-    color: var(--color-clean-white);
+    color: var(--color-ukrselt-blue);
     text-underline-offset: 4px;
   }
   .hero-grid {

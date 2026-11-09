@@ -354,14 +354,14 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   /* Phone ≤809 */
   @media (max-width: 809.98px) {
     .compact {
-      height: 68px;
+      height: 72px;
       padding: 0 var(--grid-pad);
     }
     .compact-actions {
       gap: 17px;
     }
     .mobile-nav {
-      padding: 128px 0 80px var(--grid-pad); /* 68 (рядок шапки) + 60 відступ Mobile Nav */
+      padding: 132px 0 80px var(--grid-pad); /* 72 (рядок шапки) + 60 відступ Mobile Nav */
       gap: 32px;
     }
     .mobile-link {
@@ -373,9 +373,22 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
     :global(.cta-tablet) {
       display: none !important;
     }
+    :global(.logo-phone) {
+      width: auto;
+      height: 40px;
+      aspect-ratio: 128 / 36;
+    }
     :global(.logo-phone),
     :global(.cta-phone) {
       display: inline-flex !important;
+    }
+  }
+  @media (max-width: 359.98px) {
+    .compact-actions {
+      gap: 4px;
+    }
+    .compact-actions > :global(.cta-phone) {
+      padding-inline: 10px;
     }
   }
 </style>

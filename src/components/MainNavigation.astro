@@ -354,14 +354,14 @@ const label = (k: (typeof headerNav)[number]) => t(`nav.${k}` as Parameters<type
   /* Phone ≤809 */
   @media (max-width: 809.98px) {
     .compact {
-      height: 64px;
-      padding: 12px 15px;
+      height: 68px;
+      padding: 0 var(--grid-pad);
     }
     .compact-actions {
       gap: 17px;
     }
     .mobile-nav {
-      padding: 124px 0 80px 15px; /* 64 (рядок шапки) + 60 відступ Mobile Nav */
+      padding: 128px 0 80px var(--grid-pad); /* 68 (рядок шапки) + 60 відступ Mobile Nav */
       gap: 32px;
     }
     .mobile-link {

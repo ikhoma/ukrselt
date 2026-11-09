@@ -20,7 +20,7 @@ interface Props {
   service: ServiceLanding;
 }
 const { service } = Astro.props;
-const { slug, title, lead, description, prices, priceLabel, submitLabel, priceNote, hero, stepsImage, steps, doctors, doctorIntro, faq, photos } = service;
+const { slug, title, lead, description, prices, submitLabel, priceNote, hero, stepsImage, steps, doctors, doctorIntro, faq, photos } = service;
 const locale = getLocale(Astro.url);
 const home = getPage(locale, 'home');
 const teamPage = getPage(locale, 'team');
@@ -61,7 +61,6 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
       <div class="hero-copy">
         <p class="lead">{lead}</p>
         <p class="text-heading-2 from-price">від {fromPrice} грн</p>
-        {priceLabel && <p class="price-label">{priceLabel}</p>}
       </div>
       <div class="hero-form">
         <Booking service={slug} variant="inline" submit="diagnostics" submitLabel={submitLabel} demo />
@@ -233,10 +232,6 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
-  }
-  .price-label {
-    color: var(--text-body-color);
-    margin-top: -8px;
   }
   .hero-form > :global(.booking) {
     align-self: stretch;

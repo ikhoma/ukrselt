@@ -1,4 +1,5 @@
 ---
+import { keepShortWords } from '../i18n/typography';
 import { Image } from 'astro:assets';
 import PageLayout from './PageLayout.astro';
 import Lights from '../components/Lights.astro';
@@ -57,9 +58,9 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
       Усі послуги
     </a>
     <div class="hero-grid">
-      <h1 class="text-heading-1 title">{title.replace(/(?<!\S)(у|в|і|й|з|та|до|на|за|по|від|для|під|над|при) /giu, "$1\u00A0")}</h1>
+      <h1 class="text-heading-1 title">{keepShortWords(title)}</h1>
       <div class="hero-copy">
-        <p class="lead">{lead}</p>
+        <p class="lead">{keepShortWords(lead)}</p>
         <p class="text-heading-2 from-price">від {fromPrice} грн</p>
       </div>
       <div class="hero-form">
@@ -198,7 +199,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
     column-gap: var(--grid-gutter);
-    row-gap: 24px;
+    row-gap: var(--hero-title-gap);
     align-items: start;
   }
   .hero-image {
@@ -219,10 +220,8 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     gap: 32px;
   }
   .title {
-    text-wrap: balance;
     line-height: 100%;
     grid-column: 1 / -1;
-    margin: 0 0 8px;
   }
   .lead {
     margin: 0;
@@ -348,12 +347,6 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     .hero-form {
       grid-row: auto;
     }
-    .hero-grid {
-      row-gap: 48px;
-    }
-    .title {
-      margin-bottom: 0;
-    }
     .cost,
     .steps,
     .doctors,
@@ -376,9 +369,6 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
       letter-spacing: -0.02em;
     }
 
-    .hero-grid {
-      row-gap: 32px;
-    }
     .lead {
       font-size: var(--text-body-size);
       line-height: var(--text-body-line-height);

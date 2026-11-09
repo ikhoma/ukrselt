@@ -1,5 +1,6 @@
 ---
-/** Заголовок сторінки без фото (Ціни, Контакти): H1 + сірий текст по центру, між ними 48px. */
+/** Заголовок сторінки без фото (Ціни, Контакти): H1 + сірий текст по центру зі спільним відступом hero. */
+import { keepShortWords } from '../i18n/typography';
 interface Props {
   title: string;
   text: string;
@@ -8,8 +9,8 @@ const { title, text } = Astro.props;
 ---
 
 <div class="page-title">
-  <h1 class="text-heading-1">{title}</h1>
-  <p class="text">{text}</p>
+  <h1 class="text-heading-1">{keepShortWords(title)}</h1>
+  <p class="text">{keepShortWords(text)}</p>
 </div>
 
 <style>
@@ -19,7 +20,7 @@ const { title, text } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    gap: var(--hero-title-gap);
     width: 100%;
     text-align: center;
   }

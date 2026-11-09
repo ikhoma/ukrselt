@@ -3,6 +3,7 @@
  * /team/<slug> (Framer): Intro (ПІБ, опис, Посада/Стаж/Освіта + портрет) → benefit-1 → Photos → benefit-1 (0–2) → booking.
  * Дані — запис колекції team з полем page. Сторінки є тільки в людей, у яких заповнено page.
  */
+import { keepShortWords } from '../../i18n/typography';
 import { Image } from 'astro:assets';
 import PageLayout from '../../layouts/PageLayout.astro';
 import Booking from '../../components/Booking.astro';
@@ -25,7 +26,7 @@ const [first, ...rest] = p.sections;
     <div class="container">
       <div class="info">
         <h1 class="text-heading-2">{p.surname}<br />{p.givenNames}</h1>
-        {p.intro && <p class="lead">{p.intro}</p>}
+        {p.intro && <p class="lead">{keepShortWords(p.intro)}</p>}
         <dl class="facts">
           {
             p.facts.map((f) => (
@@ -97,7 +98,7 @@ const [first, ...rest] = p.sections;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: var(--hero-title-gap);
   }
   .lead {
     max-width: 522px;
@@ -107,7 +108,7 @@ const [first, ...rest] = p.sections;
   }
   .facts {
     max-width: 522px;
-    margin: 0;
+    margin: calc(32px - var(--hero-title-gap)) 0 0;
     display: flex;
     flex-direction: column;
     gap: 24px;

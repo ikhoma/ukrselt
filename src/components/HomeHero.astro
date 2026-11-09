@@ -5,6 +5,7 @@
  * Для пошуковиків і читачів екрана — один H1 з повною фразою; візуальний заголовок aria-hidden.
  * Шапка сайту лежить поверх (PageLayout).
  */
+import { keepShortWords } from '../i18n/typography';
 import { Image } from 'astro:assets';
 import hero from '../assets/home/hero.png';
 import overlay from '../assets/home/hero-overlay.png';
@@ -38,7 +39,7 @@ import ButtonCta from './ButtonCta.astro';
       </span>
     </div>
     <div class="row">
-      <p class="text">{text}</p>
+      <p class="text">{keepShortWords(text)}</p>
       <ButtonCta size="l" href={localizePath('/', locale) + '#book'} action="callback">{cta}</ButtonCta>
     </div>
   </div>
@@ -89,7 +90,7 @@ import ButtonCta from './ButtonCta.astro';
     width: 867px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: var(--hero-title-gap);
   }
   .heading {
     display: flex;
@@ -141,7 +142,6 @@ import ButtonCta from './ButtonCta.astro';
     }
     .title {
       width: 630px;
-      gap: 20px;
     }
     .heading {
       flex-direction: column;

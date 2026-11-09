@@ -28,6 +28,7 @@
   --grid-cols: 12;
   --grid-gutter: 20px;
   --grid-pad: 80px;
+  --hero-title-gap: 20px;
 
   /* ── Шрифт ───────────────────────────────── */
   --font-family: 'Open Sans', sans-serif;

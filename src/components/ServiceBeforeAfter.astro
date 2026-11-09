@@ -3,27 +3,32 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
+  illustrated?: boolean;
   photos: [ImageMetadata, ImageMetadata];
 }
-const { photos } = Astro.props;
+const { photos, illustrated = false } = Astro.props;
 ---
-<div class="comparison">
+<div class:list={['comparison', { 'comparison--illustrated': illustrated }]}>
   {photos.map((photo, index) => (
     <figure>
       <Image
         src={photo}
         alt=""
         widths={[360, 640, 1000]}
-        sizes="(max-width: 809.98px) calc((100vw - 48px) / 2), 45vw"
+        sizes={illustrated
+          ? '(max-width: 809.98px) calc(100vw - 32px), 45vw'
+          : '(max-width: 809.98px) calc((100vw - 48px) / 2), 45vw'}
         format="webp"
       />
       <figcaption>{index === 0 ? 'До лікування' : 'Після лікування'}</figcaption>
     </figure>
   ))}
 </div>
+{illustrated && <p class="illustration-label">Згенерована ілюстрація для макета</p>}
 
 <style>
-  figcaption {
+  figcaption,
+  .illustration-label {
     color: var(--text-body-color);
     font-size: var(--text-body-size);
     line-height: var(--text-body-line-height);
@@ -43,6 +48,14 @@ const { photos } = Astro.props;
   figcaption {
     margin-top: 8px;
   }
+  .comparison--illustrated img {
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+    object-position: center 42%;
+  }
+  .illustration-label {
+    margin-top: 16px;
+  }
 
   @media (max-width: 1199.98px) {
     img {
@@ -51,6 +64,9 @@ const { photos } = Astro.props;
   }
 
   @media (max-width: 809.98px) {
+    .comparison--illustrated {
+      grid-template-columns: minmax(0, 1fr);
+    }
     img {
       border-radius: 40px;
     }

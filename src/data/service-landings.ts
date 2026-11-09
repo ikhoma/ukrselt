@@ -28,6 +28,7 @@ export interface ServiceLanding {
   doctors: string[];
   doctorIntro: string;
   faq: { question: string; answer: string }[];
+  illustratedComparison?: boolean;
   photos?: [ImageMetadata, ImageMetadata];
 }
 
@@ -146,6 +147,7 @@ export const veneers: ServiceLanding = {
   doctors: ['servinsky'],
   doctorIntro: 'На огляді лікар пояснить, чи можна досягти бажаних змін вінірами і які є варіанти для ваших зубів.',
   photos: [veneersFirst, veneersSecond],
+  illustratedComparison: true,
   faq: [
     { question: 'Чи підходять вініри для моїх зубів?', answer: 'Це залежить від стану емалі, ясен і прикусу. Лікар оцінить їх та обговорить доступні варіанти.' },
     { question: 'Чи потрібна підготовка емалі?', answer: 'Обсяг підготовки залежить від положення й форми зубів та обраного плану. Його обговорюють до початку роботи.' },

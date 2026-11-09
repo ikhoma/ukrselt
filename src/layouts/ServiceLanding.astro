@@ -50,7 +50,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
 >
   <section class="hero">
     <Lights size={400} top={61} offset={-360} />
-    <a class="services-link text-body" href={localizePath('/services', locale)}>
+    <a class="services-link" href={localizePath('/services', locale)}>
       <svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12" fill="none">
         <path d="M7.5 2 3.5 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
@@ -183,8 +183,16 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
-    color: var(--color-ukrselt-blue);
-    text-underline-offset: 4px;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 400;
+    color: var(--color-somewhat-light-grey);
+    text-decoration: none;
+    transition: color var(--dur-hover) var(--ease-hover);
+  }
+  .services-link:hover,
+  .services-link:focus-visible {
+    color: var(--color-greyish);
   }
   .hero-grid {
     display: grid;

@@ -50,6 +50,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
 >
   <section class="hero">
     <Lights size={400} top={61} offset={-360} />
+    <a class="services-link text-body" href={localizePath('/services', locale)}>← Усі послуги</a>
     <div class="hero-grid">
       <h1 class="text-heading-1 title">{title.replace(/(?<!\S)(у|в|і|й|з|та|до|на|за|по|від|для|під|над|при) /giu, "$1\u00A0")}</h1>
       <div class="hero-copy">
@@ -172,6 +173,12 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
   .hero {
     padding-top: 200px;
     padding-bottom: 80px;
+  }
+  .services-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: var(--color-clean-white);
+    text-underline-offset: 4px;
   }
   .hero-grid {
     display: grid;

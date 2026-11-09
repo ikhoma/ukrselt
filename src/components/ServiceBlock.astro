@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Lights from './Lights.astro';
+import BtnSecondary from './BtnSecondary.astro';
 
 interface Props {
   title: string;
@@ -18,8 +19,9 @@ interface Props {
   first?: boolean;
   /** Якір (/services#<id>) — на нього ведуть картки напрямів з головної. */
   id?: string;
+  links?: { href: string; label: string }[];
 }
-const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false, id } = Astro.props;
+const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false, id, links } = Astro.props;
 ---
 
 <section id={id} class:list={['service', `service--image-${imagePosition}`, { 'service--first': first }]}>
@@ -30,6 +32,11 @@ const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false, 
       <p class="text-body-2" data-appear>{lead}</p>
       {paragraphs.map((t) => <p class="text-body" data-appear>{t}</p>)}
     </div>
+    {links?.length && (
+      <div class="links">
+        {links.map((link) => <BtnSecondary {...link} />)}
+      </div>
+    )}
   </div>
   <div class="pic">
     <Image src={image} alt={imageAlt} widths={[358, 630, 960, 1260]} sizes="(max-width: 1199.98px) 100vw, 630px" format="webp" loading={first ? 'eager' : 'lazy'} />
@@ -68,6 +75,11 @@ const { title, lead, paragraphs, image, imageAlt, imagePosition, first = false, 
   }
   .service--image-left .text {
     padding-left: 108px;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
   }
   .body {
     display: flex;

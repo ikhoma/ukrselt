@@ -6,14 +6,24 @@ import PageLayout from '../layouts/PageLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import ServiceBlock from '../components/ServiceBlock.astro';
 import Booking from '../components/Booking.astro';
-import { getLocale } from '../i18n';
+import { getLocale, localizePath } from '../i18n';
 import { getPage } from '../content/pages';
 import { pageImage } from '../content/images';
 import { getServices, entrySlug } from '../content/collections';
+import { caries, crowns, hygiene, implantation, veneers } from '../data/service-landings';
 
 const locale = getLocale(Astro.url);
 const c = getPage(locale, 'services');
 const services = await getServices(locale);
+const landingLinks: Record<string, { slug: string; label: string }[]> = {
+  therapy: [{ slug: caries.slug, label: 'Лікування карієсу' }],
+  implantation: [{ slug: implantation.slug, label: 'Імплантація зубів' }],
+  orthopedics: [
+    { slug: crowns.slug, label: 'Коронки та протезування' },
+    { slug: veneers.slug, label: 'Вініри' },
+  ],
+  hygiene: [{ slug: hygiene.slug, label: 'Професійна чистка зубів' }],
+};
 ---
 
 <PageLayout title={c.seo.title} description={c.seo.description}>
@@ -29,6 +39,10 @@ const services = await getServices(locale);
         image={s.data.image}
         imageAlt={s.data.imageAlt}
         imagePosition={i % 2 === 0 ? 'right' : 'left'}
+        links={landingLinks[entrySlug(s.id)]?.map(({ slug, label }) => ({
+          href: localizePath(`/services/${slug}`, locale),
+          label,
+        }))}
       />
     ))
   }

@@ -106,8 +106,16 @@
     --grid-cols: 4;
     --grid-gutter: 16px;
     --grid-pad: 16px;
+    --phone-logo-height: 48px;
+    --phone-nav-height: calc(var(--phone-logo-height) + 2 * var(--grid-pad));
     --text-heading-1-size: 64px;
     --text-heading-2-size: 40px;
+  }
+}
+
+@media (max-width: 359.98px) {
+  :root {
+    --phone-logo-height: 40px;
   }
 }
 

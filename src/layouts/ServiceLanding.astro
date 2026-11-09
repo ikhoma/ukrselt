@@ -359,7 +359,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
   }
   @media (max-width: 809.98px) {
     .hero {
-      padding-top: 128px;
+      padding-top: calc(56px + var(--phone-nav-height));
     }
     .hero-image {
       margin-top: calc(32px - var(--hero-title-gap));

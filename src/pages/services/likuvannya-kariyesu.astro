@@ -23,8 +23,8 @@ import { getLocale, localizePath } from '../../i18n';
 import { getPage } from '../../content/pages';
 import { getTeam, entrySlug } from '../../content/collections';
 import price from '../../content/price/uk.json';
-import heroImage from '../../assets/services/endodontics.png';
-import stepsImage from '../../assets/services/therapy.png';
+import heroImage from '../../assets/services/caries-hero.png';
+import stepsImage from '../../assets/services/caries-treatment.png';
 
 const locale = getLocale(Astro.url);
 const home = getPage(locale, 'home');
@@ -90,7 +90,7 @@ const service = 'likuvannya-kariyesu';
       <Image
         class="hero-image"
         src={heroImage}
-        alt="Стоматолог показує цифровий знімок зуба"
+        alt="Стоматолог поруч із пацієнткою, яка усміхається"
         widths={[420, 640, 960, 1280]}
         sizes="(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(100vw - 64px), 45vw"
         format="webp"
@@ -119,7 +119,7 @@ const service = 'likuvannya-kariyesu';
     <div class="head head--steps">
       <h2 class="text-heading-2">Як проходить <span class="accent">лікування</span></h2>
     </div>
-    <MediaSplit variant="layout" image={stepsImage} imageAlt="Стоматолог працює з мікроскопом під час лікування зуба" imagePosition="left" items={steps} />
+    <MediaSplit variant="layout" image={stepsImage} imageAlt="Стоматолог і асистентка під час процедури" imagePosition="left" items={steps} />
   </section>
 
   <section class="doctors">

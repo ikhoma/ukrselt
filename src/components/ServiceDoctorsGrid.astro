@@ -1,0 +1,33 @@
+<div class="service-doctors-grid">
+  <slot />
+</div>
+
+<style>
+  .service-doctors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 80px 20px;
+  }
+
+  @media (max-width: 1199.98px) {
+    .service-doctors-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 809.98px) {
+    .service-doctors-grid {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      /* Три колонки з чотирьох разом із двома внутрішніми гатерами. */
+      grid-auto-columns: calc(75% - var(--grid-gutter) / 4);
+      gap: var(--grid-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+    }
+
+    .service-doctors-grid > :global(.card-team) {
+      scroll-snap-align: start;
+    }
+  }
+</style>

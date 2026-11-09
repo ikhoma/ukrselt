@@ -1,0 +1,58 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  photos: [ImageMetadata, ImageMetadata];
+}
+const { photos } = Astro.props;
+---
+<div class="comparison">
+  {photos.map((photo, index) => (
+    <figure>
+      <Image
+        src={photo}
+        alt=""
+        widths={[360, 640, 1000]}
+        sizes="(max-width: 809.98px) calc((100vw - 48px) / 2), 45vw"
+        format="webp"
+      />
+      <figcaption>{index === 0 ? 'До лікування' : 'Після лікування'}</figcaption>
+    </figure>
+  ))}
+</div>
+
+<style>
+  figcaption {
+    color: var(--text-body-color);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+  }
+  .comparison {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gutter);
+  }
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    background: var(--color-dark-grey);
+    border-radius: 80px;
+  }
+  figcaption {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 1199.98px) {
+    img {
+      border-radius: 60px;
+    }
+  }
+
+  @media (max-width: 809.98px) {
+    img {
+      border-radius: 40px;
+    }
+  }
+</style>

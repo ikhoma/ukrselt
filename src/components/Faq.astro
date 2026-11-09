@@ -18,9 +18,11 @@ import DraftNote from './DraftNote.astro';
           <span class="q">{it.question}</span>
           <span class="icon" aria-hidden="true" />
         </summary>
-        <div class="a">
-          <p>{it.answer}</p>
-          {it.draft && <DraftNote />}
+        <div class="answer">
+          <div class="a">
+            <p>{it.answer}</p>
+            {it.draft && <DraftNote />}
+          </div>
         </div>
       </details>
     ))
@@ -76,6 +78,35 @@ import DraftNote from './DraftNote.astro';
   .item[open] .icon::after {
     transform: rotate(0deg);
   }
+  @supports selector(details::details-content) and (transition-behavior: allow-discrete) {
+    .item::details-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      content-visibility: hidden;
+      transition:
+        grid-template-rows var(--dur-hover) var(--ease-hover),
+        opacity var(--dur-hover) var(--ease-hover),
+        content-visibility var(--dur-hover) allow-discrete;
+    }
+    .item[open]::details-content {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      content-visibility: visible;
+    }
+    .answer {
+      min-block-size: 0;
+      overflow: clip;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icon::after {
+      transition: none;
+    }
+    .item::details-content {
+      transition: none;
+    }
+  }
   .a {
     display: flex;
     flex-direction: column;
@@ -98,6 +129,8 @@ import DraftNote from './DraftNote.astro';
       padding: 24px 0;
     }
     .a {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
       padding: 0 0 24px;
     }
   }

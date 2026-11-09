@@ -19,16 +19,17 @@ interface Props {
   demo?: boolean;
   /** Текст кнопки: «Записатися на прийом» (за замовчуванням) або «Записатися на діагностику» (сторінки послуг під рекламу). */
   submit?: 'default' | 'diagnostics';
+  submitLabel?: string;
   /** booking — Ім'я + Телефон; callback — «Замовити дзвінок»: лише Телефон, поле й кнопка в один рядок (рішення Івана 31.10). */
   kind?: 'booking' | 'callback';
 }
-const { service, variant = 'section', submit = 'default', kind = 'booking', demo = false } = Astro.props;
+const { service, variant = 'section', submit = 'default', submitLabel, kind = 'booking', demo = false } = Astro.props;
 const inline = variant === 'inline';
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
 const c = getPage(locale, 'booking');
-const submitText = t(kind === 'callback' ? 'form.submitCallback' : submit === 'diagnostics' ? 'form.submitDiagnostics' : 'form.submit');
-const uid = `book-${variant === 'overlay' ? `overlay-${kind}` : service.replace(/[^a-z0-9]/gi, '-')}`;
+const submitText = submitLabel ?? t(kind === 'callback' ? 'form.submitCallback' : submit === 'diagnostics' ? 'form.submitDiagnostics' : 'form.submit');
+const uid = `book-${variant === 'overlay' ? `overlay-${kind}` : `${variant}-${service.replace(/[^a-z0-9]/gi, '-')}`}`;
 const callback = kind === 'callback';
 const title = callback ? c.callback.title : c.title;
 const text = callback ? c.callback.text : c.text;

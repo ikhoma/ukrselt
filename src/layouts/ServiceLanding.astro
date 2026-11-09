@@ -1,0 +1,379 @@
+---
+import { Image } from 'astro:assets';
+import PageLayout from './PageLayout.astro';
+import Lights from '../components/Lights.astro';
+import MediaSplit from '../components/MediaSplit.astro';
+import CardTeam from '../components/CardTeam.astro';
+import ServiceDoctorsGrid from '../components/ServiceDoctorsGrid.astro';
+import BtnSecondary from '../components/BtnSecondary.astro';
+import Faq from '../components/Faq.astro';
+import Testimonials from '../components/Testimonials.astro';
+import VisitUs from '../components/VisitUs.astro';
+import Booking from '../components/Booking.astro';
+import { getLocale, localizePath } from '../i18n';
+import { getPage } from '../content/pages';
+import { getTeam, entrySlug } from '../content/collections';
+import price from '../content/price/uk.json';
+import ServiceBeforeAfter from '../components/ServiceBeforeAfter.astro';
+import type { ServiceLanding } from '../data/service-landings';
+interface Props {
+  service: ServiceLanding;
+}
+const { service } = Astro.props;
+const { slug, title, lead, description, prices, priceLabel, submitLabel, priceNote, hero, stepsImage, steps, doctors, doctorIntro, faq, photos } = service;
+const locale = getLocale(Astro.url);
+const home = getPage(locale, 'home');
+const teamPage = getPage(locale, 'team');
+
+const priceItems = price.categories.flatMap((category) => category.groups.flatMap((group) => group.items));
+const rows = prices.map((name) => {
+  const item = priceItems.find((entry) => entry.service === name);
+  if (!item) throw new Error(`Немає в прайсі: ${name}`);
+  return item;
+});
+const fromPrice = Number(rows[0].price.split('–')[0].trim()).toLocaleString('uk-UA');
+
+const team = await getTeam(locale);
+const selectedDoctors = doctors.map((slug) => {
+  const doctor = team.find((entry) => entrySlug(entry.id) === slug);
+  if (!doctor) throw new Error(`Немає в команді: ${slug}`);
+  return doctor;
+});
+const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98px) calc((100vw - 84px) / 2), calc((100vw - 200px) / 3)';
+---
+
+<PageLayout
+  title={`${title} — Ukrselt`}
+  description={description}
+  noindex
+  bookingDemo
+>
+  <section class="hero">
+    <Lights size={400} top={61} offset={-360} />
+    <div class="hero-grid">
+      <h1 class="text-heading-1 title">{title.replace(/(?<!\S)(у|в|і|й|з|та|до|на|за|по|від|для|під|над|при) /giu, "$1\u00A0")}</h1>
+      <div class="hero-copy">
+        <p class="lead">{lead}</p>
+        <p class="text-heading-2 from-price">від {fromPrice} грн</p>
+        {priceLabel && <p class="price-label">{priceLabel}</p>}
+      </div>
+      <div class="hero-form">
+        <Booking service={slug} variant="inline" submit="diagnostics" submitLabel={submitLabel} demo />
+      </div>
+      <Image
+        class="hero-image"
+        src={hero.src}
+        alt={hero.alt}
+        widths={[420, 640, 960, 1280]}
+        sizes="(max-width: 809.98px) calc(100vw - 32px), (max-width: 1199.98px) calc(100vw - 64px), 45vw"
+        format="webp"
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <section class="cost" id="cost">
+    <div class="head">
+      <h2 class="text-heading-2">Скільки коштує</h2>
+      <p class="head-text">{priceNote}<br />Остаточну вартість погоджуємо після огляду, до початку лікування.</p>
+    </div>
+    <ul class="rows">
+      {rows.map((it, i) => (
+        <li class:list={['row', { odd: i % 2 === 0 }]}><span class="service">{it.service}</span><span class="price">{it.price}</span></li>
+      ))}
+    </ul>
+    <div class="cost-foot">
+      <BtnSecondary href={localizePath('/price', locale)} label="Повний прайс" />
+    </div>
+  </section>
+
+  <section class="steps">
+    <Lights size={900} offset={400} />
+    <div class="head head--steps">
+      <h2 class="text-heading-2">Як проходить <span class="accent">лікування</span></h2>
+    </div>
+    <MediaSplit variant="layout" image={stepsImage.src} imageAlt={stepsImage.alt} imagePosition="left" items={steps} />
+  </section>
+
+  <section class="doctors">
+    <div class="head">
+      <h2 class="text-heading-2">Хто лікуватиме</h2>
+      <p class="head-text">{doctorIntro}</p>
+    </div>
+    <ServiceDoctorsGrid>
+      {selectedDoctors.map((p) => (
+        <CardTeam
+          name={p.data.name}
+          role={p.data.role}
+          photo={p.data.photo}
+          photoAlt={p.data.photoAlt}
+          href={localizePath(`/team/${entrySlug(p.id)}`, locale)}
+          moreLabel={teamPage.more}
+          moreAriaLabel={`${teamPage.more}: ${p.data.name}`}
+          sizes={cardSizes}
+        />
+      ))}
+    </ServiceDoctorsGrid>
+  </section>
+
+  {photos && (
+    <section class="cases" aria-labelledby="service-cases-title">
+      <div class="head">
+        <h2 id="service-cases-title" class="text-heading-2">До і після</h2>
+      </div>
+      <ServiceBeforeAfter photos={photos} />
+    </section>
+  )}
+
+  <section class="questions">
+    <div class="q-head">
+      <h2 class="text-heading-2">Питання<br /><span class="accent">перед візитом</span></h2>
+    </div>
+    <div class="q-list"><Faq items={faq} /></div>
+  </section>
+
+  <Testimonials {...home.testimonials} />
+  <VisitUs />
+  <Booking service={slug} submit="diagnostics" submitLabel={submitLabel} demo />
+</PageLayout>
+
+<style>
+  section {
+    position: relative;
+    padding-left: var(--grid-pad);
+    padding-right: var(--grid-pad);
+    background: var(--color-almost-black);
+  }
+  section > :not(:global(.lights)) {
+    position: relative;
+    z-index: 1;
+  }
+  .head {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+    row-gap: 24px;
+    align-items: end;
+    margin-bottom: 56px;
+  }
+  .head h2 {
+    grid-column: 1 / span 6;
+    margin: 0;
+  }
+  .head-text {
+    grid-column: 1 / span 6;
+    margin: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--text-body-color);
+  }
+
+  /* ── Перший екран: фото 1–6, опис і форма 8–12 ── */
+  .hero {
+    padding-top: 200px;
+    padding-bottom: 80px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+    row-gap: 24px;
+    align-items: start;
+  }
+  .hero-image {
+    grid-column: 1 / span 6;
+    grid-row: 2 / span 2;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 40px;
+  }
+  .hero-copy {
+    grid-column: 8 / span 5;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+  }
+  .title {
+    text-wrap: balance;
+    grid-column: 1 / -1;
+    margin: 0 0 8px;
+  }
+  .lead {
+    margin: 0;
+    font-size: var(--text-body-2-size);
+    line-height: var(--text-body-2-line-height);
+    letter-spacing: var(--text-body-2-letter-spacing);
+    color: var(--text-body-2-color);
+  }
+  .from-price {
+    margin: 0;
+  }
+  .hero-form {
+    grid-column: 8 / span 5;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .price-label {
+    color: var(--text-body-color);
+    margin-top: -8px;
+  }
+  .hero-form > :global(.booking) {
+    align-self: stretch;
+  }
+
+  /* ── Вартість: рядки як на сторінці «Ціни» ── */
+  .cost {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .cost .head h2 {
+    grid-column: 1 / -1;
+  }
+  .head--steps .accent {
+    color: var(--color-ukrselt-blue);
+  }
+  .q-list {
+    --faq-icon-color: var(--color-clean-white);
+  }
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 32px;
+    border-radius: 32px;
+  }
+  .row.odd {
+    background: var(--color-dark-grey);
+  }
+  .service {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line-height);
+    color: var(--color-light-grey);
+  }
+  .price {
+    flex: none;
+    font-size: var(--text-heading-4-size);
+    line-height: var(--text-heading-4-line-height);
+    font-weight: var(--text-heading-4-weight);
+    color: var(--color-clean-white);
+    white-space: nowrap;
+  }
+  .cost-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  /* ── Етапи / Лікарі / Питання ── */
+  .steps,
+  .doctors,
+  .cases,
+  .questions {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .questions {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+    row-gap: 40px;
+  }
+  .q-head {
+    grid-column: 1 / span 5;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .q-head h2 {
+    margin: 0;
+  }
+  .q-head .accent {
+    color: var(--color-ukrselt-blue);
+  }
+  .q-list {
+    grid-column: 7 / span 6;
+  }
+
+  @media (max-width: 1199.98px) {
+    .hero {
+      padding-bottom: 40px;
+    }
+    .hero-image,
+    .hero-copy,
+    .hero-form,
+    .head h2,
+    .head-text,
+    .q-head,
+    .q-list {
+      grid-column: 1 / -1;
+    }
+    .hero-image,
+    .hero-copy,
+    .hero-form {
+      grid-row: auto;
+    }
+    .hero-grid {
+      row-gap: 48px;
+    }
+    .title {
+      margin-bottom: 0;
+    }
+    .cost,
+    .steps,
+    .doctors,
+    .cases,
+    .questions {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+  }
+  @media (max-width: 809.98px) {
+    .hero {
+      padding-top: 120px;
+    }
+    .hero-copy {
+      gap: 16px;
+    }
+    /* Перший екран без скролу (ТЗ, п. 2): заголовок розміром Heading 2. */
+    .title {
+      font-size: var(--text-heading-2-size);
+      line-height: 110%;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-grid {
+      row-gap: 32px;
+    }
+    .lead {
+      font-size: var(--text-body-size);
+      line-height: var(--text-body-line-height);
+    }
+    .head {
+      margin-bottom: 32px;
+    }
+    .row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 20px 16px;
+    }
+  }
+</style>

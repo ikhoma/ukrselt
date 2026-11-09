@@ -4,9 +4,10 @@ import type { ImageMetadata } from 'astro';
 
 interface Props {
   illustrated?: boolean;
+  captions?: [string, string];
   photos: [ImageMetadata, ImageMetadata];
 }
-const { photos, illustrated = false } = Astro.props;
+const { photos, illustrated = false, captions = ['До лікування', 'Після лікування'] } = Astro.props;
 ---
 <div class:list={['comparison', { 'comparison--illustrated': illustrated }]}>
   {photos.map((photo, index) => (
@@ -20,7 +21,7 @@ const { photos, illustrated = false } = Astro.props;
           : '(max-width: 809.98px) calc((100vw - 48px) / 2), 45vw'}
         format="webp"
       />
-      <figcaption>{index === 0 ? 'До лікування' : 'Після лікування'}</figcaption>
+      <figcaption>{captions[index]}</figcaption>
     </figure>
   ))}
 </div>

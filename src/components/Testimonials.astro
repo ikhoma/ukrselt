@@ -14,9 +14,10 @@ interface Props {
   image: string;
   imageAlt: string;
   headshots: string[];
-  items: { text: string; author: string; photo: string }[];
+  source?: string;
+  items: { text: string; author: string; photo?: string; lang?: string }[];
 }
-const { title, rating, count, image, imageAlt, headshots, items } = Astro.props;
+const { title, rating, count, image, imageAlt, headshots, items, source } = Astro.props;
 const star = `<svg viewBox="0 0 14 15" preserveAspectRatio="none" aria-hidden="true"><path d="M 6.524 1.964 C 6.674 1.503 7.326 1.503 7.476 1.964 L 8.459 4.991 C 8.526 5.197 8.718 5.337 8.935 5.337 L 12.119 5.337 C 12.603 5.337 12.804 5.957 12.412 6.241 L 9.837 8.113 C 9.662 8.24 9.588 8.466 9.655 8.672 L 10.639 11.7 C 10.789 12.16 10.261 12.543 9.87 12.259 L 7.294 10.387 C 7.119 10.26 6.881 10.26 6.706 10.387 L 4.13 12.259 C 3.739 12.543 3.211 12.16 3.361 11.7 L 4.345 8.672 C 4.412 8.466 4.338 8.24 4.163 8.113 L 1.588 6.241 C 1.196 5.957 1.397 5.337 1.881 5.337 L 5.065 5.337 C 5.282 5.337 5.474 5.197 5.541 4.991 Z" fill="var(--color-yellow)"/></svg>`;
 const stars = Array.from({ length: 5 }, () => star).join('');
 ---
@@ -42,9 +43,15 @@ const stars = Array.from({ length: 5 }, () => star).join('');
         items.map((it) => (
           <figure class="card" data-appear="slow">
             <span class="stars" set:html={stars} aria-hidden="true" />
-            <blockquote class="quote">{it.text}</blockquote>
+            <blockquote class="quote" cite={source} lang={it.lang}>{it.text}</blockquote>
             <figcaption class="author">
-              <Image class="avatar" src={homeImage(it.photo)} alt="" widths={[48, 96]} sizes="48px" format="webp" />
+              {it.photo ? (
+                <Image class="avatar" src={homeImage(it.photo)} alt="" widths={[48, 96]} sizes="48px" format="webp" />
+              ) : (
+                <span class="avatar avatar--initials" aria-hidden="true">
+                  {it.author.trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()}
+                </span>
+              )}
               <span class="name">{it.author}</span>
             </figcaption>
           </figure>
@@ -190,6 +197,14 @@ const stars = Array.from({ length: 5 }, () => star).join('');
     height: 48px;
     border-radius: 50%;
     object-fit: cover;
+    flex: none;
+  }
+  .avatar--initials {
+    display: grid;
+    place-items: center;
+    background: var(--color-dark-grey);
+    color: var(--color-clean-white);
+    font-size: var(--text-body-size);
   }
   .name {
     font-size: 20px;

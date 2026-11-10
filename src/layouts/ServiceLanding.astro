@@ -15,6 +15,7 @@ import { getLocale, localizePath } from '../i18n';
 import { getPage } from '../content/pages';
 import { getTeam, entrySlug } from '../content/collections';
 import price from '../content/price/uk.json';
+import serviceReviews from '../content/reviews/services.uk.json';
 import ServiceBeforeAfter from '../components/ServiceBeforeAfter.astro';
 import type { ServiceLanding } from '../data/service-landings';
 interface Props {
@@ -24,6 +25,8 @@ const { service } = Astro.props;
 const { slug, title, lead, description, prices, submitLabel, priceNote, hero, stepsImage, steps, doctors, doctorIntro, faq, photos } = service;
 const locale = getLocale(Astro.url);
 const home = getPage(locale, 'home');
+const reviews = serviceReviews.byService[slug as keyof typeof serviceReviews.byService];
+if (!reviews) throw new Error(`Немає відгуків для послуги: ${slug}`);
 const teamPage = getPage(locale, 'team');
 
 const priceItems = price.categories.flatMap((category) => category.groups.flatMap((group) => group.items));
@@ -136,7 +139,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     <div class="q-list"><Faq items={faq} /></div>
   </section>
 
-  <Testimonials {...home.testimonials} />
+  <Testimonials {...home.testimonials} items={reviews} source={serviceReviews.source} />
   <VisitUs />
   <Booking service={slug} submit="diagnostics" submitLabel={submitLabel} demo />
 </PageLayout>

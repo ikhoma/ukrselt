@@ -4,10 +4,10 @@ import type { ImageMetadata } from 'astro';
 
 interface Props {
   illustrated?: boolean;
-  captions?: [string, string];
+  description?: string;
   photos: [ImageMetadata, ImageMetadata];
 }
-const { photos, illustrated = false, captions } = Astro.props;
+const { photos, illustrated = false, description } = Astro.props;
 const labels = ['До', 'Після'];
 ---
 
@@ -19,16 +19,16 @@ const labels = ['До', 'Після'];
     {photos.map((photo, index) => (
       <Image
         src={photo}
-        alt={captions?.[index] ?? labels[index]}
+        alt={labels[index]}
         widths={[360, 640, 1000]}
         sizes="(max-width: 809.98px) calc((100vw - 32px) / 2), 25vw"
         format="webp"
       />
     ))}
   </div>
-  {(captions || illustrated) && (
+  {(description || illustrated) && (
     <figcaption class="text-body">
-      {captions ? captions.join(' → ') : 'Згенерована ілюстрація для макета'}
+      {description ?? 'Згенерована ілюстрація для макета'}
     </figcaption>
   )}
 </figure>

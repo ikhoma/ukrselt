@@ -29,7 +29,7 @@ export interface ServiceLanding {
   doctorIntro: string;
   faq: { question: string; answer: string }[];
   illustratedComparison?: boolean;
-  comparisonCaptions?: [string, string];
+  comparisonDescription?: string;
   photos?: [ImageMetadata, ImageMetadata];
 }
 
@@ -120,7 +120,7 @@ export const crowns: ServiceLanding = {
   doctors: ['servinsky'],
   doctorIntro: 'На консультації лікар оцінить опорні зуби та прикус і пояснить, які конструкції можна розглянути.',
   photos: [crownsFirst, crownsSecond],
-  comparisonCaptions: ['Дефект переднього зуба', 'Відновлена форма зуба'],
+  comparisonDescription: 'Естетична реставрація, встановлення пломб, відбілювання зубів, ортодонтичне лікування брекетами та імплантація зубів.',
   faq: [
     { question: 'Як обрати матеріал коронки?', answer: 'Лікар врахує розташування зуба, навантаження під час жування та бажаний вигляд.' },
     { question: 'Чи можна замінити стару коронку?', answer: 'Таку можливість оцінюємо на огляді. План залежить від стану зуба під коронкою та ясен.' },

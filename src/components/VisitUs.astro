@@ -1,6 +1,6 @@
 ---
 /**
- * Visit us (Framer, головна і «Контакти»): заголовок «Відвідати / наш центр», опис, адреса, розклад + карта Google (lazy).
+ * Visit us (Framer, головна і «Контакти»): заголовок «Відвідати / наш центр», опис, адреса, розклад + карта Google.
  * Tablet/Phone: карта зверху.
  */
 import Lights from './Lights.astro';
@@ -8,7 +8,7 @@ import { getLocale } from '../i18n';
 import { getPage } from '../content/pages';
 
 const v = getPage(getLocale(Astro.url), 'visit');
-// Той самий embed, що на Framer (SPEC §7.3), lazy.
+// Той самий embed, що на Framer (SPEC §7.3).
 const mapSrc =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2542.4037867767497!2d30.521542076832915!3d50.414857289925436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf3c19aa2309%3A0xef5beb9a60400c6c!2zVWtyc2VsdCAtINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LAg0JrQu9GW0L3RltC60LAsINCh0YLQvtC80LDRgtC-0LvQvtCz0ZbRh9C90LjQuSDQptC10L3RgtGALCDQodGC0L7QvNCw0YLQvtC70L7Qs9GW0Y8!5e0!3m2!1sen!2sua!4v1724497576306!5m2!1sen!2sua';
 ---
@@ -30,7 +30,7 @@ const mapSrc =
     </div>
   </div>
   <div class="map">
-    <iframe src={mapSrc} title={v.mapTitle} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    <iframe src={mapSrc} title={v.mapTitle} loading="eager" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
   </div>
 </section>
 

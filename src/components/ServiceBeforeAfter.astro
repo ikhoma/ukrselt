@@ -13,7 +13,7 @@ const portrait = photos.every((photo) => photo.height > photo.width);
 ---
 
 <figure class="comparison">
-  <div class="labels text-body" aria-hidden="true">
+  <div class="labels text-heading-4" aria-hidden="true">
     {labels.map((label) => <span>{label}</span>)}
   </div>
   <div class:list={['photos', { 'photos--portrait': portrait }]}>

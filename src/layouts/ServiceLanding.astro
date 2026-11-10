@@ -124,9 +124,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
 
   {photos && (
     <section class="cases" aria-labelledby="service-cases-title">
-      <div class="head">
-        <h2 id="service-cases-title" class="text-heading-2">До і після</h2>
-      </div>
+      <h2 id="service-cases-title" class="text-heading-2">До та після<br /><span class="accent">лікування</span></h2>
       <ServiceBeforeAfter photos={photos} illustrated={service.illustratedComparison} captions={service.comparisonCaptions} />
     </section>
   )}
@@ -307,6 +305,15 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     padding-top: 80px;
     padding-bottom: 80px;
   }
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gutter);
+    align-items: start;
+  }
+  .cases .accent {
+    color: var(--color-ukrselt-blue);
+  }
   .questions {
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
@@ -358,6 +365,10 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     }
   }
   @media (max-width: 809.98px) {
+    .cases {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 24px;
+    }
     .hero {
       padding-top: calc(56px + var(--phone-nav-height));
     }

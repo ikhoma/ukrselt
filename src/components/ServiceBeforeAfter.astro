@@ -7,69 +7,58 @@ interface Props {
   captions?: [string, string];
   photos: [ImageMetadata, ImageMetadata];
 }
-const { photos, illustrated = false, captions = ['До лікування', 'Після лікування'] } = Astro.props;
+const { photos, illustrated = false, captions } = Astro.props;
+const labels = ['До', 'Після'];
 ---
-<div class:list={['comparison', { 'comparison--illustrated': illustrated }]}>
-  {photos.map((photo, index) => (
-    <figure>
+
+<figure class="comparison">
+  <div class="labels text-body" aria-hidden="true">
+    {labels.map((label) => <span>{label}</span>)}
+  </div>
+  <div class="photos">
+    {photos.map((photo, index) => (
       <Image
         src={photo}
-        alt=""
+        alt={captions?.[index] ?? labels[index]}
         widths={[360, 640, 1000]}
-        sizes={illustrated
-          ? '(max-width: 809.98px) calc(100vw - 32px), 45vw'
-          : '(max-width: 809.98px) calc((100vw - 48px) / 2), 45vw'}
+        sizes="(max-width: 809.98px) calc((100vw - 32px) / 2), 25vw"
         format="webp"
       />
-      <figcaption>{captions[index]}</figcaption>
-    </figure>
-  ))}
-</div>
-{illustrated && <p class="illustration-label">Згенерована ілюстрація для макета</p>}
+    ))}
+  </div>
+  {(captions || illustrated) && (
+    <figcaption class="text-body">
+      {captions ? captions.join(' → ') : 'Згенерована ілюстрація для макета'}
+    </figcaption>
+  )}
+</figure>
 
 <style>
-  figcaption,
-  .illustration-label {
-    color: var(--text-body-color);
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line-height);
-  }
-  .comparison {
+  .labels,
+  .photos {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--grid-gutter);
   }
-  img {
+  .labels {
+    margin-bottom: 8px;
+  }
+  .photos {
+    overflow: hidden;
+    border-radius: 32px;
+  }
+  .photos img {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
-    background: var(--color-dark-grey);
-    border-radius: 80px;
-  }
-  figcaption {
-    margin-top: 8px;
-  }
-  .comparison--illustrated img {
     aspect-ratio: 2 / 1;
     object-fit: cover;
     object-position: center 42%;
   }
-  .illustration-label {
-    margin-top: 16px;
-  }
-
-  @media (max-width: 1199.98px) {
-    img {
-      border-radius: 60px;
-    }
+  figcaption {
+    margin-top: 20px;
   }
 
   @media (max-width: 809.98px) {
-    .comparison--illustrated {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    img {
-      border-radius: 40px;
+    .photos {
+      border-radius: 24px;
     }
   }
 </style>

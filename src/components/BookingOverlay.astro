@@ -114,8 +114,11 @@ const label = kind === 'callback' ? c.callback.ariaLabel : c.title;
     }
   }
   @media (max-width: 809.98px) {
+    .booking-overlay {
+      --booking-close-center: 80px;
+    }
     .close {
-      top: 56px;
+      top: calc(var(--booking-close-center) - 24px);
       right: 11px;
     }
     .content {

@@ -22,6 +22,15 @@ body {
 body {
   background: var(--color-night-black);
   font-family: var(--font-family);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable]:not([contenteditable='false']) {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 h1,

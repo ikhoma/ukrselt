@@ -9,19 +9,20 @@ interface Props {
 }
 const { photos, illustrated = false, description } = Astro.props;
 const labels = ['До', 'Після'];
+const portrait = photos.every((photo) => photo.height > photo.width);
 ---
 
 <figure class="comparison">
   <div class="labels text-body" aria-hidden="true">
     {labels.map((label) => <span>{label}</span>)}
   </div>
-  <div class="photos">
+  <div class:list={['photos', { 'photos--portrait': portrait }]}>
     {photos.map((photo, index) => (
       <Image
         src={photo}
         alt={labels[index]}
         widths={[360, 640, 1000]}
-        sizes="(max-width: 809.98px) calc((100vw - 32px) / 2), 25vw"
+        sizes="(max-width: 809.98px) calc((100vw - 48px) / 2), 25vw"
         format="webp"
       />
     ))}
@@ -38,26 +39,29 @@ const labels = ['До', 'Після'];
   .photos {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gutter);
   }
   .labels {
     margin-bottom: 8px;
-  }
-  .photos {
-    overflow: hidden;
-    border-radius: 32px;
   }
   .photos img {
     width: 100%;
     aspect-ratio: 2 / 1;
     object-fit: cover;
     object-position: center 42%;
+    border-radius: 32px;
+  }
+  .photos--portrait img {
+    aspect-ratio: 7 / 10;
+    object-fit: contain;
+    background: var(--color-almost-black);
   }
   figcaption {
     margin-top: 20px;
   }
 
   @media (max-width: 809.98px) {
-    .photos {
+    .photos img {
       border-radius: 24px;
     }
   }

@@ -97,12 +97,12 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
   const bookingSubmit = document.querySelector('#book [data-submit]');
 
   if (heroCallback && floatingCallback && bookingSubmit) {
-    const bookingLead = 160;
+    const fadeDistance = 160;
     const observer = new IntersectionObserver(() => {
-      const heroPassed = heroCallback.getBoundingClientRect().bottom <= 0;
-      const bookingAhead = bookingSubmit.getBoundingClientRect().top > window.innerHeight + bookingLead;
+      const heroPassed = heroCallback.getBoundingClientRect().bottom < -fadeDistance;
+      const bookingAhead = bookingSubmit.getBoundingClientRect().top > window.innerHeight + fadeDistance;
       floatingCallback.toggleAttribute('data-visible', heroPassed && bookingAhead);
-    }, { rootMargin: `0px 0px ${bookingLead}px 0px` });
+    }, { rootMargin: `${fadeDistance}px 0px ${fadeDistance}px 0px` });
     observer.observe(heroCallback);
     observer.observe(bookingSubmit);
   }

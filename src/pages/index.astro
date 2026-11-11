@@ -94,15 +94,17 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
 <script>
   const heroCallback = document.querySelector('[data-hero-callback]');
   const floatingCallback = document.querySelector('[data-floating-callback]');
+  const bookingSubmit = document.querySelector('#book [data-submit]');
 
-  if (heroCallback && floatingCallback) {
-    const observer = new IntersectionObserver(([entry]) => {
-      floatingCallback.toggleAttribute(
-        'data-visible',
-        !entry.isIntersecting && entry.boundingClientRect.bottom <= 0,
-      );
-    });
+  if (heroCallback && floatingCallback && bookingSubmit) {
+    const bookingLead = 80;
+    const observer = new IntersectionObserver(() => {
+      const heroPassed = heroCallback.getBoundingClientRect().bottom <= 0;
+      const bookingAhead = bookingSubmit.getBoundingClientRect().top > window.innerHeight + bookingLead;
+      floatingCallback.toggleAttribute('data-visible', heroPassed && bookingAhead);
+    }, { rootMargin: `0px 0px ${bookingLead}px 0px` });
     observer.observe(heroCallback);
+    observer.observe(bookingSubmit);
   }
 </script>
 

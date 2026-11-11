@@ -120,14 +120,27 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
     border-radius: 50%;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 180ms ease, visibility 180ms, background-color var(--dur-hover) var(--ease-hover);
+    transform: translateY(12px) scale(0.88);
+    pointer-events: none;
+    transition:
+      transform 160ms cubic-bezier(0.2, 0, 1, 0.9),
+      opacity 160ms ease-in,
+      visibility 0s linear 160ms,
+      background-color var(--dur-hover) var(--ease-hover);
   }
   :global(a.floating-callback[data-visible]) {
     visibility: visible;
     opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition:
+      transform 240ms cubic-bezier(0, 0, 0.38, 0.9),
+      opacity 200ms ease-out,
+      background-color var(--dur-hover) var(--ease-hover);
   }
   @media (prefers-reduced-motion: reduce) {
-    :global(a.floating-callback) {
+    :global(a.floating-callback),
+    :global(a.floating-callback[data-visible]) {
       transition: none;
     }
   }

@@ -50,7 +50,6 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
   title={`${title} — Ukrselt`}
   description={description}
   noindex
-  bookingDemo
 >
   <section class="hero">
     <Lights size={400} top={61} offset={-360} />
@@ -67,7 +66,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
         <p class="text-heading-2 from-price">від {fromPrice} грн</p>
       </div>
       <div class="hero-form">
-        <Booking service={slug} variant="inline" submit="diagnostics" submitLabel={submitLabel} demo />
+        <Booking service={slug} variant="inline" submit="diagnostics" submitLabel={submitLabel} />
       </div>
       <Image
         class="hero-image"
@@ -141,7 +140,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
 
   <Testimonials {...home.testimonials} items={reviews} source={serviceReviews.source} />
   <VisitUs />
-  <Booking service={slug} submit="diagnostics" submitLabel={submitLabel} demo />
+  <Booking service={slug} submit="diagnostics" submitLabel={submitLabel} />
 </PageLayout>
 
 <style>

@@ -1,6 +1,6 @@
 /**
  * POST /api/contact — заявка з форми запису → Telegram Bot API (ADR-0004, SPEC §7.1).
- * Секрети тільки з env: BOT_TOKEN, CHAT_ID. Телефони в логах маскуємо.
+ * Секрети тільки з env: BOT_TOKEN, TELEGRAM_LEADS_CHAT_ID. Телефони в логах маскуємо.
  * Приймає multipart/form-data або application/x-www-form-urlencoded (і з fetch, і без JS).
  * Відповідь: JSON, якщо клієнт просить JSON; інакше проста HTML-сторінка (форма без JS).
  */
@@ -44,7 +44,7 @@ export function buildMessage({ name, phone, service, page, fastMs }: { name: str
 
 async function sendTelegram(text: string): Promise<boolean> {
   const token = env('BOT_TOKEN');
-  const chatId = env('CHAT_ID');
+  const chatId = env('TELEGRAM_LEADS_CHAT_ID');
   if (!token || !chatId) return false;
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
@@ -72,12 +72,11 @@ async function handle(form: FormData): Promise<Result> {
   const page = get('page').slice(0, 200);
   const text = buildMessage({ name, phone, service, page, fastMs });
 
-  if (!env('BOT_TOKEN') || !env('CHAT_ID')) {
-    // Бот ще не підключений (SPEC §7.1, задача перед запуском). На production — помилка, щоб людина подзвонила;
-    // на preview/локально — «суха» відправка для перевірки форми.
-    const production = env('VERCEL_ENV') === 'production';
-    console.warn('[contact] BOT_TOKEN/CHAT_ID не задані', production ? '' : '(dry run)', maskPhone(phone));
-    return production ? { ok: false, status: 502, error: 'send' } : { ok: true, status: 200, dryRun: true };
+  if (!env('BOT_TOKEN') || !env('TELEGRAM_LEADS_CHAT_ID')) {
+    const deployment = env('VERCEL_ENV');
+    const local = !deployment || deployment === 'development';
+    console.warn('[contact] BOT_TOKEN/TELEGRAM_LEADS_CHAT_ID не задані', local ? '(dry run)' : '', maskPhone(phone));
+    return local ? { ok: true, status: 200, dryRun: true } : { ok: false, status: 502, error: 'send' };
   }
 
   try {

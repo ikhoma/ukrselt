@@ -40,7 +40,7 @@ import ButtonCta from './ButtonCta.astro';
     </div>
     <div class="row">
       <p class="text">{keepShortWords(text)}</p>
-      <ButtonCta size="l" href={localizePath('/', locale) + '#book'} action="callback">{cta}</ButtonCta>
+      <ButtonCta size="l" href={localizePath('/', locale) + '#book'} action="callback" data-hero-callback>{cta}</ButtonCta>
     </div>
   </div>
 </section>

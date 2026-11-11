@@ -7,6 +7,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import HomeHero from '../components/HomeHero.astro';
 import Preloader from '../components/Preloader.astro';
+import ButtonCta from '../components/ButtonCta.astro';
 import BookingOverlay from '../components/BookingOverlay.astro';
 import HomeShowcase from '../components/HomeShowcase.astro';
 import HomeServices from '../components/HomeServices.astro';
@@ -77,9 +78,57 @@ const team = (await getTeam(locale)).filter((p) => p.data.homePhoto).slice(0, 6)
   <VisitUs />
   <Booking service="home" />
   <BookingOverlay kind="callback" />
+  <ButtonCta
+    class="floating-callback"
+    href={localizePath('/', locale) + '#book'}
+    action="callback"
+    aria-label={c.hero.cta}
+    data-floating-callback
+  >
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 18 18 0 0 1-7.9-2.8 18 18 0 0 1-5.5-5.5 18 18 0 0 1-2.8-8A2 2 0 0 1 5.6 3h3a2 2 0 0 1 2 1.7l.5 2.8a2 2 0 0 1-.6 2.1l-1.2 1.2a14 14 0 0 0 5.5 5.5l1.2-1.2a2 2 0 0 1 2.1-.6l2.8.5a2 2 0 0 1 1.1 1.9Z" />
+    </svg>
+  </ButtonCta>
 </PageLayout>
 
+<script>
+  const heroCallback = document.querySelector('[data-hero-callback]');
+  const floatingCallback = document.querySelector('[data-floating-callback]');
+
+  if (heroCallback && floatingCallback) {
+    const observer = new IntersectionObserver(([entry]) => {
+      floatingCallback.toggleAttribute(
+        'data-visible',
+        !entry.isIntersecting && entry.boundingClientRect.bottom <= 0,
+      );
+    });
+    observer.observe(heroCallback);
+  }
+</script>
+
 <style>
+  :global(a.floating-callback) {
+    position: fixed;
+    z-index: 5;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 128px;
+    height: 128px;
+    padding: 0;
+    border-radius: 50%;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 180ms ease, visibility 180ms, background-color var(--dur-hover) var(--ease-hover);
+  }
+  :global(a.floating-callback[data-visible]) {
+    visibility: visible;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(a.floating-callback) {
+      transition: none;
+    }
+  }
   .benefits {
     position: relative;
     display: flex;

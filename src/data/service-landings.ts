@@ -4,7 +4,8 @@ import cariesSteps from '../assets/services/caries-treatment.png';
 import implantHero from '../assets/services/implantation.png';
 import prostheticsHero from '../assets/services/orthopedics.png';
 import hygieneHero from '../assets/services/hygiene.png';
-import therapyImage from '../assets/services/therapy.png';
+import hygieneExam from '../assets/services/hygiene-exam.png';
+import diagnosticsImage from '../assets/services/endodontics.png';
 import implantFirst from '../assets/services/cases/implant-1.webp';
 import implantSecond from '../assets/services/cases/implant-2.webp';
 import crownsFirst from '../assets/services/cases/crowns-1.webp';
@@ -82,7 +83,7 @@ export const implantation: ServiceLanding = {
     'Керамічна коронка на імпланті: MegaGen, Osstem, Straumann, Nobel (без урахування індивідуального абатменту)',
   ],
   hero: { src: implantHero, alt: '' },
-  stepsImage: { src: cariesSteps, alt: '' },
+  stepsImage: { src: diagnosticsImage, alt: 'Лікар показує стоматологічний знімок на екрані ноутбука' },
   steps: [
     { title: 'Діагностика і план', text: 'Лікар оцінює стан зубів і кістки, пояснює варіанти відновлення та послідовність етапів.' },
     { title: 'Підготовка за потреби', text: 'Якщо потрібні додаткові процедури, обговорюємо їх і вартість заздалегідь.' },
@@ -169,7 +170,7 @@ export const hygiene: ServiceLanding = {
   priceNote: 'Вартість залежить від обсягу гігієни та ділянок, які потребують особливої уваги.',
   prices: ['Гігієна верхня+нижня щелепа', 'Гігієна одна щелепа', 'Професійна гігієна зубних імплантатів, 1 зуб', 'Навчання гігієні'],
   hero: { src: hygieneHero, alt: '' },
-  stepsImage: { src: therapyImage, alt: '' },
+  stepsImage: { src: hygieneExam, alt: 'Стоматологічна команда біля пацієнта в кріслі' },
   steps: [
     { title: 'Огляд зубів і ясен', text: 'Оцінюємо кількість відкладень і чутливість, погоджуємо обсяг процедури.' },
     { title: 'Видалення нальоту й каменю', text: 'Підбираємо спосіб очищення відповідно до стану зубів і ясен.' },

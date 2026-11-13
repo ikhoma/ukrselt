@@ -35,7 +35,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !/\/(404|success)$/.test(page) &&
-        !/\/services\/(likuvannya-kariyesu|implantaciya|koronky-ta-protezuvannya|viniry|profesiyna-gigiyena)$/.test(page) && // прототип, noindex до погодження
+        !/\/services\/(likuvannya-kariyesu|implantaciya|koronky-ta-protezuvannya|viniry|profesiyna-gigiyena|brekety)$/.test(page) && // прототип, noindex до погодження
         !Object.keys(redirects).some((r) => page.endsWith(r)),
     }),
   ],

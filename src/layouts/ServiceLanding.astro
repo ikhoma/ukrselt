@@ -26,7 +26,6 @@ const { slug, title, lead, description, prices, submitLabel, priceNote, hero, st
 const locale = getLocale(Astro.url);
 const home = getPage(locale, 'home');
 const reviews = serviceReviews.byService[slug as keyof typeof serviceReviews.byService];
-if (!reviews) throw new Error(`Немає відгуків для послуги: ${slug}`);
 const teamPage = getPage(locale, 'team');
 
 const priceItems = price.categories.flatMap((category) => category.groups.flatMap((group) => group.items));
@@ -103,6 +102,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     <MediaSplit variant="layout" image={stepsImage.src} imageAlt={stepsImage.alt} imagePosition="left" items={steps} />
   </section>
 
+  {selectedDoctors.length > 0 && (
   <section class="doctors">
     <div class="head">
       <h2 class="text-heading-2">Хто лікуватиме</h2>
@@ -124,6 +124,8 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     </ServiceDoctorsGrid>
   </section>
 
+  )}
+
   {photos && (
     <section class="cases" aria-labelledby="service-cases-title">
       <h2 id="service-cases-title" class="text-heading-2">До та після<br /><span class="accent">лікування</span></h2>
@@ -138,7 +140,7 @@ const cardSizes = '(max-width: 809.98px) calc(75vw - 28px), (max-width: 1199.98p
     <div class="q-list"><Faq items={faq} /></div>
   </section>
 
-  <Testimonials {...home.testimonials} items={reviews} source={serviceReviews.source} />
+  {reviews && <Testimonials {...home.testimonials} items={reviews} source={serviceReviews.source} />}
   <VisitUs />
   <Booking service={slug} submit="diagnostics" submitLabel={submitLabel} />
 </PageLayout>

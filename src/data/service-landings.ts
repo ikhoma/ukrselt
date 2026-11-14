@@ -14,6 +14,21 @@ import crownsSecond from '../assets/services/cases/crowns-2.webp';
 import veneersFirst from '../assets/services/cases/veneers-1.webp';
 import veneersSecond from '../assets/services/cases/veneers-2.webp';
 
+import caries1Before from '../assets/services/cases/caries-1-before.webp';
+import caries1After from '../assets/services/cases/caries-1-after.webp';
+import caries2Before from '../assets/services/cases/caries-2-before.webp';
+import caries2After from '../assets/services/cases/caries-2-after.webp';
+import caries3Before from '../assets/services/cases/caries-3-before.webp';
+import caries3After from '../assets/services/cases/caries-3-after.webp';
+import caries4Before from '../assets/services/cases/caries-4-before.webp';
+import caries4After from '../assets/services/cases/caries-4-after.webp';
+import caries5Before from '../assets/services/cases/caries-5-before.webp';
+import caries5After from '../assets/services/cases/caries-5-after.webp';
+import hygiene1Before from '../assets/services/cases/hygiene-1-before.webp';
+import hygiene1After from '../assets/services/cases/hygiene-1-after.webp';
+import hygiene2Before from '../assets/services/cases/hygiene-2-before.webp';
+import hygiene2After from '../assets/services/cases/hygiene-2-after.webp';
+
 type ServiceImage = { src: ImageMetadata; alt: string };
 
 export interface ServiceLanding {
@@ -33,6 +48,7 @@ export interface ServiceLanding {
   illustratedComparison?: boolean;
   comparisonDescription?: string;
   photos?: [ImageMetadata, ImageMetadata];
+  photoPairs?: [ImageMetadata, ImageMetadata][];
 }
 
 const consultation = 'Консультація лікаря-стоматолога';
@@ -66,6 +82,13 @@ export const caries: ServiceLanding = {
   steps: cariesStepsCopy,
   doctors: ['motorna', 'sofia'],
   doctorIntro: 'Лікування карієсу та естетичні реставрації — серед напрямів роботи наших лікарок.',
+  photoPairs: [
+    [caries1Before, caries1After],
+    [caries2Before, caries2After],
+    [caries3Before, caries3After],
+    [caries4Before, caries4After],
+    [caries5Before, caries5After],
+  ],
   faq: cariesFaq,
 };
 
@@ -179,6 +202,10 @@ export const hygiene: ServiceLanding = {
   ],
   doctors: ['sofia'],
   doctorIntro: 'Лікарка оцінить стан ясен, проведе гігієну й підкаже, як підтримувати результат вдома.',
+  photoPairs: [
+    [hygiene1Before, hygiene1After],
+    [hygiene2Before, hygiene2After],
+  ],
   faq: [
     { question: 'Чистка і відбілювання — це одне й те саме?', answer: 'Під час чистки прибираємо відкладення та поверхневі пігменти. Відбілювання окремо змінює відтінок зубів.' },
     { question: 'Що робити, якщо зуби чутливі?', answer: 'Скажіть про це до процедури. Лікар врахує чутливість під час вибору способу очищення.' },

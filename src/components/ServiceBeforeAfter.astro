@@ -5,9 +5,10 @@ import type { ImageMetadata } from 'astro';
 interface Props {
   illustrated?: boolean;
   description?: string;
+  preserveFraming?: boolean;
   photos: [ImageMetadata, ImageMetadata];
 }
-const { photos, illustrated = false, description } = Astro.props;
+const { photos, illustrated = false, description, preserveFraming = false } = Astro.props;
 const labels = ['До', 'Після'];
 const portrait = photos.every((photo) => photo.height > photo.width);
 ---
@@ -16,7 +17,7 @@ const portrait = photos.every((photo) => photo.height > photo.width);
   <div class="labels text-heading-4" aria-hidden="true">
     {labels.map((label) => <span>{label}</span>)}
   </div>
-  <div class:list={['photos', { 'photos--portrait': portrait }]}>
+  <div class:list={['photos', { 'photos--portrait': portrait, 'photos--contain': preserveFraming }]}>
     {photos.map((photo, index) => (
       <Image
         src={photo}
@@ -53,8 +54,14 @@ const portrait = photos.every((photo) => photo.height > photo.width);
   }
   .photos--portrait img {
     aspect-ratio: 7 / 10;
+  }
+  .photos--portrait img,
+  .photos--contain img {
     object-fit: contain;
     background: var(--color-almost-black);
+  }
+  .photos--contain:not(.photos--portrait) img {
+    aspect-ratio: 3 / 2;
   }
   figcaption {
     margin-top: 20px;
